@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<aside th:fragment="sidebar" class="sidebar">
+
+    <nav>
+
+        <a th:href="@{/}">
+            Início
+        </a>
+
+        <a th:href="@{/pacientes}">
+            Pacientes
+        </a>
+
+        <a th:href="@{/dentistas}">
+            Dentistas
+        </a>
+
+        <a th:href="@{/agenda}">
+            Agenda
+        </a>
+
+        <a th:href="@{/odontogramas}">
+            Odontogramas
+        </a>
+
+        <a th:href="@{/procedimentos}">
+            Procedimentos
+        </a>
+
+        <a th:href="@{/produtos}">
+            Produtos
+        </a>
+
+        <a th:href="@{/financeiro}">
+            Financeiro
+        </a>
+
+        <a th:if="${isAdmin}"
+           th:href="@{/admin}">
+            Administração
+        </a>
+
+    </nav>
+
+</aside>
+
+</body>
+</html>

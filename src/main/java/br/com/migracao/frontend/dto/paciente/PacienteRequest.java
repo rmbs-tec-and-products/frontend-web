@@ -1,0 +1,22 @@
+package br.com.migracao.frontend.dto.paciente;
+
+import java.time.LocalDateTime;
+
+public record PacienteRequest(
+
+        String nome,
+        String telefone,
+        String celular,
+        String cpf,
+        LocalDateTime dataNascimento,
+        String sexo,
+        String endereco,
+        String numero,
+        String cep,
+        String cidade,
+        String estado,
+        String bairro,
+        AnamneseRequest anamnese
+
+) {
+}

@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <title>Pacientes - SysOdonto</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/app.css}">
+
+    <link rel="stylesheet"
+          th:href="@{/css/paciente.css}">
+
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="app-container">
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <main class="content">
+
+        <h1>Pacientes</h1>
+
+        <div th:if="${mensagemSucesso}"
+             class="alert success"
+             th:text="${mensagemSucesso}">
+        </div>
+
+        <div th:if="${mensagemErro}"
+             class="alert error"
+             th:text="${mensagemErro}">
+        </div>
+
+        <div class="patient-tabs">
+
+            <a th:href="@{/pacientes/novo}"
+               th:classappend="${modo == 'novo'} ? ' active' : ''">
+                Novo
+            </a>
+
+            <a th:href="@{/pacientes}"
+               th:classappend="${modo == 'consultar'} ? ' active' : ''">
+                Consultar
+            </a>
+
+        </div>
+
+
+        <!-- =========================================
+             CONSULTAR
+        ========================================== -->
+
+        <section th:if="${modo == 'consultar'}">
+
+            <form method="get"
+                  th:action="@{/pacientes}">
+
+                <label for="pesquisa">
+                    Pesquisa
+                </label>
+
+                <div class="search-row">
+
+                    <input
+                            id="pesquisa"
+                            name="pesquisa"
+                            type="text"
+                            th:value="${pesquisa}"
+                            placeholder="Nome, telefone, celular ou CPF">
+
+                    <button type="submit">
+                        Pesquisar
+                    </button>
+
+                </div>
+
+            </form>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                    <tr>
+                        <th>Código</th>
+                        <th>Nome</th>
+                        <th>Telefone</th>
+                        <th>Celular</th>
+                        <th>Ações</th>
+                    </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    <tr th:each="paciente : ${pacientes}">
+
+                        <td th:text="${paciente.codigo}">
+                        </td>
+
+                        <td>
+
+                            <a th:href="@{/pacientes/{codigo}/editar(
+                                    codigo=${paciente.codigo}
+                            )}"
+                               th:text="${paciente.nome}">
+                            </a>
+
+                        </td>
+
+                        <td th:text="${paciente.telefone}">
+                        </td>
+
+                        <td th:text="${paciente.celular}">
+                        </td>
+
+                        <td class="actions">
+
+                            <a th:href="@{/pacientes/{codigo}/editar(
+                                    codigo=${paciente.codigo}
+                            )}">
+                                Editar
+                            </a>
+
+                            <form
+                                    th:action="@{/pacientes/{codigo}/excluir(
+                                            codigo=${paciente.codigo}
+                                    )}"
+                                    method="post">
+
+                                <button type="submit"
+                                        class="btn-delete"
+                                        onclick="return confirm('Deseja realmente excluir este paciente?')">
+                                    Excluir
+                                </button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(pacientes)}">
+
+                        <td colspan="5"
+                            class="empty-table">
+
+                            Nenhum paciente encontrado.
+
+                        </td>
+
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================================
+             NOVO / EDITAR
+        ========================================== -->
+
+        <section th:if="${modo == 'novo'}">
+
+            <form
+                    th:action="@{/pacientes/salvar}"
+                    th:object="${pacienteForm}"
+                    method="post">
+
+                <input type="hidden"
+                       th:field="*{codigo}">
+
+
+                <!-- ================================
+                     DADOS PESSOAIS
+                ================================= -->
+
+                <div class="form-section">
+
+                    <h2>Dados pessoais</h2>
+
+                    <div class="form-grid form-grid-3">
+
+                        <div class="field field-large">
+
+                            <label for="nome">
+                                Nome
+                            </label>
+
+                            <input
+                                    id="nome"
+                                    type="text"
+                                    th:field="*{nome}"
+                                    required>
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="telefone">
+                                Telefone
+                            </label>
+
+                            <input
+                                    id="telefone"
+                                    type="text"
+                                    th:field="*{telefone}"
+                                    required>
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="celular">
+                                Celular
+                            </label>
+
+                            <input
+                                    id="celular"
+                                    type="text"
+                                    th:field="*{celular}"
+                                    required>
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="cpf">
+                                CPF
+                            </label>
+
+                            <input
+                                    id="cpf"
+                                    type="text"
+                                    th:field="*{cpf}">
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="dataNascimento">
+                                Data de nascimento
+                            </label>
+
+                            <input
+                                    id="dataNascimento"
+                                    type="date"
+                                    th:field="*{dataNascimento}">
+
+                        </div>
+
+                        <div class="field">
+
+                            <label>
+                                Sexo
+                            </label>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input
+                                            type="radio"
+                                            th:field="*{sexo}"
+                                            value="Masculino">
+                                    Masculino
+                                </label>
+
+                                <label>
+                                    <input
+                                            type="radio"
+                                            th:field="*{sexo}"
+                                            value="Feminino">
+                                    Feminino
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================================
+                     ENDEREÇO
+                ================================= -->
+
+                <div class="form-section">
+
+                    <h2>Endereço</h2>
+
+                    <div class="form-grid form-grid-3">
+
+                        <div class="field">
+
+                            <label for="cep">
+                                CEP
+                            </label>
+
+                            <input
+                                    id="cep"
+                                    type="text"
+                                    th:field="*{cep}">
+
+                        </div>
+
+                        <div class="field field-large">
+
+                            <label for="endereco">
+                                Logradouro
+                            </label>
+
+                            <input
+                                    id="endereco"
+                                    type="text"
+                                    th:field="*{endereco}">
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="numero">
+                                Número
+                            </label>
+
+                            <input
+                                    id="numero"
+                                    type="text"
+                                    th:field="*{numero}">
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="bairro">
+                                Bairro
+                            </label>
+
+                            <input
+                                    id="bairro"
+                                    type="text"
+                                    th:field="*{bairro}">
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="cidade">
+                                Cidade
+                            </label>
+
+                            <input
+                                    id="cidade"
+                                    type="text"
+                                    th:field="*{cidade}">
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="estado">
+                                Estado
+                            </label>
+
+                            <input
+                                    id="estado"
+                                    type="text"
+                                    maxlength="2"
+                                    th:field="*{estado}">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================================
+                     ANAMNESE
+                ================================= -->
+
+                <div class="form-section">
+
+                    <h2>Anamnese</h2>
+
+
+                    <!-- Tratamento médico -->
+
+                    <div class="question-block">
+
+                        <div class="question-row">
+
+                            <span class="question-title">
+                                Recebeu algum tratamento médico nos últimos dois anos?
+                            </span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.algumTratamento}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.algumTratamento}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                        <div id="grupo-tratamento"
+                             class="dependent-fields">
+
+                            <div class="form-grid form-grid-2">
+
+                                <div class="field">
+
+                                    <label for="especialidade">
+                                        Em que especialidade?
+                                    </label>
+
+                                    <input
+                                            id="especialidade"
+                                            type="text"
+                                            th:field="*{anamnese.especialidade}">
+
+                                </div>
+
+                                <div class="field">
+
+                                    <label for="nomeMedico">
+                                        Nome do médico
+                                    </label>
+
+                                    <input
+                                            id="nomeMedico"
+                                            type="text"
+                                            th:field="*{anamnese.nomeMedico}">
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Hospitalização -->
+
+                    <div class="question-block">
+
+                        <div class="question-row">
+
+                            <span class="question-title">
+                                Já esteve hospitalizado?
+                            </span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.hospitalizado}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.hospitalizado}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                        <div id="grupo-hospitalizado"
+                             class="dependent-fields">
+
+                            <div class="form-grid form-grid-3">
+
+                                <div class="field">
+
+                                    <label for="quandoHospitalizado">
+                                        Quando foi hospitalizado?
+                                    </label>
+
+                                    <input
+                                            id="quandoHospitalizado"
+                                            type="text"
+                                            th:field="*{anamnese.quandoHospitalizado}">
+
+                                </div>
+
+                                <div class="field">
+
+                                    <label for="tempo">
+                                        Quanto tempo?
+                                    </label>
+
+                                    <input
+                                            id="tempo"
+                                            type="text"
+                                            th:field="*{anamnese.tempo}">
+
+                                </div>
+
+                                <div class="field">
+
+                                    <label for="motivo">
+                                        Qual motivo?
+                                    </label>
+
+                                    <input
+                                            id="motivo"
+                                            type="text"
+                                            th:field="*{anamnese.motivo}">
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Medicamento -->
+
+                    <div class="question-block">
+
+                        <div class="question-row">
+
+                            <span class="question-title">
+                                Toma medicamento?
+                            </span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.tomaMedicamento}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.tomaMedicamento}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                        <div id="grupo-medicamento"
+                             class="dependent-fields">
+
+                            <div class="field">
+
+                                <label for="medicamento">
+                                    Quais medicamentos?
+                                </label>
+
+                                <input
+                                        id="medicamento"
+                                        type="text"
+                                        th:field="*{anamnese.medicamento}">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Alergia -->
+
+                    <div class="question-block">
+
+                        <div class="question-row">
+
+                            <span class="question-title">
+                                Tem alergia a algum medicamento ou anestésico?
+                            </span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.alergiaMedicamentoAnestesico}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.alergiaMedicamentoAnestesico}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                        <div id="grupo-alergia"
+                             class="dependent-fields">
+
+                            <div class="field">
+
+                                <label for="alergia">
+                                    Quais alergias?
+                                </label>
+
+                                <input
+                                        id="alergia"
+                                        type="text"
+                                        th:field="*{anamnese.alergia}">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Cirurgia -->
+
+                    <div class="question-block">
+
+                        <div class="question-row">
+
+                            <span class="question-title">
+                                Já fez cirurgias?
+                            </span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.cirurgia}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.cirurgia}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                        <div id="grupo-cirurgia"
+                             class="dependent-fields">
+
+                            <div class="field">
+
+                                <label for="qualCirurgia">
+                                    Quais cirurgias?
+                                </label>
+
+                                <input
+                                        id="qualCirurgia"
+                                        type="text"
+                                        th:field="*{anamnese.qualCirurgia}">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Fumante -->
+
+                    <div class="question-block">
+
+                        <div class="question-row">
+
+                            <span class="question-title">
+                                É fumante?
+                            </span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.fumante}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.fumante}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                        <div id="grupo-fumante"
+                             class="dependent-fields">
+
+                            <div class="field">
+
+                                <label for="cigarroDia">
+                                    Quantos cigarros por dia?
+                                </label>
+
+                                <input
+                                        id="cigarroDia"
+                                        type="number"
+                                        min="0"
+                                        th:field="*{anamnese.cigarroDia}">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Perguntas simples -->
+
+                    <div class="simple-questions-grid">
+
+
+                        <div class="simple-question">
+
+                            <span>Já fez transfusão de sangue?</span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.transfusaoSangue}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.transfusaoSangue}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="simple-question">
+
+                            <span>Sangra muito quando machuca?</span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.sangraMuito}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.sangraMuito}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="simple-question">
+
+                            <span>Consome bebidas alcoólicas?</span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.bebidaAlcoolica}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.bebidaAlcoolica}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="simple-question">
+
+                            <span>Problema cardíaco?</span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.problemaCardiaco}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.problemaCardiaco}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="simple-question">
+
+                            <span>Febre reumática?</span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.febreReumatica}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.febreReumatica}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="simple-question">
+
+                            <span>Desmaios ou tontura?</span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.desmaioTontura}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.desmaioTontura}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="simple-question">
+
+                            <span>Problema respiratório?</span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.respiratorio}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.respiratorio}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="simple-question">
+
+                            <span>HIV?</span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.hiv}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.hiv}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="simple-question">
+
+                            <span>Tuberculose?</span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.tuberculose}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.tuberculose}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="simple-question">
+
+                            <span>Epilepsia?</span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.epilepsia}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.epilepsia}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="simple-question">
+
+                            <span>Hepatite?</span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.hepatite}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.hepatite}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="simple-question">
+
+                            <span>Demora a cicatrizar?</span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.demoraCicatrizar}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.demoraCicatrizar}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="simple-question">
+
+                            <span>Depressão?</span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.depressao}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.depressao}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="simple-question">
+
+                            <span>Diabetes?</span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.diabete}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.diabete}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="simple-question">
+
+                            <span>Hipertensão?</span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.hipertensao}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.hipertensao}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="simple-question">
+
+                            <span>Reumatismo?</span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.reumatismo}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.reumatismo}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="simple-question">
+
+                            <span>Problema renal?</span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.renal}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.renal}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="simple-question">
+
+                            <span>Problema nervoso?</span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.problemaNervoso}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.problemaNervoso}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="simple-question">
+
+                            <span>Anemia?</span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.anemia}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.anemia}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="simple-question">
+
+                            <span>Cirurgia bucal?</span>
+
+                            <div class="radio-group">
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.cirurgiaBucal}"
+                                           value="true">
+                                    Sim
+                                </label>
+
+                                <label>
+                                    <input type="radio"
+                                           th:field="*{anamnese.cirurgiaBucal}"
+                                           value="false">
+                                    Não
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================================
+                     BOTÕES
+                ================================= -->
+
+                <div class="form-actions">
+
+                    <button
+                            type="submit"
+                            class="btn-save"
+                            th:text="${pacienteForm.codigo == null
+                                ? 'Cadastrar'
+                                : 'Salvar alterações'}">
+                        Salvar
+                    </button>
+
+                    <a th:href="@{/pacientes}"
+                       class="btn-cancel">
+                        Cancelar
+                    </a>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</div>
+<script th:src="@{/js/paciente.js}"></script>
+</body>
+</html>

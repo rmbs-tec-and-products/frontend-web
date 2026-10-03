@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<header th:fragment="header" class="topbar">
+
+    <div class="topbar-title">
+        SysOdonto
+    </div>
+
+    <div class="topbar-user">
+
+        <span>
+            Usuário:
+            <strong th:text="${username}"></strong>
+        </span>
+
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn-logout">
+                Sair
+            </button>
+        </form>
+
+    </div>
+
+</header>
+
+</body>
+</html>

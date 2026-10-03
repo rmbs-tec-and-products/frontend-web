@@ -1,0 +1,261 @@
+.patient-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #d5d5d5;
+}
+
+.patient-tabs a {
+    padding: 10px 18px;
+    text-decoration: none;
+    color: #333333;
+    border-radius: 5px 5px 0 0;
+}
+
+.patient-tabs a:hover {
+    background: #e9ecef;
+}
+
+.patient-tabs a.active {
+    background: #ffffff;
+    font-weight: bold;
+    border: 1px solid #d5d5d5;
+    border-bottom: 1px solid #ffffff;
+    margin-bottom: -1px;
+}
+
+
+/* ================================
+   SEÇÕES
+================================ */
+
+.form-section {
+    background: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+
+    padding: 22px;
+
+    margin-bottom: 20px;
+}
+
+.form-section h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+
+/* ================================
+   GRID
+================================ */
+
+.form-grid {
+    display: grid;
+    gap: 16px;
+}
+
+.form-grid-2 {
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+}
+
+.form-grid-3 {
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+}
+
+.field {
+    min-width: 0;
+}
+
+.field label {
+    display: block;
+    margin-top: 0;
+    margin-bottom: 6px;
+}
+
+.field input,
+.field select {
+    width: 100%;
+}
+
+
+/* ================================
+   RADIO
+================================ */
+
+.radio-group {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+
+    margin-top: 8px;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    margin: 0;
+
+    cursor: pointer;
+}
+
+.radio-group input {
+    width: auto;
+    margin: 0;
+}
+
+
+/* ================================
+   ANAMNESE
+================================ */
+
+.question-block {
+    border-bottom: 1px solid #eeeeee;
+    padding: 14px 0;
+}
+
+.question-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.question-title {
+    font-weight: 500;
+}
+
+.dependent-fields {
+    display: none;
+
+    margin-top: 16px;
+
+    padding: 16px;
+
+    background: #f7f8fa;
+
+    border-radius: 6px;
+}
+
+.dependent-fields.visible {
+    display: block;
+}
+
+
+/* ================================
+   PERGUNTAS SIMPLES
+================================ */
+
+.simple-questions-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 12px;
+
+    margin-top: 20px;
+}
+
+.simple-question {
+    background: #f7f8fa;
+
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+
+    padding: 14px;
+}
+
+.simple-question span {
+    display: block;
+    min-height: 38px;
+}
+
+
+/* ================================
+   AÇÕES
+================================ */
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+
+    margin-top: 20px;
+}
+
+.btn-save {
+    border: none;
+
+    background: #198754;
+    color: #ffffff;
+
+    padding: 10px 20px;
+
+    border-radius: 5px;
+}
+
+.btn-cancel {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 10px 20px;
+
+    background: #6c757d;
+    color: #ffffff;
+
+    border-radius: 5px;
+
+    text-decoration: none;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.actions form {
+    margin: 0;
+}
+
+.btn-delete {
+    border: none;
+
+    background: #dc3545;
+    color: #ffffff;
+
+    padding: 7px 12px;
+
+    border-radius: 4px;
+}
+
+
+/* ================================
+   RESPONSIVO
+================================ */
+
+@media (max-width: 1000px) {
+
+    .form-grid-3,
+    .simple-questions-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+
+    .form-grid-2,
+    .form-grid-3,
+    .simple-questions-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .question-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
