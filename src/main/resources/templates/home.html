@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Home</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<main class="container">
+    <h1>Frontend Web</h1>
+    <p>Usuário autenticado: <strong th:text="${username}"></strong></p>
+    <p>Permissões: <span th:text="${authorities}"></span></p>
+
+    <nav>
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/admin}">Área administrativa</a>
+    </nav>
+
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Sair</button>
+    </form>
+</main>
+</body>
+</html>
