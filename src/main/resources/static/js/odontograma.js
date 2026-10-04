@@ -1,105 +1,192 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    const teeth = document.querySelectorAll(".tooth");
-    const toothInput = document.getElementById("dente");
-    const selectedLabel = document.getElementById("selected-tooth-label");
-    const actionTooth = document.getElementById("action-tooth");
+    const teeth =
+        document.querySelectorAll(".tooth");
 
-    const excludeForm =
-        document.getElementById("exclude-tooth-form");
+    const toothInput =
+        document.getElementById("dente");
 
-    const restoreForm =
-        document.getElementById("restore-tooth-form");
+    const selectedLabel =
+        document.getElementById(
+            "selected-tooth-label"
+        );
+
+    const actionTooth =
+        document.getElementById(
+            "action-tooth"
+        );
+
+    const excludeInput =
+        document.getElementById(
+            "exclude-tooth-input"
+        );
+
+    const restoreInput =
+        document.getElementById(
+            "restore-tooth-input"
+        );
+
+    const excludeButton =
+        document.getElementById(
+            "exclude-tooth-button"
+        );
+
+    const restoreButton =
+        document.getElementById(
+            "restore-tooth-button"
+        );
 
     const procedureSelect =
-        document.getElementById("procedimentoCodigo");
+        document.getElementById(
+            "procedimentoCodigo"
+        );
 
     const valueInput =
-        document.getElementById("valor");
+        document.getElementById(
+            "valor"
+        );
 
-    function selectTooth(toothNumber) {
+    function formatValue(value) {
+
+        if (value === null
+                || value === undefined
+                || value === "") {
+
+            return "";
+        }
+
+        const number =
+            Number(
+                String(value)
+                    .replace(",", ".")
+            );
+
+        if (Number.isNaN(number)) {
+            return value;
+        }
+
+        return number.toFixed(2);
+    }
+
+    function selectTooth(
+        toothNumber
+    ) {
 
         if (!toothNumber) {
             return;
         }
 
-        teeth.forEach(function (tooth) {
-            tooth.classList.remove("tooth-selected");
-        });
+        teeth.forEach(
+            function (tooth) {
+
+                tooth.classList.remove(
+                    "tooth-selected"
+                );
+            }
+        );
 
         const selected =
             document.querySelector(
-                '.tooth[data-tooth="' + toothNumber + '"]'
+                '.tooth[data-tooth="'
+                + toothNumber
+                + '"]'
             );
 
-        if (selected) {
-            selected.classList.add("tooth-selected");
+        if (!selected) {
+            return;
         }
 
+        selected.classList.add(
+            "tooth-selected"
+        );
+
+        const excluded =
+            selected.dataset.excluded
+            === "true";
+
         if (toothInput) {
-            toothInput.value = toothNumber;
+
+            toothInput.value =
+                toothNumber;
+        }
+
+        if (excludeInput) {
+
+            excludeInput.value =
+                toothNumber;
+        }
+
+        if (restoreInput) {
+
+            restoreInput.value =
+                toothNumber;
         }
 
         if (selectedLabel) {
+
             selectedLabel.textContent =
-                "Dente selecionado: " + toothNumber;
+                "Dente selecionado: "
+                + toothNumber
+                + (
+                    excluded
+                        ? " — excluído"
+                        : ""
+                );
         }
 
         if (actionTooth) {
+
             actionTooth.textContent =
                 toothNumber;
         }
 
-        updateToothActions(toothNumber);
-    }
+        if (excludeButton) {
 
-    function updateToothActions(toothNumber) {
-
-        if (!excludeForm || !restoreForm) {
-            return;
+            excludeButton.disabled =
+                excluded;
         }
 
-        const odontograma =
-            excludeForm.dataset.odontograma;
+        if (restoreButton) {
 
-        excludeForm.action =
-            "/odontogramas/"
-            + odontograma
-            + "/dentes/"
-            + toothNumber
-            + "/excluir";
-
-        restoreForm.action =
-            "/odontogramas/"
-            + odontograma
-            + "/dentes/"
-            + toothNumber
-            + "/restaurar";
+            restoreButton.disabled =
+                !excluded;
+        }
     }
 
-    teeth.forEach(function (tooth) {
+    teeth.forEach(
+        function (tooth) {
 
-        tooth.addEventListener(
-            "click",
-            function () {
+            tooth.addEventListener(
+                "click",
+                function () {
 
-                selectTooth(
-                    tooth.dataset.tooth
-                );
-            }
-        );
-    });
+                    selectTooth(
+                        tooth.dataset.tooth
+                    );
+                }
+            );
+        }
+    );
 
     if (toothInput
-        && toothInput.value) {
+            && toothInput.value) {
 
         selectTooth(
             toothInput.value
         );
     }
 
+    if (valueInput
+            && valueInput.value) {
+
+        valueInput.value =
+            formatValue(
+                valueInput.value
+            );
+    }
+
     if (procedureSelect
-        && valueInput) {
+            && valueInput) {
 
         procedureSelect.addEventListener(
             "change",
@@ -118,14 +205,22 @@ document.addEventListener("DOMContentLoaded", function () {
                     selectedOption.dataset.value;
 
                 if (value !== undefined
-                    && value !== null
-                    && value !== "") {
+                        && value !== null
+                        && value !== "") {
 
-                    valueInput.value = value;
+                    valueInput.value =
+                        formatValue(
+                            value
+                        );
                 }
             }
         );
     }
+
+    const excludeForm =
+        document.getElementById(
+            "exclude-tooth-form"
+        );
 
     if (excludeForm) {
 
@@ -133,8 +228,8 @@ document.addEventListener("DOMContentLoaded", function () {
             "submit",
             function (event) {
 
-                if (!toothInput
-                    || !toothInput.value) {
+                if (!excludeInput
+                        || !excludeInput.value) {
 
                     event.preventDefault();
 
@@ -146,14 +241,19 @@ document.addEventListener("DOMContentLoaded", function () {
         );
     }
 
+    const restoreForm =
+        document.getElementById(
+            "restore-tooth-form"
+        );
+
     if (restoreForm) {
 
         restoreForm.addEventListener(
             "submit",
             function (event) {
 
-                if (!toothInput
-                    || !toothInput.value) {
+                if (!restoreInput
+                        || !restoreInput.value) {
 
                     event.preventDefault();
 

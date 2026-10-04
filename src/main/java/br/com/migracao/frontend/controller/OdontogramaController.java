@@ -1,5 +1,6 @@
 package br.com.migracao.frontend.controller;
 
+import br.com.migracao.frontend.client.CaixaClient;
 import br.com.migracao.frontend.client.OdontogramaClient;
 import br.com.migracao.frontend.client.PacienteClient;
 import br.com.migracao.frontend.client.ProcedimentoClient;
@@ -26,14 +27,14 @@ import java.util.List;
 public class OdontogramaController {
 
     private final OdontogramaClient odontogramaClient;
+    private final CaixaClient caixaClient;
     private final PacienteClient pacienteClient;
     private final ProcedimentoClient procedimentoClient;
     private final ObjectMapper objectMapper;
 
     @GetMapping
     public String pacientes(
-            @RequestParam(required = false)
-            String pesquisa,
+            @RequestParam(required = false) String pesquisa,
             Model model
     ) {
         try {
@@ -64,8 +65,7 @@ public class OdontogramaController {
 
     @GetMapping("/paciente/{pacienteCodigo}")
     public String odontogramasPaciente(
-            @PathVariable
-            Integer pacienteCodigo,
+            @PathVariable Integer pacienteCodigo,
             Model model,
             RedirectAttributes redirectAttributes
     ) {
@@ -98,8 +98,7 @@ public class OdontogramaController {
 
     @PostMapping("/paciente/{pacienteCodigo}/novo")
     public String novoOdontograma(
-            @PathVariable
-            Integer pacienteCodigo,
+            @PathVariable Integer pacienteCodigo,
             RedirectAttributes redirectAttributes
     ) {
         try {
@@ -131,12 +130,8 @@ public class OdontogramaController {
 
     @GetMapping("/{codigo}")
     public String detalhe(
-            @PathVariable
-            Integer codigo,
-
-            @RequestParam(required = false)
-            Integer editar,
-
+            @PathVariable Integer codigo,
+            @RequestParam(required = false) Integer editar,
             Model model,
             RedirectAttributes redirectAttributes
     ) {
@@ -227,12 +222,8 @@ public class OdontogramaController {
 
     @PostMapping("/{codigo}/status")
     public String alterarStatus(
-            @PathVariable
-            Integer codigo,
-
-            @RequestParam
-            String status,
-
+            @PathVariable Integer codigo,
+            @RequestParam String status,
             RedirectAttributes redirectAttributes
     ) {
         try {
@@ -259,14 +250,10 @@ public class OdontogramaController {
                 + codigo;
     }
 
-    @PostMapping("/{codigo}/dentes/{dente}/excluir")
+    @PostMapping("/{codigo}/dentes/excluir")
     public String excluirDente(
-            @PathVariable
-            Integer codigo,
-
-            @PathVariable
-            Integer dente,
-
+            @PathVariable Integer codigo,
+            @RequestParam Integer dente,
             RedirectAttributes redirectAttributes
     ) {
         try {
@@ -293,14 +280,10 @@ public class OdontogramaController {
                 + codigo;
     }
 
-    @PostMapping("/{codigo}/dentes/{dente}/restaurar")
+    @PostMapping("/{codigo}/dentes/restaurar")
     public String restaurarDente(
-            @PathVariable
-            Integer codigo,
-
-            @PathVariable
-            Integer dente,
-
+            @PathVariable Integer codigo,
+            @RequestParam Integer dente,
             RedirectAttributes redirectAttributes
     ) {
         try {
@@ -329,12 +312,8 @@ public class OdontogramaController {
 
     @PostMapping("/{codigo}/procedimentos/salvar")
     public String salvarProcedimento(
-            @PathVariable
-            Integer codigo,
-
-            @ModelAttribute
-            OdontogramaProcedimentoForm procedimentoForm,
-
+            @PathVariable Integer codigo,
+            @ModelAttribute OdontogramaProcedimentoForm procedimentoForm,
             RedirectAttributes redirectAttributes
     ) {
         try {
@@ -385,12 +364,8 @@ public class OdontogramaController {
 
     @PostMapping("/{codigo}/procedimentos/{itemCodigo}/excluir")
     public String excluirProcedimento(
-            @PathVariable
-            Integer codigo,
-
-            @PathVariable
-            Integer itemCodigo,
-
+            @PathVariable Integer codigo,
+            @PathVariable Integer itemCodigo,
             RedirectAttributes redirectAttributes
     ) {
         try {
@@ -417,15 +392,13 @@ public class OdontogramaController {
 
     @PostMapping("/{codigo}/procedimentos/{itemCodigo}/concluir")
     public String concluirProcedimento(
-            @PathVariable
-            Integer codigo,
-
-            @PathVariable
-            Integer itemCodigo,
-
+            @PathVariable Integer codigo,
+            @PathVariable Integer itemCodigo,
             RedirectAttributes redirectAttributes
     ) {
         try {
+            caixaClient.buscarAberto();
+
             odontogramaClient.concluirProcedimento(
                     codigo,
                     itemCodigo
@@ -437,9 +410,14 @@ public class OdontogramaController {
             );
 
         } catch (RestClientResponseException exception) {
+            String mensagem =
+                    exception.getStatusCode().value() == 404
+                            ? "Não existe caixa aberto. Abra o caixa antes de concluir o procedimento."
+                            : extrairMensagemErro(exception);
+
             redirectAttributes.addFlashAttribute(
                     "mensagemErro",
-                    extrairMensagemErro(exception)
+                    mensagem
             );
         }
 
@@ -498,6 +476,15 @@ public class OdontogramaController {
                     && !mensagem.asText().isBlank()) {
 
                 return mensagem.asText();
+            }
+
+            JsonNode detalhe =
+                    json.get("detail");
+
+            if (detalhe != null
+                    && !detalhe.asText().isBlank()) {
+
+                return detalhe.asText();
             }
 
         } catch (Exception ignored) {

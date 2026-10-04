@@ -400,3 +400,56 @@
         align-items: stretch;
     }
 }
+
+.odontograma-toast {
+    position: fixed;
+    top: 72px;
+    right: 24px;
+    z-index: 9999;
+    width: min(520px, calc(100vw - 48px));
+    padding: 14px 16px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-sizing: border-box;
+    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
+    font-weight: 600;
+}
+
+.odontograma-toast-success {
+    background: #063b2d;
+    border: 1px solid #15803d;
+    color: #dcfce7;
+}
+
+.odontograma-toast-error {
+    background: #451a1a;
+    border: 1px solid #dc2626;
+    color: #fee2e2;
+}
+
+.odontograma-toast-icon {
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.odontograma-toast-close {
+    margin-left: auto;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+}
+
+@media (max-width: 700px) {
+
+    .odontograma-toast {
+        top: 64px;
+        right: 12px;
+        width: calc(100vw - 24px);
+    }
+}

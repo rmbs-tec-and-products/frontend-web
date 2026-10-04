@@ -66,15 +66,37 @@
         </div>
 
         <div th:if="${mensagemSucesso}"
-             class="feedback feedback-success">
-            <span class="feedback-icon">✓</span>
+             class="odontograma-toast odontograma-toast-success">
+
+            <span class="odontograma-toast-icon">
+                ✓
+            </span>
+
             <span th:text="${mensagemSucesso}"></span>
+
+            <button type="button"
+                    class="odontograma-toast-close"
+                    onclick="this.parentElement.remove()">
+                ×
+            </button>
+
         </div>
 
         <div th:if="${mensagemErro}"
-             class="feedback feedback-error">
-            <span class="feedback-icon">!</span>
+             class="odontograma-toast odontograma-toast-error">
+
+            <span class="odontograma-toast-icon">
+                !
+            </span>
+
             <span th:text="${mensagemErro}"></span>
+
+            <button type="button"
+                    class="odontograma-toast-close"
+                    onclick="this.parentElement.remove()">
+                ×
+            </button>
+
         </div>
 
         <section class="odonto-card status-general-card">
@@ -92,6 +114,7 @@
                   class="status-form">
 
                 <select name="status">
+
                     <option value="EM_ANDAMENTO"
                             th:selected="${odontograma.status == 'EM_ANDAMENTO'}">
                         Em andamento
@@ -106,6 +129,7 @@
                             th:selected="${odontograma.status == 'CANCELADO'}">
                         Cancelado
                     </option>
+
                 </select>
 
                 <button type="submit"
@@ -120,11 +144,15 @@
         <section class="odonto-card">
 
             <div class="section-title">
-                <h2>Odontograma</h2>
+
+                <h2>
+                    Odontograma
+                </h2>
 
                 <p>
                     Clique em um dente para selecioná-lo no formulário.
                 </p>
+
             </div>
 
             <div class="odontogram-legend">
@@ -166,11 +194,15 @@
                                 class="tooth"
                                 th:each="dente : ${dentesSuperioresDireita}"
                                 th:data-tooth="${dente}"
+                                th:data-excluded="${#lists.contains(odontograma.dentesExcluidos, dente)}"
                                 th:classappend="${#lists.contains(odontograma.dentesExcluidos, dente)} ? ' tooth-excluded' : ''">
 
-                            <span class="tooth-shape">🦷</span>
+                            <span class="tooth-shape">
+                                🦷
+                            </span>
 
-                            <strong th:text="${dente}"></strong>
+                            <strong th:text="${dente}">
+                            </strong>
 
                         </button>
 
@@ -182,11 +214,15 @@
                                 class="tooth"
                                 th:each="dente : ${dentesSuperioresEsquerda}"
                                 th:data-tooth="${dente}"
+                                th:data-excluded="${#lists.contains(odontograma.dentesExcluidos, dente)}"
                                 th:classappend="${#lists.contains(odontograma.dentesExcluidos, dente)} ? ' tooth-excluded' : ''">
 
-                            <span class="tooth-shape">🦷</span>
+                            <span class="tooth-shape">
+                                🦷
+                            </span>
 
-                            <strong th:text="${dente}"></strong>
+                            <strong th:text="${dente}">
+                            </strong>
 
                         </button>
 
@@ -194,7 +230,8 @@
 
                 </div>
 
-                <div class="mouth-divider"></div>
+                <div class="mouth-divider">
+                </div>
 
                 <div class="arch">
 
@@ -204,11 +241,15 @@
                                 class="tooth"
                                 th:each="dente : ${dentesInferioresDireita}"
                                 th:data-tooth="${dente}"
+                                th:data-excluded="${#lists.contains(odontograma.dentesExcluidos, dente)}"
                                 th:classappend="${#lists.contains(odontograma.dentesExcluidos, dente)} ? ' tooth-excluded' : ''">
 
-                            <span class="tooth-shape">🦷</span>
+                            <span class="tooth-shape">
+                                🦷
+                            </span>
 
-                            <strong th:text="${dente}"></strong>
+                            <strong th:text="${dente}">
+                            </strong>
 
                         </button>
 
@@ -220,11 +261,15 @@
                                 class="tooth"
                                 th:each="dente : ${dentesInferioresEsquerda}"
                                 th:data-tooth="${dente}"
+                                th:data-excluded="${#lists.contains(odontograma.dentesExcluidos, dente)}"
                                 th:classappend="${#lists.contains(odontograma.dentesExcluidos, dente)} ? ' tooth-excluded' : ''">
 
-                            <span class="tooth-shape">🦷</span>
+                            <span class="tooth-shape">
+                                🦷
+                            </span>
 
-                            <strong th:text="${dente}"></strong>
+                            <strong th:text="${dente}">
+                            </strong>
 
                         </button>
 
@@ -348,59 +393,83 @@
                         <div class="faces-grid">
 
                             <label>
+
                                 <input type="checkbox"
                                        th:field="*{faces}"
                                        value="DISTAL">
+
                                 Distal
+
                             </label>
 
                             <label>
+
                                 <input type="checkbox"
                                        th:field="*{faces}"
                                        value="LINGUAL_PALATAL">
+
                                 Lingual / palatal
+
                             </label>
 
                             <label>
+
                                 <input type="checkbox"
                                        th:field="*{faces}"
                                        value="MESIAL">
+
                                 Mesial
+
                             </label>
 
                             <label>
+
                                 <input type="checkbox"
                                        th:field="*{faces}"
                                        value="VESTIBULAR">
+
                                 Vestibular
+
                             </label>
 
                             <label>
+
                                 <input type="checkbox"
                                        th:field="*{faces}"
                                        value="OCLUSAL">
+
                                 Oclusal
+
                             </label>
 
                             <label>
+
                                 <input type="checkbox"
                                        th:field="*{faces}"
                                        value="RAIZ_MESIO_VESTIBULAR">
+
                                 Raiz mésio-vestibular
+
                             </label>
 
                             <label>
+
                                 <input type="checkbox"
                                        th:field="*{faces}"
                                        value="RAIZ_DISTO_VESTIBULAR">
+
                                 Raiz disto-vestibular
+
                             </label>
 
                             <label>
+
                                 <input type="checkbox"
                                        th:field="*{faces}"
                                        value="RAIZ_PALATINA">
+
                                 Raiz palatina
+
                             </label>
 
                         </div>
@@ -424,12 +493,16 @@
                         <a th:if="${procedimentoForm.codigo != null}"
                            th:href="@{/odontogramas/{codigo}(codigo=${odontograma.codigo})}"
                            class="btn-secondary">
+
                             Cancelar
+
                         </a>
 
                         <button type="submit"
                                 class="btn-primary">
+
                             Salvar
+
                         </button>
 
                     </div>
@@ -441,42 +514,64 @@
             <section class="odonto-card">
 
                 <div class="section-title">
-                    <h2>Dente selecionado</h2>
+
+                    <h2>
+                        Dente selecionado
+                    </h2>
+
                     <p>
                         Excluir ou restaurar um dente inteiro.
                     </p>
+
                 </div>
 
                 <div class="tooth-actions">
 
                     <span>
+
                         Dente:
+
                         <strong id="action-tooth">
                             -
                         </strong>
+
                     </span>
 
                     <form id="exclude-tooth-form"
-                          method="post"
-                          data-base-action="/odontogramas/"
-                          th:data-odontograma="${odontograma.codigo}">
+                          th:action="@{/odontogramas/{codigo}/dentes/excluir(codigo=${odontograma.codigo})}"
+                          method="post">
 
-                        <button type="submit"
+                        <input id="exclude-tooth-input"
+                               type="hidden"
+                               name="dente">
+
+                        <button id="exclude-tooth-button"
+                                type="submit"
                                 class="btn-danger"
+                                disabled
                                 onclick="return confirm('Deseja excluir este dente?')">
+
                             Excluir dente
+
                         </button>
 
                     </form>
 
                     <form id="restore-tooth-form"
-                          method="post"
-                          data-base-action="/odontogramas/"
-                          th:data-odontograma="${odontograma.codigo}">
+                          th:action="@{/odontogramas/{codigo}/dentes/restaurar(codigo=${odontograma.codigo})}"
+                          method="post">
 
-                        <button type="submit"
-                                class="btn-secondary">
+                        <input id="restore-tooth-input"
+                               type="hidden"
+                               name="dente">
+
+                        <button id="restore-tooth-button"
+                                type="submit"
+                                class="btn-secondary"
+                                disabled>
+
                             Restaurar dente
+
                         </button>
 
                     </form>
@@ -490,10 +585,14 @@
         <section class="odonto-card">
 
             <div class="section-title">
-                <h2>Procedimentos</h2>
+
+                <h2>
+                    Procedimentos
+                </h2>
 
                 <p th:text="${#lists.size(odontograma.procedimentos) + ' procedimento(s)'}">
                 </p>
+
             </div>
 
             <div class="table-responsive">
@@ -503,14 +602,39 @@
                     <thead>
 
                     <tr>
-                        <th>Procedimento</th>
-                        <th>Status</th>
-                        <th>Dente</th>
-                        <th>Face</th>
-                        <th>Valor</th>
-                        <th>Observação</th>
-                        <th>Data</th>
-                        <th>Ações</th>
+
+                        <th>
+                            Procedimento
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Dente
+                        </th>
+
+                        <th>
+                            Face
+                        </th>
+
+                        <th>
+                            Valor
+                        </th>
+
+                        <th>
+                            Observação
+                        </th>
+
+                        <th>
+                            Data
+                        </th>
+
+                        <th>
+                            Ações
+                        </th>
+
                     </tr>
 
                     </thead>
@@ -520,27 +644,35 @@
                     <tr th:each="item : ${odontograma.procedimentos}">
 
                         <td>
+
                             <strong th:text="${item.procedimentoNome}">
                             </strong>
+
                         </td>
 
                         <td>
+
                             <span class="procedure-status"
                                   th:classappend="${' status-' + #strings.toLowerCase(item.status)}"
                                   th:text="${item.statusDescricao}">
                             </span>
+
                         </td>
 
                         <td th:text="${item.dente}">
                         </td>
 
-                        <td th:text="${item.face != null && !item.face.isBlank() ? item.face : '-'}">
+                        <td th:text="${item.face != null && !item.face.isBlank()
+                            ? item.face
+                            : '-'}">
                         </td>
 
                         <td th:text="${'R$ ' + #numbers.formatDecimal(item.valor, 1, 'POINT', 2, 'COMMA')}">
                         </td>
 
-                        <td th:text="${item.observacao != null && !item.observacao.isBlank() ? item.observacao : '-'}">
+                        <td th:text="${item.observacao != null && !item.observacao.isBlank()
+                            ? item.observacao
+                            : '-'}">
                         </td>
 
                         <td th:text="${#temporals.format(item.data, 'dd/MM/yyyy HH:mm')}">
@@ -553,7 +685,9 @@
 
                                 <a th:href="@{/odontogramas/{codigo}(codigo=${odontograma.codigo},editar=${item.codigo})}"
                                    class="btn-table-edit">
+
                                     Alterar
+
                                 </a>
 
                                 <form th:action="@{/odontogramas/{codigo}/procedimentos/{itemCodigo}/concluir(
@@ -564,7 +698,9 @@
                                     <button type="submit"
                                             class="btn-table-success"
                                             onclick="return confirm('Concluir este procedimento? Isso irá movimentar estoque e caixa.')">
+
                                         Concluir
+
                                     </button>
 
                                 </form>
@@ -577,7 +713,9 @@
                                     <button type="submit"
                                             class="btn-table-delete"
                                             onclick="return confirm('Deseja excluir este procedimento?')">
+
                                         Excluir
+
                                     </button>
 
                                 </form>
@@ -586,7 +724,9 @@
 
                             <span th:if="${item.status == 'CONCLUIDO'}"
                                   class="completed-label">
+
                                 Concluído
+
                             </span>
 
                         </td>
@@ -598,9 +738,11 @@
                         <td colspan="8">
 
                             <div class="empty-state">
+
                                 <strong>
                                     Nenhum procedimento registrado.
                                 </strong>
+
                             </div>
 
                         </td>
@@ -620,4 +762,5 @@
 </div>
 
 </body>
+
 </html>
