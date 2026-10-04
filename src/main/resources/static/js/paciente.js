@@ -1,38 +1,42 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
-    configurarCampoDependente(
-        "anamnese.algumTratamento",
-        "grupo-tratamento"
-    );
+        configurarCampoDependente(
+            "anamnese.algumTratamento",
+            "grupo-tratamento"
+        );
 
-    configurarCampoDependente(
-        "anamnese.hospitalizado",
-        "grupo-hospitalizado"
-    );
+        configurarCampoDependente(
+            "anamnese.hospitalizado",
+            "grupo-hospitalizado"
+        );
 
-    configurarCampoDependente(
-        "anamnese.tomaMedicamento",
-        "grupo-medicamento"
-    );
+        configurarCampoDependente(
+            "anamnese.tomaMedicamento",
+            "grupo-medicamento"
+        );
 
-    configurarCampoDependente(
-        "anamnese.alergiaMedicamentoAnestesico",
-        "grupo-alergia"
-    );
+        configurarCampoDependente(
+            "anamnese.alergiaMedicamentoAnestesico",
+            "grupo-alergia"
+        );
 
-    configurarCampoDependente(
-        "anamnese.cirurgia",
-        "grupo-cirurgia"
-    );
+        configurarCampoDependente(
+            "anamnese.cirurgia",
+            "grupo-cirurgia"
+        );
 
-    configurarCampoDependente(
-        "anamnese.fumante",
-        "grupo-fumante"
-    );
+        configurarCampoDependente(
+            "anamnese.fumante",
+            "grupo-fumante"
+        );
 
-    configurarToasts();
-    configurarEstadoMaiusculo();
-});
+        configurarToasts();
+        configurarEstadoMaiusculo();
+        configurarAcessoProntuario();
+    }
+);
 
 function configurarCampoDependente(
     nomeCampo,
@@ -52,10 +56,13 @@ function configurarCampoDependente(
     if (!container
             || !radios
             || radios.length === 0) {
+
         return;
     }
 
-    function atualizar(limpar) {
+    function atualizar(
+        limpar
+    ) {
 
         let valorSelecionado =
             null;
@@ -63,6 +70,7 @@ function configurarCampoDependente(
         for (const radio of radios) {
 
             if (radio.checked) {
+
                 valorSelecionado =
                     radio.value;
 
@@ -118,12 +126,17 @@ function configurarCampoDependente(
         radio.addEventListener(
             "change",
             function () {
-                atualizar(true);
+
+                atualizar(
+                    true
+                );
             }
         );
     }
 
-    atualizar(false);
+    atualizar(
+        false
+    );
 }
 
 function configurarToasts() {
@@ -143,6 +156,7 @@ function configurarToasts() {
                 close.addEventListener(
                     "click",
                     function () {
+
                         toast.remove();
                     }
                 );
@@ -152,6 +166,7 @@ function configurarToasts() {
                 function () {
 
                     if (toast.isConnected) {
+
                         toast.remove();
                     }
                 },
@@ -179,7 +194,135 @@ function configurarEstadoMaiusculo() {
             estado.value =
                 estado.value
                     .toUpperCase()
-                    .slice(0, 2);
+                    .slice(
+                        0,
+                        2
+                    );
         }
+    );
+}
+
+function configurarAcessoProntuario() {
+
+    configurarProntuarioNaLista();
+    configurarProntuarioNaEdicao();
+}
+
+function configurarProntuarioNaLista() {
+
+    document.querySelectorAll(
+        ".patient-table tbody tr"
+    ).forEach(
+        function (linha) {
+
+            const codigo =
+                linha.querySelector(
+                    ".patient-code"
+                );
+
+            const acoes =
+                linha.querySelector(
+                    ".table-actions"
+                );
+
+            if (!codigo
+                    || !acoes) {
+
+                return;
+            }
+
+            const pacienteCodigo =
+                codigo.textContent.trim();
+
+            if (!pacienteCodigo) {
+                return;
+            }
+
+            if (acoes.querySelector(
+                ".action-prontuario"
+            )) {
+
+                return;
+            }
+
+            const link =
+                document.createElement(
+                    "a"
+                );
+
+            link.href =
+                "/pacientes/"
+                + encodeURIComponent(
+                    pacienteCodigo
+                )
+                + "/prontuario";
+
+            link.className =
+                "action-link action-edit action-prontuario";
+
+            link.textContent =
+                "Prontuário";
+
+            acoes.insertBefore(
+                link,
+                acoes.firstChild
+            );
+        }
+    );
+}
+
+function configurarProntuarioNaEdicao() {
+
+    const codigo =
+        document.querySelector(
+            'input[name="codigo"]'
+        );
+
+    const header =
+        document.querySelector(
+            ".patient-editor-header"
+        );
+
+    const codigoCard =
+        document.querySelector(
+            ".patient-editor-code"
+        );
+
+    if (!codigo
+            || !codigo.value
+            || !header
+            || !codigoCard) {
+
+        return;
+    }
+
+    if (header.querySelector(
+        ".patient-prontuario-button"
+    )) {
+
+        return;
+    }
+
+    const link =
+        document.createElement(
+            "a"
+        );
+
+    link.href =
+        "/pacientes/"
+        + encodeURIComponent(
+            codigo.value
+        )
+        + "/prontuario";
+
+    link.className =
+        "btn-secondary patient-prontuario-button";
+
+    link.textContent =
+        "Prontuário";
+
+    header.insertBefore(
+        link,
+        codigoCard
     );
 }

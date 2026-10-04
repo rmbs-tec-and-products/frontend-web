@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <title>Prontuário - SysOdonto</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/app.css}">
+
+    <link rel="stylesheet"
+          th:href="@{/css/prontuario.css}">
+
+    <script th:src="@{/js/prontuario.js}"
+            defer></script>
+
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="app-container">
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <main class="content prontuario-page">
+
+        <!-- TOASTS -->
+
+        <div th:if="${mensagemSucesso}"
+             class="prontuario-toast prontuario-toast-success">
+
+            <span class="prontuario-toast-icon">
+                ✓
+            </span>
+
+            <span th:text="${mensagemSucesso}">
+            </span>
+
+            <button type="button"
+                    class="prontuario-toast-close"
+                    aria-label="Fechar">
+
+                ×
+
+            </button>
+
+        </div>
+
+        <div th:if="${mensagemErro}"
+             class="prontuario-toast prontuario-toast-error">
+
+            <span class="prontuario-toast-icon">
+                !
+            </span>
+
+            <span th:text="${mensagemErro}">
+            </span>
+
+            <button type="button"
+                    class="prontuario-toast-close"
+                    aria-label="Fechar">
+
+                ×
+
+            </button>
+
+        </div>
+
+        <!-- CABEÇALHO -->
+
+        <header class="prontuario-header">
+
+            <div>
+
+                <a th:href="@{/pacientes}"
+                   class="back-link">
+
+                    ← Voltar para pacientes
+
+                </a>
+
+                <span class="page-eyebrow">
+                    Histórico documental
+                </span>
+
+                <h1>
+                    Prontuário
+                </h1>
+
+                <p>
+                    Exames, radiografias, fotografias e documentos clínicos do paciente.
+                </p>
+
+            </div>
+
+            <a th:if="${paciente != null}"
+               th:href="@{/pacientes/{codigo}/editar(codigo=${paciente.codigo})}"
+               class="btn-secondary">
+
+                Editar paciente
+
+            </a>
+
+        </header>
+
+        <!-- PACIENTE -->
+
+        <section th:if="${paciente != null}"
+                 class="patient-summary-card">
+
+            <div class="patient-summary-main">
+
+                <div class="patient-summary-avatar"
+                     th:text="${#strings.substring(paciente.nome, 0, 1)}">
+
+                    P
+
+                </div>
+
+                <div class="patient-summary-info">
+
+                    <span class="section-eyebrow">
+                        Paciente
+                    </span>
+
+                    <h2 th:text="${paciente.nome}">
+                    </h2>
+
+                    <div class="patient-summary-meta">
+
+                        <span th:text="${'Código #' + paciente.codigo}">
+                        </span>
+
+                        <span th:if="${paciente.cpf != null && !paciente.cpf.isBlank()}"
+                              th:text="${'CPF ' + paciente.cpf}">
+                        </span>
+
+                        <span th:if="${paciente.celular != null && !paciente.celular.isBlank()}"
+                              th:text="${paciente.celular}">
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="patient-summary-count">
+
+                <span>
+                    Arquivos
+                </span>
+
+                <strong th:text="${arquivos != null ? #lists.size(arquivos) : 0}">
+                    0
+                </strong>
+
+            </div>
+
+        </section>
+
+        <!-- CONTEÚDO -->
+
+        <section th:if="${paciente != null}"
+                 class="prontuario-workspace">
+
+            <!-- UPLOAD -->
+
+            <aside class="upload-card">
+
+                <header class="upload-card-header">
+
+                    <span class="section-eyebrow">
+                        Novo documento
+                    </span>
+
+                    <h2>
+                        Adicionar ao prontuário
+                    </h2>
+
+                    <p>
+                        Anexe exames, imagens, radiografias ou documentos.
+                    </p>
+
+                </header>
+
+                <form th:action="@{/pacientes/{codigo}/prontuario/enviar(codigo=${paciente.codigo})}"
+                      method="post"
+                      enctype="multipart/form-data"
+                      id="upload-form">
+
+                    <div class="field">
+
+                        <label for="titulo">
+                            Título
+                            <span class="required">*</span>
+                        </label>
+
+                        <input id="titulo"
+                               name="titulo"
+                               type="text"
+                               maxlength="150"
+                               required
+                               placeholder="Ex.: Radiografia panorâmica">
+
+                    </div>
+
+                    <div class="field">
+
+                        <label for="descricao">
+                            Observação
+                        </label>
+
+                        <textarea id="descricao"
+                                  name="descricao"
+                                  rows="4"
+                                  maxlength="2000"
+                                  placeholder="Informações sobre o exame ou documento"></textarea>
+
+                    </div>
+
+                    <div class="field">
+
+                        <label>
+                            Arquivo
+                            <span class="required">*</span>
+                        </label>
+
+                        <label class="file-drop"
+                               for="arquivo">
+
+                            <input id="arquivo"
+                                   name="arquivo"
+                                   type="file"
+                                   required
+                                   accept=".pdf,.jpg,.jpeg,.png,.webp,.heic,.heif,application/pdf,image/jpeg,image/png,image/webp,image/heic,image/heif">
+
+                            <span class="file-drop-icon">
+                                ↑
+                            </span>
+
+                            <strong>
+                                Selecionar arquivo
+                            </strong>
+
+                            <small>
+                                PDF, JPG, PNG, WEBP ou HEIC
+                            </small>
+
+                            <small>
+                                Máximo de 20 MB
+                            </small>
+
+                        </label>
+
+                    </div>
+
+                    <div id="selected-file"
+                         class="selected-file">
+
+                        <div class="selected-file-icon">
+                            ▣
+                        </div>
+
+                        <div>
+
+                            <strong id="selected-file-name">
+                            </strong>
+
+                            <span id="selected-file-size">
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <button type="submit"
+                            class="btn-primary upload-button">
+
+                        Adicionar ao prontuário
+
+                    </button>
+
+                </form>
+
+            </aside>
+
+            <!-- HISTÓRICO -->
+
+            <section class="documents-card">
+
+                <header class="documents-header">
+
+                    <div>
+
+                        <span class="section-eyebrow">
+                            Histórico
+                        </span>
+
+                        <h2>
+                            Documentos
+                        </h2>
+
+                        <p th:text="${arquivos != null
+                            ? #lists.size(arquivos) + ' arquivo(s) no prontuário'
+                            : '0 arquivos no prontuário'}">
+                        </p>
+
+                    </div>
+
+                </header>
+
+                <div th:if="${arquivos != null && !#lists.isEmpty(arquivos)}"
+                     class="documents-grid">
+
+                    <article th:each="arquivo : ${arquivos}"
+                             class="document-card">
+
+                        <!-- PREVIEW IMAGEM -->
+
+                        <a th:if="${arquivo.imagemPreview()}"
+                           th:href="@{/pacientes/{pacienteCodigo}/prontuario/{arquivoCodigo}/conteudo(
+                                pacienteCodigo=${paciente.codigo},
+                                arquivoCodigo=${arquivo.codigo}
+                           )}"
+                           target="_blank"
+                           class="document-preview document-preview-image">
+
+                            <img th:src="@{/pacientes/{pacienteCodigo}/prontuario/{arquivoCodigo}/conteudo(
+                                    pacienteCodigo=${paciente.codigo},
+                                    arquivoCodigo=${arquivo.codigo}
+                                )}"
+                                 th:alt="${arquivo.titulo}">
+
+                        </a>
+
+                        <!-- PREVIEW PDF -->
+
+                        <a th:if="${arquivo.pdf()}"
+                           th:href="@{/pacientes/{pacienteCodigo}/prontuario/{arquivoCodigo}/conteudo(
+                                pacienteCodigo=${paciente.codigo},
+                                arquivoCodigo=${arquivo.codigo}
+                           )}"
+                           target="_blank"
+                           class="document-preview document-preview-pdf">
+
+                            <span>
+                                PDF
+                            </span>
+
+                        </a>
+
+                        <!-- OUTROS -->
+
+                        <a th:if="${!arquivo.imagemPreview() && !arquivo.pdf()}"
+                           th:href="@{/pacientes/{pacienteCodigo}/prontuario/{arquivoCodigo}/conteudo(
+                                pacienteCodigo=${paciente.codigo},
+                                arquivoCodigo=${arquivo.codigo}
+                           )}"
+                           target="_blank"
+                           class="document-preview document-preview-file">
+
+                            <span>
+                                ▣
+                            </span>
+
+                            <small th:text="${arquivo.tipoExibicao()}">
+                                Arquivo
+                            </small>
+
+                        </a>
+
+                        <div class="document-body">
+
+                            <div class="document-title-row">
+
+                                <div>
+
+                                    <span class="document-type"
+                                          th:text="${arquivo.tipoExibicao()}">
+                                    </span>
+
+                                    <h3 th:text="${arquivo.titulo}">
+                                    </h3>
+
+                                </div>
+
+                            </div>
+
+                            <p th:if="${arquivo.descricao != null && !arquivo.descricao.isBlank()}"
+                               class="document-description"
+                               th:text="${arquivo.descricao}">
+                            </p>
+
+                            <div class="document-meta">
+
+                                <span th:text="${arquivo.nomeArquivoOriginal}">
+                                </span>
+
+                                <span>
+                                    ·
+                                </span>
+
+                                <span th:text="${arquivo.tamanhoFormatado()}">
+                                </span>
+
+                            </div>
+
+                            <div class="document-date">
+
+                                <span>
+                                    Adicionado em
+                                </span>
+
+                                <strong th:text="${#temporals.format(arquivo.criadoEm, 'dd/MM/yyyy HH:mm')}">
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                        <footer class="document-actions">
+
+                            <a th:href="@{/pacientes/{pacienteCodigo}/prontuario/{arquivoCodigo}/conteudo(
+                                    pacienteCodigo=${paciente.codigo},
+                                    arquivoCodigo=${arquivo.codigo}
+                               )}"
+                               target="_blank"
+                               class="document-action document-action-view">
+
+                                Visualizar
+
+                            </a>
+
+                            <form th:action="@{/pacientes/{pacienteCodigo}/prontuario/{arquivoCodigo}/excluir(
+                                    pacienteCodigo=${paciente.codigo},
+                                    arquivoCodigo=${arquivo.codigo}
+                               )}"
+                                  method="post">
+
+                                <button type="submit"
+                                        class="document-action document-action-delete"
+                                        th:attr="onclick=|return confirm('Deseja realmente excluir &quot;${arquivo.titulo}&quot; do prontuário?')|">
+
+                                    Excluir
+
+                                </button>
+
+                            </form>
+
+                        </footer>
+
+                    </article>
+
+                </div>
+
+                <!-- VAZIO -->
+
+                <div th:if="${arquivos == null || #lists.isEmpty(arquivos)}"
+                     class="prontuario-empty">
+
+                    <div class="prontuario-empty-icon">
+                        ▣
+                    </div>
+
+                    <strong>
+                        Prontuário sem documentos
+                    </strong>
+
+                    <span>
+                        Adicione o primeiro exame, radiografia, fotografia ou PDF deste paciente.
+                    </span>
+
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>
