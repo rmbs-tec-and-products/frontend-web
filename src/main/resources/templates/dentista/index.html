@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <title>Dentistas - SysOdonto</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/app.css}">
+    <link rel="stylesheet"
+          th:href="@{/css/dentista.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="app-container">
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <main class="content dentista-page">
+
+        <div class="page-header">
+
+            <div>
+                <h1>Dentistas</h1>
+
+                <p class="page-subtitle">
+                    Gerencie os profissionais responsáveis pelos atendimentos.
+                </p>
+            </div>
+
+            <a th:if="${modo == 'consultar'}"
+               th:href="@{/dentistas/novo}"
+               class="btn-primary">
+                + Novo dentista
+            </a>
+
+        </div>
+
+        <div th:if="${mensagemSucesso}"
+             class="feedback feedback-success">
+
+            <span class="feedback-icon">✓</span>
+
+            <span th:text="${mensagemSucesso}">
+            </span>
+
+        </div>
+
+        <div th:if="${mensagemErro}"
+             class="feedback feedback-error">
+
+            <span class="feedback-icon">!</span>
+
+            <span th:text="${mensagemErro}">
+            </span>
+
+        </div>
+
+        <div class="dentist-tabs">
+
+            <a th:href="@{/dentistas/novo}"
+               th:classappend="${modo == 'novo'} ? ' active' : ''">
+                Novo
+            </a>
+
+            <a th:href="@{/dentistas}"
+               th:classappend="${modo == 'consultar'} ? ' active' : ''">
+                Consultar
+            </a>
+
+        </div>
+
+        <section th:if="${modo == 'consultar'}">
+
+            <div class="search-card">
+
+                <div class="search-header">
+
+                    <h2>
+                        Consultar dentistas
+                    </h2>
+
+                    <p>
+                        Pesquise pelo nome do profissional.
+                    </p>
+
+                </div>
+
+                <form method="get"
+                      th:action="@{/dentistas}"
+                      class="search-form">
+
+                    <div class="search-input-wrapper">
+
+                        <span class="search-icon">⌕</span>
+
+                        <input
+                                name="pesquisa"
+                                type="text"
+                                th:value="${pesquisa}"
+                                placeholder="Digite o nome do dentista...">
+
+                    </div>
+
+                    <button
+                            type="submit"
+                            class="btn-primary">
+                        Pesquisar
+                    </button>
+
+                    <a th:if="${pesquisa != null and !pesquisa.isBlank()}"
+                       th:href="@{/dentistas}"
+                       class="btn-secondary">
+                        Limpar
+                    </a>
+
+                </form>
+
+            </div>
+
+            <div class="table-card">
+
+                <div class="table-header">
+
+                    <div>
+
+                        <h2>Dentistas</h2>
+
+                        <span class="result-count"
+                              th:text="${#lists.size(dentistas) + ' dentista(s) encontrado(s)'}">
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="table-responsive">
+
+                    <table class="dentist-table">
+
+                        <thead>
+
+                        <tr>
+
+                            <th class="column-code">
+                                Código
+                            </th>
+
+                            <th>
+                                Nome
+                            </th>
+
+                            <th class="column-actions">
+                                Ações
+                            </th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                        <tr th:each="dentista : ${dentistas}">
+
+                            <td>
+
+                                <span class="dentist-code"
+                                      th:text="${dentista.codigo}">
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <a th:href="@{/dentistas/{codigo}/editar(codigo=${dentista.codigo})}"
+                                   class="dentist-name"
+                                   th:text="${dentista.nome}">
+                                </a>
+
+                            </td>
+
+                            <td>
+
+                                <div class="table-actions">
+
+                                    <a th:href="@{/dentistas/{codigo}/editar(codigo=${dentista.codigo})}"
+                                       class="btn-table-edit">
+                                        Editar
+                                    </a>
+
+                                    <form th:action="@{/dentistas/{codigo}/excluir(codigo=${dentista.codigo})}"
+                                          method="post">
+
+                                        <button
+                                                type="submit"
+                                                class="btn-table-delete"
+                                                onclick="return confirm('Deseja realmente excluir este dentista?')">
+                                            Excluir
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(dentistas)}">
+
+                            <td colspan="3">
+
+                                <div class="empty-state">
+
+                                    <div class="empty-icon">
+                                        ⌕
+                                    </div>
+
+                                    <strong>
+                                        Nenhum dentista encontrado
+                                    </strong>
+
+                                    <span>
+                                        Tente pesquisar utilizando outro nome.
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <section th:if="${modo == 'novo'}">
+
+            <div class="edit-status"
+                 th:if="${dentistaForm.codigo != null}">
+
+                <span>
+                    Editando dentista
+                </span>
+
+                <strong th:text="${'#' + dentistaForm.codigo}">
+                </strong>
+
+            </div>
+
+            <form th:action="@{/dentistas/salvar}"
+                  th:object="${dentistaForm}"
+                  method="post">
+
+                <input
+                        type="hidden"
+                        th:field="*{codigo}">
+
+                <section class="form-card">
+
+                    <div class="section-header">
+
+                        <div class="section-number">
+                            1
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Dados do dentista
+                            </h2>
+
+                            <p>
+                                Informe o nome do profissional.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="dentist-grid">
+
+                        <div class="field">
+
+                            <label for="nome">
+                                Nome
+                                <span class="required">*</span>
+                            </label>
+
+                            <input
+                                    id="nome"
+                                    type="text"
+                                    th:field="*{nome}"
+                                    maxlength="100"
+                                    required
+                                    placeholder="Ex.: Dr. João Silva">
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <div class="form-action-bar">
+
+                    <span class="required-info">
+
+                        <span class="required">*</span>
+                        Campos obrigatórios
+
+                    </span>
+
+                    <div class="form-action-buttons">
+
+                        <a th:href="@{/dentistas}"
+                           class="btn-secondary">
+                            Cancelar
+                        </a>
+
+                        <button
+                                type="submit"
+                                class="btn-primary"
+                                th:text="${dentistaForm.codigo == null
+                                    ? 'Cadastrar dentista'
+                                    : 'Salvar alterações'}">
+                            Salvar
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>
