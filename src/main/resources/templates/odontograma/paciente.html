@@ -113,86 +113,52 @@
 
         </div>
 
-        <section class="dentition-selector">
+        <!-- PRIMEIRO ODONTOGRAMA -->
 
-            <button type="button"
-                    class="dentition-tab active"
-                    data-dentition-tab="adulto">
+        <section th:if="${#lists.isEmpty(odontogramasAdultos) && #lists.isEmpty(odontogramasPediatricos)}"
+                 class="first-odontogram">
 
-                <span class="dentition-tab-icon">
-                    32
+            <header class="first-odontogram-header">
+
+                <span class="section-eyebrow">
+                    Primeiro odontograma
                 </span>
 
-                <span>
+                <h2>
+                    Qual dentição deseja registrar?
+                </h2>
 
-                    <strong>
-                        Dentição permanente
-                    </strong>
+                <p>
+                    Escolha o tipo de odontograma adequado ao paciente.
+                </p>
 
-                    <small>
-                        Odontograma adulto
-                    </small>
+            </header>
 
-                </span>
+            <div class="first-odontogram-options">
 
-                <span class="dentition-count"
-                      th:text="${#lists.size(odontogramasAdultos)}">
-                    0
-                </span>
+                <article class="first-odontogram-option">
 
-            </button>
+                    <div class="first-odontogram-number">
+                        32
+                    </div>
 
-            <button type="button"
-                    class="dentition-tab"
-                    data-dentition-tab="pediatrico">
-
-                <span class="dentition-tab-icon">
-                    20
-                </span>
-
-                <span>
-
-                    <strong>
-                        Dentição decídua
-                    </strong>
-
-                    <small>
-                        Odontograma pediátrico
-                    </small>
-
-                </span>
-
-                <span class="dentition-count"
-                      th:text="${#lists.size(odontogramasPediatricos)}">
-                    0
-                </span>
-
-            </button>
-
-        </section>
-
-        <!-- ADULTO -->
-
-        <section class="dentition-panel active"
-                 data-dentition-panel="adulto">
-
-            <section class="odontogram-history-card">
-
-                <header class="odontogram-history-header">
-
-                    <div>
+                    <div class="first-odontogram-content">
 
                         <span class="section-eyebrow">
                             Dentição permanente
                         </span>
 
-                        <h2>
+                        <h3>
                             Odontograma adulto
-                        </h2>
+                        </h3>
 
                         <p>
-                            Dentição permanente composta por 32 dentes.
+                            Utiliza os 32 dentes permanentes, numerados de 11 a 48.
                         </p>
+
+                        <div class="dentition-preview">
+                            18–11 · 21–28 · 38–31 · 41–48
+                        </div>
 
                     </div>
 
@@ -200,144 +166,39 @@
                           method="post">
 
                         <button type="submit"
-                                class="btn-primary">
+                                class="btn-primary first-odontogram-button">
 
-                            + Novo odontograma adulto
+                            Criar odontograma adulto
 
                         </button>
 
                     </form>
 
-                </header>
+                </article>
 
-                <div class="table-responsive">
+                <article class="first-odontogram-option first-odontogram-option-child">
 
-                    <table class="odonto-table">
+                    <div class="first-odontogram-number">
+                        20
+                    </div>
 
-                        <thead>
-
-                        <tr>
-                            <th>Data</th>
-                            <th>Tipo</th>
-                            <th>Status</th>
-                            <th>Valor pendente</th>
-                            <th class="column-actions">
-                                Ação
-                            </th>
-                        </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                        <tr th:each="odontograma : ${odontogramasAdultos}">
-
-                            <td>
-
-                                <div class="odontogram-date">
-
-                                    <strong th:text="${#temporals.format(odontograma.data, 'dd/MM/yyyy')}">
-                                    </strong>
-
-                                    <small th:text="${#temporals.format(odontograma.data, 'HH:mm')}">
-                                    </small>
-
-                                </div>
-
-                            </td>
-
-                            <td>
-
-                                <span class="dentition-badge dentition-badge-adult">
-                                    Permanente
-                                </span>
-
-                            </td>
-
-                            <td>
-
-                                <span class="status-badge"
-                                      th:text="${odontograma.statusDescricao}">
-                                </span>
-
-                            </td>
-
-                            <td>
-
-                                <strong th:text="${'R$ ' + #numbers.formatDecimal(odontograma.valor, 1, 'POINT', 2, 'COMMA')}">
-                                </strong>
-
-                            </td>
-
-                            <td>
-
-                                <a class="btn-table-view"
-                                   th:href="@{/odontogramas/{codigo}(codigo=${odontograma.codigo})}">
-
-                                    Abrir odontograma
-
-                                </a>
-
-                            </td>
-
-                        </tr>
-
-                        <tr th:if="${#lists.isEmpty(odontogramasAdultos)}">
-
-                            <td colspan="5">
-
-                                <div class="dentition-empty">
-
-                                    <div class="dentition-empty-icon">
-                                        32
-                                    </div>
-
-                                    <strong>
-                                        Nenhum odontograma adulto
-                                    </strong>
-
-                                    <span>
-                                        Este paciente ainda não possui histórico de dentição permanente.
-                                    </span>
-
-                                </div>
-
-                            </td>
-
-                        </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </section>
-
-        </section>
-
-        <!-- PEDIÁTRICO -->
-
-        <section class="dentition-panel"
-                 data-dentition-panel="pediatrico">
-
-            <section class="odontogram-history-card">
-
-                <header class="odontogram-history-header">
-
-                    <div>
+                    <div class="first-odontogram-content">
 
                         <span class="section-eyebrow">
                             Dentição decídua
                         </span>
 
-                        <h2>
+                        <h3>
                             Odontograma pediátrico
-                        </h2>
+                        </h3>
 
                         <p>
-                            Dentição infantil composta por 20 dentes decíduos.
+                            Utiliza os 20 dentes decíduos da dentição infantil.
                         </p>
+
+                        <div class="dentition-preview">
+                            55–51 · 61–65 · 75–71 · 81–85
+                        </div>
 
                     </div>
 
@@ -345,117 +206,383 @@
                           method="post">
 
                         <button type="submit"
-                                class="btn-primary">
+                                class="btn-primary first-odontogram-button">
 
-                            + Novo odontograma pediátrico
+                            Criar odontograma pediátrico
 
                         </button>
 
                     </form>
 
-                </header>
+                </article>
 
-                <div class="table-responsive">
+            </div>
 
-                    <table class="odonto-table">
+            <div class="first-odontogram-note">
 
-                        <thead>
+                <strong>
+                    Importante
+                </strong>
 
-                        <tr>
-                            <th>Data</th>
-                            <th>Tipo</th>
-                            <th>Status</th>
-                            <th>Valor pendente</th>
-                            <th class="column-actions">
-                                Ação
-                            </th>
-                        </tr>
+                <span>
+                    O tipo pertence ao odontograma, não ao paciente. O mesmo paciente poderá possuir históricos de dentição permanente e decídua.
+                </span>
 
-                        </thead>
+            </div>
 
-                        <tbody>
+        </section>
 
-                        <tr th:each="odontograma : ${odontogramasPediatricos}">
+        <!-- HISTÓRICO EXISTENTE -->
 
-                            <td>
+        <section th:if="${!#lists.isEmpty(odontogramasAdultos) || !#lists.isEmpty(odontogramasPediatricos)}">
 
-                                <div class="odontogram-date">
+            <section class="dentition-selector"
+                     th:attr="data-adult-count=${#lists.size(odontogramasAdultos)},
+                              data-child-count=${#lists.size(odontogramasPediatricos)}">
 
-                                    <strong th:text="${#temporals.format(odontograma.data, 'dd/MM/yyyy')}">
-                                    </strong>
+                <button type="button"
+                        class="dentition-tab"
+                        data-dentition-tab="adulto">
 
-                                    <small th:text="${#temporals.format(odontograma.data, 'HH:mm')}">
-                                    </small>
+                    <span class="dentition-tab-icon">
+                        32
+                    </span>
 
-                                </div>
+                    <span>
 
-                            </td>
+                        <strong>
+                            Dentição permanente
+                        </strong>
 
-                            <td>
+                        <small>
+                            Odontograma adulto
+                        </small>
 
-                                <span class="dentition-badge dentition-badge-child">
-                                    Decídua
-                                </span>
+                    </span>
 
-                            </td>
+                    <span class="dentition-count"
+                          th:text="${#lists.size(odontogramasAdultos)}">
+                        0
+                    </span>
 
-                            <td>
+                </button>
 
-                                <span class="status-badge"
-                                      th:text="${odontograma.statusDescricao}">
-                                </span>
+                <button type="button"
+                        class="dentition-tab"
+                        data-dentition-tab="pediatrico">
 
-                            </td>
+                    <span class="dentition-tab-icon">
+                        20
+                    </span>
 
-                            <td>
+                    <span>
 
-                                <strong th:text="${'R$ ' + #numbers.formatDecimal(odontograma.valor, 1, 'POINT', 2, 'COMMA')}">
-                                </strong>
+                        <strong>
+                            Dentição decídua
+                        </strong>
 
-                            </td>
+                        <small>
+                            Odontograma pediátrico
+                        </small>
 
-                            <td>
+                    </span>
 
-                                <a class="btn-table-view"
-                                   th:href="@{/odontogramas/{codigo}(codigo=${odontograma.codigo})}">
+                    <span class="dentition-count"
+                          th:text="${#lists.size(odontogramasPediatricos)}">
+                        0
+                    </span>
 
-                                    Abrir odontograma
+                </button>
 
-                                </a>
+            </section>
 
-                            </td>
+            <!-- ADULTO -->
 
-                        </tr>
+            <section class="dentition-panel"
+                     data-dentition-panel="adulto">
 
-                        <tr th:if="${#lists.isEmpty(odontogramasPediatricos)}">
+                <section class="odontogram-history-card">
 
-                            <td colspan="5">
+                    <header class="odontogram-history-header">
 
-                                <div class="dentition-empty">
+                        <div>
 
-                                    <div class="dentition-empty-icon">
-                                        20
+                            <span class="section-eyebrow">
+                                Dentição permanente
+                            </span>
+
+                            <h2>
+                                Odontograma adulto
+                            </h2>
+
+                            <p>
+                                Histórico da dentição permanente.
+                            </p>
+
+                        </div>
+
+                        <form th:action="@{/odontogramas/paciente/{codigo}/novo(codigo=${paciente.codigo})}"
+                              method="post">
+
+                            <button type="submit"
+                                    class="btn-primary">
+
+                                + Novo odontograma adulto
+
+                            </button>
+
+                        </form>
+
+                    </header>
+
+                    <div class="table-responsive">
+
+                        <table class="odonto-table">
+
+                            <thead>
+
+                            <tr>
+                                <th>Data</th>
+                                <th>Dentição</th>
+                                <th>Status</th>
+                                <th>Valor pendente</th>
+                                <th class="column-actions">
+                                    Ação
+                                </th>
+                            </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                            <tr th:each="odontograma : ${odontogramasAdultos}">
+
+                                <td>
+
+                                    <div class="odontogram-date">
+
+                                        <strong th:text="${#temporals.format(odontograma.data, 'dd/MM/yyyy')}">
+                                        </strong>
+
+                                        <small th:text="${#temporals.format(odontograma.data, 'HH:mm')}">
+                                        </small>
+
                                     </div>
 
-                                    <strong>
-                                        Nenhum odontograma pediátrico
-                                    </strong>
+                                </td>
 
-                                    <span>
-                                        Este paciente ainda não possui histórico de dentição decídua.
+                                <td>
+
+                                    <span class="dentition-badge dentition-badge-adult">
+                                        Permanente
                                     </span>
 
-                                </div>
+                                </td>
 
-                            </td>
+                                <td>
 
-                        </tr>
+                                    <span class="status-badge"
+                                          th:text="${odontograma.statusDescricao}">
+                                    </span>
 
-                        </tbody>
+                                </td>
 
-                    </table>
+                                <td>
 
-                </div>
+                                    <strong th:text="${'R$ ' + #numbers.formatDecimal(odontograma.valor, 1, 'POINT', 2, 'COMMA')}">
+                                    </strong>
+
+                                </td>
+
+                                <td>
+
+                                    <a class="btn-table-view"
+                                       th:href="@{/odontogramas/{codigo}(codigo=${odontograma.codigo})}">
+
+                                        Abrir odontograma
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                            <tr th:if="${#lists.isEmpty(odontogramasAdultos)}">
+
+                                <td colspan="5">
+
+                                    <div class="dentition-empty">
+
+                                        <div class="dentition-empty-icon">
+                                            32
+                                        </div>
+
+                                        <strong>
+                                            Nenhum odontograma adulto
+                                        </strong>
+
+                                        <span>
+                                            Este paciente ainda não possui histórico de dentição permanente.
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+
+            </section>
+
+            <!-- PEDIÁTRICO -->
+
+            <section class="dentition-panel"
+                     data-dentition-panel="pediatrico">
+
+                <section class="odontogram-history-card">
+
+                    <header class="odontogram-history-header">
+
+                        <div>
+
+                            <span class="section-eyebrow">
+                                Dentição decídua
+                            </span>
+
+                            <h2>
+                                Odontograma pediátrico
+                            </h2>
+
+                            <p>
+                                Histórico da dentição infantil.
+                            </p>
+
+                        </div>
+
+                        <form th:action="@{/odontogramas/paciente/{codigo}/novo-pediatrico(codigo=${paciente.codigo})}"
+                              method="post">
+
+                            <button type="submit"
+                                    class="btn-primary">
+
+                                + Novo odontograma pediátrico
+
+                            </button>
+
+                        </form>
+
+                    </header>
+
+                    <div class="table-responsive">
+
+                        <table class="odonto-table">
+
+                            <thead>
+
+                            <tr>
+                                <th>Data</th>
+                                <th>Dentição</th>
+                                <th>Status</th>
+                                <th>Valor pendente</th>
+                                <th class="column-actions">
+                                    Ação
+                                </th>
+                            </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                            <tr th:each="odontograma : ${odontogramasPediatricos}">
+
+                                <td>
+
+                                    <div class="odontogram-date">
+
+                                        <strong th:text="${#temporals.format(odontograma.data, 'dd/MM/yyyy')}">
+                                        </strong>
+
+                                        <small th:text="${#temporals.format(odontograma.data, 'HH:mm')}">
+                                        </small>
+
+                                    </div>
+
+                                </td>
+
+                                <td>
+
+                                    <span class="dentition-badge dentition-badge-child">
+                                        Decídua
+                                    </span>
+
+                                </td>
+
+                                <td>
+
+                                    <span class="status-badge"
+                                          th:text="${odontograma.statusDescricao}">
+                                    </span>
+
+                                </td>
+
+                                <td>
+
+                                    <strong th:text="${'R$ ' + #numbers.formatDecimal(odontograma.valor, 1, 'POINT', 2, 'COMMA')}">
+                                    </strong>
+
+                                </td>
+
+                                <td>
+
+                                    <a class="btn-table-view"
+                                       th:href="@{/odontogramas/{codigo}(codigo=${odontograma.codigo})}">
+
+                                        Abrir odontograma
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                            <tr th:if="${#lists.isEmpty(odontogramasPediatricos)}">
+
+                                <td colspan="5">
+
+                                    <div class="dentition-empty">
+
+                                        <div class="dentition-empty-icon">
+                                            20
+                                        </div>
+
+                                        <strong>
+                                            Nenhum odontograma pediátrico
+                                        </strong>
+
+                                        <span>
+                                            Este paciente ainda não possui histórico de dentição decídua.
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
 
             </section>
 

@@ -2,6 +2,11 @@ document.addEventListener(
     "DOMContentLoaded",
     function () {
 
+        const selector =
+            document.querySelector(
+                ".dentition-selector"
+            );
+
         const tabs =
             document.querySelectorAll(
                 "[data-dentition-tab]"
@@ -12,11 +17,22 @@ document.addEventListener(
                 "[data-dentition-panel]"
             );
 
-        if (!tabs.length
+        if (!selector
+                || !tabs.length
                 || !panels.length) {
 
             return;
         }
+
+        const adultos =
+            Number(
+                selector.dataset.adultCount || 0
+            );
+
+        const pediatricos =
+            Number(
+                selector.dataset.childCount || 0
+            );
 
         function abrir(
             tipo
@@ -63,17 +79,38 @@ document.addEventListener(
             }
         );
 
-        const salva =
-            sessionStorage.getItem(
-                "sysodonto-odontograma-denticao"
-            );
+        let inicial =
+            "adulto";
 
-        if (salva === "adulto"
-                || salva === "pediatrico") {
+        if (adultos === 0
+                && pediatricos > 0) {
 
-            abrir(
-                salva
-            );
+            inicial =
+                "pediatrico";
+
+        } else if (adultos > 0
+                && pediatricos === 0) {
+
+            inicial =
+                "adulto";
+
+        } else {
+
+            const salvo =
+                sessionStorage.getItem(
+                    "sysodonto-odontograma-denticao"
+                );
+
+            if (salvo === "adulto"
+                    || salvo === "pediatrico") {
+
+                inicial =
+                    salvo;
+            }
         }
+
+        abrir(
+            inicial
+        );
     }
 );
