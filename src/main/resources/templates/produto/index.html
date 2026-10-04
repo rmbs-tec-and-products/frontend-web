@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <title>Produtos - SysOdonto</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/app.css}">
+    <link rel="stylesheet"
+          th:href="@{/css/produto.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="app-container">
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <main class="content produto-page">
+
+        <div class="page-header">
+
+            <div>
+                <h1>Produtos</h1>
+
+                <p class="page-subtitle">
+                    Gerencie materiais, estoque, valores e fornecedores.
+                </p>
+            </div>
+
+            <a th:if="${modo == 'consultar'}"
+               th:href="@{/produtos/novo}"
+               class="btn-primary">
+                + Novo produto
+            </a>
+
+        </div>
+
+        <div th:if="${mensagemSucesso}"
+             class="feedback feedback-success">
+
+            <span class="feedback-icon">✓</span>
+
+            <span th:text="${mensagemSucesso}">
+            </span>
+
+        </div>
+
+        <div th:if="${mensagemErro}"
+             class="feedback feedback-error">
+
+            <span class="feedback-icon">!</span>
+
+            <span th:text="${mensagemErro}">
+            </span>
+
+        </div>
+
+        <div class="product-tabs">
+
+            <a th:href="@{/produtos/novo}"
+               th:classappend="${modo == 'novo'} ? ' active' : ''">
+                Novo
+            </a>
+
+            <a th:href="@{/produtos}"
+               th:classappend="${modo == 'consultar'} ? ' active' : ''">
+                Consultar
+            </a>
+
+        </div>
+
+        <!-- CONSULTA -->
+
+        <section th:if="${modo == 'consultar'}">
+
+            <div class="search-card">
+
+                <div class="search-header">
+
+                    <h2>Consultar produtos</h2>
+
+                    <p>
+                        Pesquise por produto, descrição ou fornecedor.
+                    </p>
+
+                </div>
+
+                <form method="get"
+                      th:action="@{/produtos}"
+                      class="search-form">
+
+                    <div class="search-input-wrapper">
+
+                        <span class="search-icon">⌕</span>
+
+                        <input
+                                name="pesquisa"
+                                type="text"
+                                th:value="${pesquisa}"
+                                placeholder="Nome, descrição ou fornecedor...">
+
+                    </div>
+
+                    <button
+                            type="submit"
+                            class="btn-primary">
+                        Pesquisar
+                    </button>
+
+                    <a th:if="${pesquisa != null and !pesquisa.isBlank()}"
+                       th:href="@{/produtos}"
+                       class="btn-secondary">
+                        Limpar
+                    </a>
+
+                </form>
+
+            </div>
+
+            <div class="table-card">
+
+                <div class="table-header">
+
+                    <div>
+
+                        <h2>Produtos</h2>
+
+                        <span class="result-count"
+                              th:text="${#lists.size(produtos) + ' produto(s) encontrado(s)'}">
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="table-responsive">
+
+                    <table class="product-table">
+
+                        <thead>
+
+                        <tr>
+
+                            <th class="column-code">
+                                Código
+                            </th>
+
+                            <th>
+                                Produto
+                            </th>
+
+                            <th>
+                                Estoque
+                            </th>
+
+                            <th>
+                                Unidade
+                            </th>
+
+                            <th>
+                                Mínimo
+                            </th>
+
+                            <th>
+                                Valor
+                            </th>
+
+                            <th>
+                                Fornecedor
+                            </th>
+
+                            <th class="column-actions">
+                                Ações
+                            </th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                        <tr th:each="produto : ${produtos}">
+
+                            <td>
+
+                                <span class="product-code"
+                                      th:text="${produto.codigo}">
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <a th:href="@{/produtos/{codigo}/editar(codigo=${produto.codigo})}"
+                                   class="product-name"
+                                   th:text="${produto.nome}">
+                                </a>
+
+                                <div class="product-description"
+                                     th:if="${produto.descricao != null && !produto.descricao.isBlank()}"
+                                     th:text="${produto.descricao}">
+                                </div>
+
+                            </td>
+
+                            <td>
+
+                                <span th:text="${produto.quantidade}">
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span th:text="${produto.unidade != null && !produto.unidade.isBlank()
+                                    ? produto.unidade
+                                    : '-'}">
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span th:text="${produto.quantidadeMinima != null
+                                    ? produto.quantidadeMinima
+                                    : '-'}">
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span th:text="${produto.valor != null
+                                    ? 'R$ ' + #numbers.formatDecimal(produto.valor, 1, 'POINT', 2, 'COMMA')
+                                    : '-'}">
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span th:text="${produto.fornecedorNome != null
+                                    ? produto.fornecedorNome
+                                    : 'Sem fornecedor'}"
+                                      th:classappend="${produto.fornecedorNome == null
+                                        ? ' no-supplier'
+                                        : ''}">
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <div class="table-actions">
+
+                                    <a th:href="@{/produtos/{codigo}/editar(codigo=${produto.codigo})}"
+                                       class="btn-table-edit">
+                                        Editar
+                                    </a>
+
+                                    <form th:action="@{/produtos/{codigo}/excluir(codigo=${produto.codigo})}"
+                                          method="post">
+
+                                        <button
+                                                type="submit"
+                                                class="btn-table-delete"
+                                                onclick="return confirm('Deseja realmente excluir este produto?')">
+                                            Excluir
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(produtos)}">
+
+                            <td colspan="8">
+
+                                <div class="empty-state">
+
+                                    <div class="empty-icon">
+                                        ⌕
+                                    </div>
+
+                                    <strong>
+                                        Nenhum produto encontrado
+                                    </strong>
+
+                                    <span>
+                                        Tente pesquisar utilizando outro termo.
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- CADASTRO / EDIÇÃO -->
+
+        <section th:if="${modo == 'novo'}">
+
+            <div class="edit-status"
+                 th:if="${produtoForm.codigo != null}">
+
+                <span>Editando produto</span>
+
+                <strong th:text="${'#' + produtoForm.codigo}">
+                </strong>
+
+            </div>
+
+            <form
+                    th:action="@{/produtos/salvar}"
+                    th:object="${produtoForm}"
+                    method="post">
+
+                <input
+                        type="hidden"
+                        th:field="*{codigo}">
+
+                <section class="form-card">
+
+                    <div class="section-header">
+
+                        <div class="section-number">
+                            1
+                        </div>
+
+                        <div>
+                            <h2>Identificação</h2>
+
+                            <p>
+                                Dados principais do produto.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="product-main-grid">
+
+                        <div class="field">
+
+                            <label for="nome">
+                                Nome
+                                <span class="required">*</span>
+                            </label>
+
+                            <input
+                                    id="nome"
+                                    type="text"
+                                    th:field="*{nome}"
+                                    maxlength="100"
+                                    required
+                                    placeholder="Ex.: Resina Composta A2">
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="unidade">
+                                Unidade
+                                <span class="required">*</span>
+                            </label>
+
+                            <input
+                                    id="unidade"
+                                    type="text"
+                                    th:field="*{unidade}"
+                                    maxlength="100"
+                                    required
+                                    placeholder="Ex.: Unidade, Caixa, Frasco">
+
+                        </div>
+
+                    </div>
+
+                    <div class="field description-field">
+
+                        <label for="descricao">
+                            Descrição
+                        </label>
+
+                        <textarea
+                                id="descricao"
+                                th:field="*{descricao}"
+                                rows="3"
+                                placeholder="Descrição do produto"></textarea>
+
+                    </div>
+
+                </section>
+
+                <section class="form-card">
+
+                    <div class="section-header">
+
+                        <div class="section-number">
+                            2
+                        </div>
+
+                        <div>
+                            <h2>Estoque e embalagem</h2>
+
+                            <p>
+                                Controle as quantidades disponíveis e estoque mínimo.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="stock-grid">
+
+                        <div class="field">
+
+                            <label for="quantidade">
+                                Quantidade
+                                <span class="required">*</span>
+                            </label>
+
+                            <input
+                                    id="quantidade"
+                                    type="number"
+                                    min="0"
+                                    th:field="*{quantidade}"
+                                    required>
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="quantidadeMinima">
+                                Quantidade mínima
+                            </label>
+
+                            <input
+                                    id="quantidadeMinima"
+                                    type="number"
+                                    min="0"
+                                    th:field="*{quantidadeMinima}">
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="embalagem">
+                                Embalagem
+                            </label>
+
+                            <input
+                                    id="embalagem"
+                                    type="number"
+                                    min="0"
+                                    th:field="*{embalagem}">
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="qtdEmbalagem">
+                                Qtd. por embalagem
+                            </label>
+
+                            <input
+                                    id="qtdEmbalagem"
+                                    type="number"
+                                    min="0"
+                                    th:field="*{qtdEmbalagem}">
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <section class="form-card">
+
+                    <div class="section-header">
+
+                        <div class="section-number">
+                            3
+                        </div>
+
+                        <div>
+                            <h2>Valores e fornecedor</h2>
+
+                            <p>
+                                Dados comerciais e fornecedor responsável.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="commercial-grid">
+
+                        <div class="field">
+
+                            <label for="valor">
+                                Valor
+                            </label>
+
+                            <input
+                                    id="valor"
+                                    type="number"
+                                    min="0"
+                                    step="0.01"
+                                    th:field="*{valor}"
+                                    placeholder="0,00">
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="ultimoValor">
+                                Último valor
+                            </label>
+
+                            <input
+                                    id="ultimoValor"
+                                    type="number"
+                                    min="0"
+                                    step="0.01"
+                                    th:field="*{ultimoValor}"
+                                    placeholder="0,00">
+
+                        </div>
+
+                        <div class="field supplier-field">
+
+                            <label for="fornecedorCodigo">
+                                Fornecedor
+                            </label>
+
+                            <select
+                                    id="fornecedorCodigo"
+                                    th:field="*{fornecedorCodigo}">
+
+                                <option value="">
+                                    Sem fornecedor
+                                </option>
+
+                                <option
+                                        th:each="fornecedor : ${fornecedores}"
+                                        th:value="${fornecedor.codigo}"
+                                        th:text="${fornecedor.nome}">
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <div class="form-action-bar">
+
+                    <span class="required-info">
+
+                        <span class="required">*</span>
+                        Campos obrigatórios
+
+                    </span>
+
+                    <div class="form-action-buttons">
+
+                        <a th:href="@{/produtos}"
+                           class="btn-secondary">
+                            Cancelar
+                        </a>
+
+                        <button
+                                type="submit"
+                                class="btn-primary"
+                                th:text="${produtoForm.codigo == null
+                                    ? 'Cadastrar produto'
+                                    : 'Salvar alterações'}">
+                            Salvar
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

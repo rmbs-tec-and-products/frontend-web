@@ -1,21 +1,13 @@
 /* ==========================================================
-   PACIENTE
+   FORNECEDOR
 ========================================================== */
 
-.paciente-page {
+.fornecedor-page {
     max-width: 1500px;
     margin: 0 auto;
     width: auto;
     min-width: 0;
 }
-
-.patient-form {
-    padding-bottom: 20px;
-}
-
-/* ==========================================================
-   CABEÇALHO
-========================================================== */
 
 .page-header {
     display: flex;
@@ -28,7 +20,6 @@
 .page-header h1 {
     margin: 0;
     font-size: 28px;
-    line-height: 1.2;
 }
 
 .page-subtitle {
@@ -53,10 +44,6 @@
     font-weight: 600;
     text-decoration: none;
     cursor: pointer;
-    transition:
-            background 0.15s,
-            border-color 0.15s,
-            box-shadow 0.15s;
 }
 
 .btn-primary {
@@ -67,7 +54,6 @@
 
 .btn-primary:hover {
     background: var(--primary-hover);
-    border-color: var(--primary-hover);
 }
 
 .btn-secondary {
@@ -111,32 +97,24 @@
     color: #86efac;
 }
 
-.feedback-success .feedback-icon {
-    background: rgba(34, 197, 94, 0.18);
-}
-
 .feedback-error {
     background: var(--danger-soft);
     border: 1px solid rgba(239, 68, 68, 0.3);
     color: #fca5a5;
 }
 
-.feedback-error .feedback-icon {
-    background: rgba(239, 68, 68, 0.18);
-}
-
 /* ==========================================================
    ABAS
 ========================================================== */
 
-.patient-tabs {
+.supplier-tabs {
     display: flex;
     gap: 6px;
     margin-bottom: 24px;
     border-bottom: 1px solid var(--border);
 }
 
-.patient-tabs a {
+.supplier-tabs a {
     position: relative;
     padding: 10px 16px 12px;
     text-decoration: none;
@@ -145,15 +123,15 @@
     font-weight: 600;
 }
 
-.patient-tabs a:hover {
+.supplier-tabs a:hover {
     color: var(--text-primary);
 }
 
-.patient-tabs a.active {
+.supplier-tabs a.active {
     color: #60a5fa;
 }
 
-.patient-tabs a.active::after {
+.supplier-tabs a.active::after {
     content: "";
     position: absolute;
     left: 0;
@@ -191,7 +169,7 @@
 }
 
 /* ==========================================================
-   CABEÇALHO DAS SEÇÕES
+   SEÇÃO
 ========================================================== */
 
 .section-header {
@@ -228,27 +206,15 @@
 }
 
 /* ==========================================================
-   CAMPOS
+   FORMULÁRIO
 ========================================================== */
 
-.form-grid {
+.supplier-grid {
     display: grid;
-    gap: 18px;
-}
-
-.form-grid-main {
     grid-template-columns:
-            minmax(240px, 2fr)
-            minmax(180px, 1fr)
-            minmax(180px, 1fr);
-}
-
-.form-grid-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.form-grid-3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+            minmax(300px, 1fr)
+            minmax(220px, 400px);
+    gap: 18px;
 }
 
 .field {
@@ -258,14 +224,12 @@
 .field label {
     display: block;
     margin: 0 0 7px;
+    color: var(--text-secondary);
     font-size: 13px;
     font-weight: 600;
-    color: var(--text-secondary);
 }
 
-.field input,
-.field select,
-.field textarea {
+.field input {
     width: 100%;
     height: 42px;
     padding: 9px 12px;
@@ -276,24 +240,9 @@
     font-family: inherit;
     font-size: 14px;
     outline: none;
-    transition:
-            border-color 0.15s,
-            box-shadow 0.15s;
 }
 
-.field input::placeholder,
-.field textarea::placeholder {
-    color: var(--text-muted);
-}
-
-.field input:hover,
-.field select:hover {
-    border-color: #64748b;
-}
-
-.field input:focus,
-.field select:focus,
-.field textarea:focus {
+.field input:focus {
     border-color: var(--primary);
     box-shadow:
             0 0 0 3px var(--primary-soft);
@@ -301,192 +250,6 @@
 
 .required {
     color: #f87171;
-}
-
-/* ==========================================================
-   ENDEREÇO
-========================================================== */
-
-.address-grid {
-    display: grid;
-    grid-template-columns:
-            180px
-            minmax(280px, 1fr)
-            130px
-            minmax(180px, 1fr)
-            minmax(220px, 1fr)
-            90px;
-    gap: 18px;
-}
-
-/* ==========================================================
-   SEXO
-========================================================== */
-
-.radio-options {
-    display: flex;
-    gap: 10px;
-    min-height: 42px;
-}
-
-.radio-option {
-    display: inline-flex !important;
-    align-items: center;
-    gap: 7px;
-    padding: 9px 12px;
-    margin: 0 !important;
-    border: 1px solid var(--border-strong);
-    border-radius: 7px;
-    background: var(--input-bg);
-    color: var(--text-secondary);
-    font-weight: normal !important;
-    cursor: pointer;
-}
-
-.radio-option:hover {
-    background: var(--bg-surface-hover);
-}
-
-.radio-option input {
-    width: auto;
-    height: auto;
-    margin: 0;
-}
-
-/* ==========================================================
-   ANAMNESE
-========================================================== */
-
-.question-card {
-    border-bottom: 1px solid var(--border);
-    padding: 16px 0;
-}
-
-.question-card:first-of-type {
-    padding-top: 0;
-}
-
-.question-main {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    min-height: 38px;
-    color: var(--text-secondary);
-    font-size: 14px;
-    font-weight: 500;
-}
-
-/* ==========================================================
-   SIM / NÃO
-========================================================== */
-
-.yes-no {
-    display: flex;
-    flex-shrink: 0;
-    padding: 3px;
-    border: 1px solid var(--border-strong);
-    border-radius: 8px;
-    background: var(--bg-page);
-}
-
-.yes-no label {
-    position: relative;
-    margin: 0;
-    cursor: pointer;
-}
-
-.yes-no input {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-}
-
-.yes-no span {
-    display: block;
-    min-width: 52px;
-    padding: 6px 11px;
-    border-radius: 5px;
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 13px;
-    font-weight: 600;
-    transition:
-            background 0.15s,
-            color 0.15s;
-}
-
-.yes-no input:checked + span {
-    background: var(--bg-surface-hover);
-    color: #60a5fa;
-    box-shadow:
-            0 1px 4px rgba(0, 0, 0, 0.35);
-}
-
-/* ==========================================================
-   CAMPOS DINÂMICOS
-========================================================== */
-
-.dependent-fields {
-    display: none;
-    margin-top: 14px;
-    padding: 16px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--bg-surface-soft);
-}
-
-.dependent-fields.visible {
-    display: block;
-}
-
-/* ==========================================================
-   OUTRAS CONDIÇÕES
-========================================================== */
-
-.conditions-header {
-    margin-top: 30px;
-    margin-bottom: 16px;
-}
-
-.conditions-header h3 {
-    margin: 0;
-    font-size: 16px;
-}
-
-.conditions-header p {
-    margin: 4px 0 0;
-    color: var(--text-muted);
-    font-size: 13px;
-}
-
-.conditions-grid {
-    display: grid;
-    grid-template-columns:
-            repeat(3, minmax(0, 1fr));
-    gap: 10px;
-}
-
-.condition-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    min-height: 66px;
-    padding: 12px 14px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--bg-surface-soft);
-    color: var(--text-secondary);
-    font-size: 13px;
-}
-
-.condition-item:hover {
-    border-color: var(--border-strong);
-}
-
-.condition-item > span {
-    line-height: 1.35;
 }
 
 /* ==========================================================
@@ -526,7 +289,6 @@
     background: var(--input-bg);
     color: var(--text-primary);
     outline: none;
-    font-size: 14px;
 }
 
 .search-input-wrapper input:focus {
@@ -548,9 +310,6 @@
 ========================================================== */
 
 .table-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     padding: 18px 20px;
     border-bottom: 1px solid var(--border);
 }
@@ -571,16 +330,16 @@
     overflow-x: auto;
 }
 
-.patient-table {
+.supplier-table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.patient-table thead {
+.supplier-table thead {
     background: var(--bg-surface-soft);
 }
 
-.patient-table th {
+.supplier-table th {
     padding: 11px 16px;
     border-bottom: 1px solid var(--border);
     color: var(--text-muted);
@@ -588,42 +347,36 @@
     font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.03em;
 }
 
-.patient-table td {
+.supplier-table td {
     padding: 14px 16px;
     border-bottom: 1px solid var(--border);
     color: var(--text-secondary);
     font-size: 14px;
 }
 
-.patient-table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-.patient-table tbody tr:hover {
+.supplier-table tbody tr:hover {
     background: var(--bg-surface-hover);
 }
 
-.patient-name {
+.supplier-name {
     color: var(--text-primary);
     font-weight: 600;
     text-decoration: none;
 }
 
-.patient-name:hover {
+.supplier-name:hover {
     color: #60a5fa;
 }
 
-.patient-code {
+.supplier-code {
     display: inline-flex;
     padding: 4px 8px;
     border-radius: 5px;
     background: var(--bg-surface-hover);
     color: var(--text-secondary);
     font-size: 12px;
-    font-weight: 600;
 }
 
 .column-code {
@@ -635,7 +388,7 @@
 }
 
 /* ==========================================================
-   AÇÕES DA TABELA
+   AÇÕES
 ========================================================== */
 
 .table-actions {
@@ -668,18 +421,10 @@
     color: #93c5fd;
 }
 
-.btn-table-edit:hover {
-    background: rgba(59, 130, 246, 0.25);
-}
-
 .btn-table-delete {
     border: 1px solid rgba(239, 68, 68, 0.35);
     background: var(--danger-soft);
     color: #fca5a5;
-}
-
-.btn-table-delete:hover {
-    background: rgba(239, 68, 68, 0.25);
 }
 
 /* ==========================================================
@@ -704,12 +449,11 @@
 }
 
 /* ==========================================================
-   MODO EDIÇÃO
+   EDIÇÃO
 ========================================================== */
 
 .edit-status {
     display: inline-flex;
-    align-items: center;
     gap: 6px;
     margin-bottom: 14px;
     padding: 6px 10px;
@@ -720,11 +464,10 @@
 }
 
 /* ==========================================================
-   BARRA DE AÇÕES
+   BARRA FINAL
 ========================================================== */
 
 .form-action-bar {
-    position: static;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -751,43 +494,14 @@
    RESPONSIVO
 ========================================================== */
 
-@media (max-width: 1250px) {
-    .address-grid {
-        grid-template-columns:
-                repeat(3, minmax(0, 1fr));
-    }
-
-    .conditions-grid {
-        grid-template-columns:
-                repeat(2, minmax(0, 1fr));
-    }
-}
-
-@media (max-width: 900px) {
-    .form-grid-main,
-    .form-grid-3,
-    .form-grid-2,
-    .address-grid {
-        grid-template-columns:
-                repeat(2, minmax(0, 1fr));
-    }
-
-    .page-header {
-        align-items: flex-start;
-    }
-}
-
-@media (max-width: 700px) {
-    .form-grid-main,
-    .form-grid-3,
-    .form-grid-2,
-    .address-grid,
-    .conditions-grid {
+@media (max-width: 800px) {
+    .supplier-grid {
         grid-template-columns: 1fr;
     }
 
     .page-header {
         flex-direction: column;
+        align-items: flex-start;
     }
 
     .search-form {
@@ -797,16 +511,6 @@
 
     .search-input-wrapper {
         max-width: none;
-    }
-
-    .question-main {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .condition-item {
-        flex-direction: column;
-        align-items: flex-start;
     }
 
     .form-action-bar {
