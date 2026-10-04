@@ -4,6 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport"
           content="width=device-width, initial-scale=1">
 
@@ -29,19 +30,18 @@
 
     <main class="content financeiro-page">
 
-        <!-- TOASTS -->
-
         <div th:if="${mensagemSucesso}"
              class="finance-toast finance-toast-success">
 
-            <span class="finance-toast-icon">✓</span>
+            <span class="finance-toast-icon">
+                ✓
+            </span>
 
             <span th:text="${mensagemSucesso}">
             </span>
 
             <button type="button"
-                    class="finance-toast-close"
-                    aria-label="Fechar">
+                    class="finance-toast-close">
                 ×
             </button>
 
@@ -50,20 +50,19 @@
         <div th:if="${mensagemErro}"
              class="finance-toast finance-toast-error">
 
-            <span class="finance-toast-icon">!</span>
+            <span class="finance-toast-icon">
+                !
+            </span>
 
             <span th:text="${mensagemErro}">
             </span>
 
             <button type="button"
-                    class="finance-toast-close"
-                    aria-label="Fechar">
+                    class="finance-toast-close">
                 ×
             </button>
 
         </div>
-
-        <!-- CABEÇALHO -->
 
         <header class="finance-page-header">
 
@@ -78,59 +77,213 @@
                 </h1>
 
                 <p>
-                    Controle de caixas, entradas, saídas e movimentações dos atendimentos.
+                    Contas a pagar, contas a receber, caixa e movimentações da clínica.
                 </p>
 
             </div>
 
-            <a th:if="${modo == 'consultar' || modo == 'detalhe'}"
+            <a th:if="${modo == 'contas'}"
+               th:href="@{/financeiro/contas/novo}"
+               class="btn-primary">
+
+                + Nova conta
+
+            </a>
+
+            <a th:if="${modo == 'caixas' || modo == 'detalhe'}"
                th:href="@{/financeiro/caixa-aberto}"
                class="btn-primary">
+
                 Ir para caixa aberto
+
             </a>
 
         </header>
 
-        <!-- TABS -->
-
         <nav class="finance-tabs">
 
             <a th:href="@{/financeiro}"
-               th:classappend="${modo == 'consultar' || modo == 'detalhe'} ? ' active' : ''">
-                Histórico de caixas
+               th:classappend="${modo == 'contas' || modo == 'contaForm'} ? ' active' : ''">
+
+                Contas
+
             </a>
 
             <a th:href="@{/financeiro/caixa-aberto}"
                th:classappend="${modo == 'caixaAberto'} ? ' active' : ''">
+
                 Caixa aberto
+
+            </a>
+
+            <a th:href="@{/financeiro/caixas}"
+               th:classappend="${modo == 'caixas' || modo == 'detalhe'} ? ' active' : ''">
+
+                Histórico de caixas
+
             </a>
 
         </nav>
 
-        <!-- =====================================================
-             CONSULTA
-        ====================================================== -->
+        <!-- CONTAS -->
 
-        <section th:if="${modo == 'consultar'}"
+        <section th:if="${modo == 'contas'}"
                  class="finance-consult">
+
+            <section th:if="${resumoContas != null}"
+                     class="account-summary">
+
+                <article class="summary-card summary-exit">
+
+                    <div class="summary-card-icon">
+                        ↓
+                    </div>
+
+                    <div>
+
+                        <span>
+                            A pagar
+                        </span>
+
+                        <strong th:text="${'R$ ' + #numbers.formatDecimal(resumoContas.totalPagarPendente, 1, 'POINT', 2, 'COMMA')}">
+                        </strong>
+
+                        <small>
+                            Total pendente no período
+                        </small>
+
+                    </div>
+
+                </article>
+
+                <article class="summary-card summary-entry">
+
+                    <div class="summary-card-icon">
+                        ↑
+                    </div>
+
+                    <div>
+
+                        <span>
+                            A receber
+                        </span>
+
+                        <strong th:text="${'R$ ' + #numbers.formatDecimal(resumoContas.totalReceberPendente, 1, 'POINT', 2, 'COMMA')}">
+                        </strong>
+
+                        <small>
+                            Total pendente no período
+                        </small>
+
+                    </div>
+
+                </article>
+
+                <article class="summary-card summary-paid">
+
+                    <div class="summary-card-icon">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Pago
+                        </span>
+
+                        <strong th:text="${'R$ ' + #numbers.formatDecimal(resumoContas.totalPago, 1, 'POINT', 2, 'COMMA')}">
+                        </strong>
+
+                        <small>
+                            Contas pagas no período
+                        </small>
+
+                    </div>
+
+                </article>
+
+                <article class="summary-card summary-received">
+
+                    <div class="summary-card-icon">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Recebido
+                        </span>
+
+                        <strong th:text="${'R$ ' + #numbers.formatDecimal(resumoContas.totalRecebido, 1, 'POINT', 2, 'COMMA')}">
+                        </strong>
+
+                        <small>
+                            Contas recebidas no período
+                        </small>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+            <section th:if="${resumoContas != null && resumoContas.quantidadeVencidas > 0}"
+                     class="overdue-alert">
+
+                <div class="overdue-icon">
+                    !
+                </div>
+
+                <div>
+
+                    <strong th:text="${resumoContas.quantidadeVencidas + ' conta(s) vencida(s)'}">
+                    </strong>
+
+                    <span>
+                        A pagar:
+                        <b th:text="${'R$ ' + #numbers.formatDecimal(resumoContas.totalPagarVencido, 1, 'POINT', 2, 'COMMA')}">
+                        </b>
+
+                        · A receber:
+
+                        <b th:text="${'R$ ' + #numbers.formatDecimal(resumoContas.totalReceberVencido, 1, 'POINT', 2, 'COMMA')}">
+                        </b>
+                    </span>
+
+                </div>
+
+            </section>
 
             <section class="filter-card">
 
-                <div class="filter-header">
+                <div class="filter-header account-filter-header">
 
                     <div>
 
                         <span class="section-eyebrow">
-                            Histórico
+                            Contas financeiras
                         </span>
 
                         <h2>
-                            Consultar caixas
+                            Contas a pagar e receber
                         </h2>
 
                         <p>
-                            Selecione o período para visualizar os caixas registrados.
+                            Consulte compromissos, recebimentos e vencimentos.
                         </p>
+
+                    </div>
+
+                    <div th:class="${caixaAbertoAtual != null
+                            ? 'current-cash current-cash-open'
+                            : 'current-cash current-cash-closed'}">
+
+                        <i></i>
+
+                        <span th:text="${caixaAbertoAtual != null
+                            ? 'Caixa aberto'
+                            : 'Caixa fechado'}">
+                        </span>
 
                     </div>
 
@@ -138,12 +291,12 @@
 
                 <form method="get"
                       th:action="@{/financeiro}"
-                      class="period-filter">
+                      class="account-filter">
 
                     <div class="field">
 
                         <label for="inicio">
-                            Data inicial
+                            De
                         </label>
 
                         <input id="inicio"
@@ -157,7 +310,7 @@
                     <div class="field">
 
                         <label for="fim">
-                            Data final
+                            Até
                         </label>
 
                         <input id="fim"
@@ -168,30 +321,168 @@
 
                     </div>
 
+                    <div class="field">
+
+                        <label for="tipoFiltro">
+                            Tipo
+                        </label>
+
+                        <select id="tipoFiltro"
+                                name="tipo">
+
+                            <option value="">
+                                Todos
+                            </option>
+
+                            <option value="PAGAR"
+                                    th:selected="${tipoFiltro == 'PAGAR'}">
+
+                                A pagar
+
+                            </option>
+
+                            <option value="RECEBER"
+                                    th:selected="${tipoFiltro == 'RECEBER'}">
+
+                                A receber
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="field">
+
+                        <label for="statusFiltro">
+                            Situação
+                        </label>
+
+                        <select id="statusFiltro"
+                                name="status">
+
+                            <option value="">
+                                Todas
+                            </option>
+
+                            <option value="PENDENTE"
+                                    th:selected="${statusFiltro == 'PENDENTE'}">
+
+                                Pendente
+
+                            </option>
+
+                            <option value="BAIXADA"
+                                    th:selected="${statusFiltro == 'BAIXADA'}">
+
+                                Baixada
+
+                            </option>
+
+                            <option value="CANCELADA"
+                                    th:selected="${statusFiltro == 'CANCELADA'}">
+
+                                Cancelada
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="field account-search-field">
+
+                        <label for="pesquisa">
+                            Pesquisa
+                        </label>
+
+                        <input id="pesquisa"
+                               name="pesquisa"
+                               type="text"
+                               th:value="${pesquisa}"
+                               placeholder="Descrição da conta">
+
+                    </div>
+
                     <button type="submit"
                             class="btn-primary filter-button">
+
                         Pesquisar
+
                     </button>
+
+                    <a th:href="@{/financeiro}"
+                       class="btn-secondary filter-button">
+
+                        Limpar
+
+                    </a>
 
                 </form>
 
             </section>
 
-            <section class="cash-list-card">
+            <section class="account-actions">
+
+                <a th:href="@{/financeiro/contas/novo(tipo='PAGAR')}"
+                   class="account-action-card account-action-pay">
+
+                    <span class="account-action-icon">
+                        ↓
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Nova conta a pagar
+                        </strong>
+
+                        <small>
+                            Despesas, fornecedores e compromissos
+                        </small>
+
+                    </div>
+
+                </a>
+
+                <a th:href="@{/financeiro/contas/novo(tipo='RECEBER')}"
+                   class="account-action-card account-action-receive">
+
+                    <span class="account-action-icon">
+                        ↑
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Nova conta a receber
+                        </strong>
+
+                        <small>
+                            Valores e recebimentos futuros
+                        </small>
+
+                    </div>
+
+                </a>
+
+            </section>
+
+            <section class="account-list-card">
 
                 <header class="cash-list-header">
 
                     <div>
 
                         <span class="section-eyebrow">
-                            Movimentação financeira
+                            Lançamentos
                         </span>
 
                         <h2>
-                            Caixas
+                            Contas
                         </h2>
 
-                        <p th:text="${#lists.size(caixas) + ' caixa(s) encontrado(s)'}">
+                        <p th:text="${#lists.size(contas) + ' conta(s) encontrada(s)'}">
                         </p>
 
                     </div>
@@ -199,13 +490,18 @@
                     <div class="status-legend">
 
                         <span>
-                            <i class="legend-dot legend-open"></i>
-                            Aberto
+                            <i class="legend-dot legend-pending"></i>
+                            Pendente
                         </span>
 
                         <span>
-                            <i class="legend-dot legend-closed"></i>
-                            Fechado
+                            <i class="legend-dot legend-overdue"></i>
+                            Vencida
+                        </span>
+
+                        <span>
+                            <i class="legend-dot legend-done"></i>
+                            Baixada
                         </span>
 
                     </div>
@@ -214,41 +510,64 @@
 
                 <div class="table-responsive">
 
-                    <table class="finance-table cash-history-table">
+                    <table class="finance-table accounts-table">
 
                         <thead>
 
                         <tr>
-                            <th>Caixa</th>
-                            <th>Abertura</th>
-                            <th>Fechamento</th>
-                            <th>Status</th>
-                            <th>Entradas</th>
-                            <th>Saídas</th>
-                            <th>Saldo</th>
-                            <th class="column-actions">Ações</th>
+                            <th>Vencimento</th>
+                            <th>Conta</th>
+                            <th>Tipo</th>
+                            <th>Valor</th>
+                            <th>Forma</th>
+                            <th>Situação</th>
+                            <th>Recorrência</th>
+                            <th class="account-actions-column">
+                                Ações
+                            </th>
                         </tr>
 
                         </thead>
 
                         <tbody>
 
-                        <tr th:each="caixa : ${caixas}">
+                        <tr th:each="conta : ${contas}"
+                            th:classappend="${conta.vencida ? ' account-overdue-row' : ''}">
 
                             <td>
 
-                                <div class="cash-identity">
+                                <div class="due-date">
 
-                                    <span class="cash-icon">
-                                        $
+                                    <strong th:text="${#temporals.format(conta.dataVencimento, 'dd/MM/yyyy')}">
+                                    </strong>
+
+                                    <small th:if="${conta.vencida}">
+                                        Vencida
+                                    </small>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+
+                                <div class="account-identity">
+
+                                    <span th:class="${conta.tipo == 'PAGAR'
+                                            ? 'account-icon account-icon-pay'
+                                            : 'account-icon account-icon-receive'}"
+                                          th:text="${conta.tipo == 'PAGAR'
+                                            ? '↓'
+                                            : '↑'}">
                                     </span>
 
                                     <div>
 
-                                        <strong th:text="${'Caixa #' + caixa.codigo}">
+                                        <strong th:text="${conta.descricao}">
                                         </strong>
 
-                                        <small th:text="${#temporals.format(caixa.dataAbertura, 'dd/MM/yyyy')}">
+                                        <small th:if="${conta.observacao != null && !conta.observacao.isBlank()}"
+                                               th:text="${conta.observacao}">
                                         </small>
 
                                     </div>
@@ -259,70 +578,140 @@
 
                             <td>
 
-                                <span class="date-time-value"
-                                      th:text="${#temporals.format(caixa.dataAbertura, 'dd/MM/yyyy HH:mm')}">
+                                <span th:class="${conta.tipo == 'PAGAR'
+                                        ? 'type-badge type-exit'
+                                        : 'type-badge type-entry'}"
+                                      th:text="${conta.tipo == 'PAGAR'
+                                        ? 'A pagar'
+                                        : 'A receber'}">
                                 </span>
 
                             </td>
 
                             <td>
 
-                                <span class="date-time-value"
-                                      th:text="${caixa.dataFechamento != null
-                                        ? #temporals.format(caixa.dataFechamento, 'dd/MM/yyyy HH:mm')
-                                        : '-'}">
+                                <strong th:class="${conta.tipo == 'PAGAR'
+                                        ? 'money money-exit'
+                                        : 'money money-entry'}"
+                                        th:text="${'R$ ' + #numbers.formatDecimal(conta.valor, 1, 'POINT', 2, 'COMMA')}">
+                                </strong>
+
+                            </td>
+
+                            <td>
+
+                                <span class="payment-method"
+                                      th:text="${conta.formaPagamento}">
                                 </span>
 
                             </td>
 
                             <td>
 
-                                <span th:class="${caixa.aberto
-                                        ? 'status-badge status-open'
-                                        : 'status-badge status-closed'}"
-                                      th:text="${caixa.aberto
-                                        ? 'Aberto'
-                                        : 'Fechado'}">
+                                <span th:if="${conta.vencida}"
+                                      class="account-status account-status-overdue">
+
+                                    Vencida
+
+                                </span>
+
+                                <span th:if="${!conta.vencida && conta.status == 'PENDENTE'}"
+                                      class="account-status account-status-pending">
+
+                                    Pendente
+
+                                </span>
+
+                                <span th:if="${conta.status == 'BAIXADA'}"
+                                      class="account-status account-status-done">
+
+                                    Baixada
+
+                                </span>
+
+                                <span th:if="${conta.status == 'CANCELADA'}"
+                                      class="account-status account-status-cancelled">
+
+                                    Cancelada
+
                                 </span>
 
                             </td>
 
                             <td>
 
-                                <strong class="money money-entry"
-                                        th:text="${'R$ ' + #numbers.formatDecimal(caixa.totalEntrada, 1, 'POINT', 2, 'COMMA')}">
-                                </strong>
+                                <span th:if="${conta.recorrente}"
+                                      class="recurring-badge">
+
+                                    ↻ Mensal
+
+                                </span>
+
+                                <span th:if="${!conta.recorrente}"
+                                      class="muted-value">
+
+                                    -
+
+                                </span>
 
                             </td>
 
                             <td>
 
-                                <strong class="money money-exit"
-                                        th:text="${'R$ ' + #numbers.formatDecimal(caixa.totalSaida, 1, 'POINT', 2, 'COMMA')}">
-                                </strong>
+                                <div th:if="${conta.status == 'PENDENTE'}"
+                                     class="table-actions account-row-actions">
 
-                            </td>
+                                    <a th:href="@{/financeiro/contas/{codigo}/editar(codigo=${conta.codigo})}"
+                                       class="action-link action-edit">
 
-                            <td>
+                                        Editar
 
-                                <strong class="money cash-total"
-                                        th:text="${'R$ ' + #numbers.formatDecimal(caixa.total, 1, 'POINT', 2, 'COMMA')}">
-                                </strong>
+                                    </a>
 
-                            </td>
+                                    <form th:action="@{/financeiro/contas/{codigo}/baixar(codigo=${conta.codigo})}"
+                                          method="post">
 
-                            <td>
+                                        <button type="submit"
+                                                th:class="${conta.tipo == 'PAGAR'
+                                                    ? 'action-link action-pay'
+                                                    : 'action-link action-receive'}"
+                                                th:text="${conta.tipo == 'PAGAR'
+                                                    ? 'Pagar'
+                                                    : 'Receber'}"
+                                                th:attr="onclick=${conta.tipo == 'PAGAR'
+                                                    ? 'return confirm(''Confirma o pagamento desta conta? O valor será lançado como saída no caixa aberto.'')'
+                                                    : 'return confirm(''Confirma o recebimento desta conta? O valor será lançado como entrada no caixa aberto.'')'}">
+                                        </button>
 
-                                <a th:href="@{/financeiro/caixas/{codigo}(codigo=${caixa.codigo})}"
-                                   class="action-link action-view">
-                                    Ver histórico
-                                </a>
+                                    </form>
+
+                                    <form th:action="@{/financeiro/contas/{codigo}/cancelar(codigo=${conta.codigo})}"
+                                          method="post">
+
+                                        <button type="submit"
+                                                class="action-link action-delete"
+                                                onclick="return confirm('Deseja cancelar esta conta?')">
+
+                                            Cancelar
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                                <span th:if="${conta.status != 'PENDENTE'}"
+                                      class="muted-value">
+
+                                    -
+
+                                </span>
 
                             </td>
 
                         </tr>
 
-                        <tr th:if="${#lists.isEmpty(caixas)}">
+                        <tr th:if="${#lists.isEmpty(contas)}">
 
                             <td colspan="8">
 
@@ -333,12 +722,19 @@
                                     </div>
 
                                     <strong>
-                                        Nenhum caixa encontrado
+                                        Nenhuma conta encontrada
                                     </strong>
 
                                     <span>
-                                        Não existem caixas registrados no período informado.
+                                        Não existem contas para os filtros informados.
                                     </span>
+
+                                    <a th:href="@{/financeiro/contas/novo}"
+                                       class="btn-primary empty-action">
+
+                                        + Nova conta
+
+                                    </a>
 
                                 </div>
 
@@ -356,14 +752,376 @@
 
         </section>
 
-        <!-- =====================================================
-             CAIXA ABERTO
-        ====================================================== -->
+        <!-- FORMULÁRIO CONTA -->
+
+        <section th:if="${modo == 'contaForm'}"
+                 class="account-editor">
+
+            <header class="cash-detail-header">
+
+                <div>
+
+                    <a th:href="@{/financeiro}"
+                       class="back-link">
+
+                        ← Voltar para contas
+
+                    </a>
+
+                    <span class="page-eyebrow"
+                          th:text="${contaForm.codigo == null
+                            ? 'Novo lançamento'
+                            : 'Editando lançamento'}">
+                    </span>
+
+                    <h2 th:text="${contaForm.codigo == null
+                        ? 'Nova conta'
+                        : contaForm.descricao}">
+                    </h2>
+
+                    <p>
+                        Informe os dados financeiros e o vencimento.
+                    </p>
+
+                </div>
+
+                <div th:if="${contaForm.codigo != null}"
+                     class="account-code">
+
+                    <span>
+                        Código
+                    </span>
+
+                    <strong th:text="${contaForm.codigo}">
+                    </strong>
+
+                </div>
+
+            </header>
+
+            <form th:action="@{/financeiro/contas/salvar}"
+                  th:object="${contaForm}"
+                  method="post"
+                  class="account-form"
+                  id="conta-form">
+
+                <input type="hidden"
+                       th:field="*{codigo}">
+
+                <section class="account-form-card">
+
+                    <header class="form-section-header">
+
+                        <span class="form-section-number">
+                            1
+                        </span>
+
+                        <div>
+
+                            <span class="section-eyebrow">
+                                Lançamento
+                            </span>
+
+                            <h3>
+                                Tipo da conta
+                            </h3>
+
+                            <p>
+                                Informe se este valor será pago ou recebido.
+                            </p>
+
+                        </div>
+
+                    </header>
+
+                    <div class="account-type-selector">
+
+                        <label class="account-type-option account-type-pay">
+
+                            <input type="radio"
+                                   th:field="*{tipo}"
+                                   value="PAGAR">
+
+                            <span>
+
+                                <b>
+                                    ↓ Conta a pagar
+                                </b>
+
+                                <small>
+                                    Despesa ou compromisso da clínica
+                                </small>
+
+                            </span>
+
+                        </label>
+
+                        <label class="account-type-option account-type-receive">
+
+                            <input type="radio"
+                                   th:field="*{tipo}"
+                                   value="RECEBER">
+
+                            <span>
+
+                                <b>
+                                    ↑ Conta a receber
+                                </b>
+
+                                <small>
+                                    Valor que a clínica deverá receber
+                                </small>
+
+                            </span>
+
+                        </label>
+
+                    </div>
+
+                </section>
+
+                <section class="account-form-card">
+
+                    <header class="form-section-header">
+
+                        <span class="form-section-number">
+                            2
+                        </span>
+
+                        <div>
+
+                            <span class="section-eyebrow">
+                                Dados financeiros
+                            </span>
+
+                            <h3>
+                                Informações da conta
+                            </h3>
+
+                        </div>
+
+                    </header>
+
+                    <div class="account-form-grid">
+
+                        <div class="field account-description-field">
+
+                            <label for="descricaoConta">
+                                Descrição
+                                <span class="required">*</span>
+                            </label>
+
+                            <input id="descricaoConta"
+                                   type="text"
+                                   th:field="*{descricao}"
+                                   maxlength="100"
+                                   required
+                                   placeholder="Ex.: Aluguel da clínica">
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="valorConta">
+                                Valor
+                                <span class="required">*</span>
+                            </label>
+
+                            <div class="money-input">
+
+                                <span>
+                                    R$
+                                </span>
+
+                                <input id="valorConta"
+                                       name="valor"
+                                       type="text"
+                                       inputmode="decimal"
+                                       data-money-br
+                                       th:value="${contaForm.valor != null
+                                            ? #numbers.formatDecimal(contaForm.valor, 1, 'POINT', 2, 'COMMA')
+                                            : ''}"
+                                       required
+                                       placeholder="0,00">
+
+                            </div>
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="dataVencimento">
+                                Vencimento
+                                <span class="required">*</span>
+                            </label>
+
+                            <input id="dataVencimento"
+                                   type="date"
+                                   th:field="*{dataVencimento}"
+                                   required>
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="formaPagamento">
+                                Forma de pagamento/recebimento
+                                <span class="required">*</span>
+                            </label>
+
+                            <input id="formaPagamento"
+                                   type="text"
+                                   th:field="*{formaPagamento}"
+                                   maxlength="100"
+                                   required
+                                   placeholder="Ex.: PIX, boleto, cartão">
+
+                        </div>
+
+                    </div>
+
+                    <div class="field account-observation-field">
+
+                        <label for="observacaoConta">
+                            Observação
+                        </label>
+
+                        <textarea id="observacaoConta"
+                                  th:field="*{observacao}"
+                                  rows="4"
+                                  placeholder="Informações complementares"></textarea>
+
+                    </div>
+
+                </section>
+
+                <section class="account-form-card recurring-section"
+                         id="recurring-section">
+
+                    <header class="form-section-header">
+
+                        <span class="form-section-number">
+                            3
+                        </span>
+
+                        <div>
+
+                            <span class="section-eyebrow">
+                                Recorrência
+                            </span>
+
+                            <h3>
+                                Conta recorrente
+                            </h3>
+
+                            <p>
+                                Disponível apenas para contas a pagar.
+                            </p>
+
+                        </div>
+
+                    </header>
+
+                    <label class="recurring-option">
+
+                        <input id="recorrente"
+                               type="checkbox"
+                               th:field="*{recorrente}">
+
+                        <span class="recurring-checkbox">
+                            ✓
+                        </span>
+
+                        <span>
+
+                            <strong>
+                                Esta conta se repete mensalmente
+                            </strong>
+
+                            <small>
+                                Quando esta conta for paga, o SysOdonto criará automaticamente a próxima com vencimento no mês seguinte.
+                            </small>
+
+                        </span>
+
+                    </label>
+
+                    <div class="recurring-disabled-message"
+                         id="recurring-disabled-message">
+
+                        Recorrência não é utilizada em contas a receber nesta versão.
+
+                    </div>
+
+                </section>
+
+                <section class="account-preview">
+
+                    <span th:class="${contaForm.tipo == 'RECEBER'
+                            ? 'account-preview-icon preview-receive'
+                            : 'account-preview-icon preview-pay'}"
+                          id="account-preview-icon">
+
+                        ↓
+
+                    </span>
+
+                    <div>
+
+                        <span>
+                            Prévia do lançamento
+                        </span>
+
+                        <strong id="account-preview-description">
+                            Nova conta
+                        </strong>
+
+                        <small id="account-preview-details">
+                            Informe os dados da conta.
+                        </small>
+
+                    </div>
+
+                </section>
+
+                <footer class="account-form-actions">
+
+                    <span class="required-info">
+                        <span class="required">*</span>
+                        Campos obrigatórios
+                    </span>
+
+                    <div>
+
+                        <a th:href="@{/financeiro}"
+                           class="btn-secondary">
+
+                            Cancelar
+
+                        </a>
+
+                        <button type="submit"
+                                class="btn-primary"
+                                th:text="${contaForm.codigo == null
+                                    ? 'Cadastrar conta'
+                                    : 'Salvar alterações'}">
+
+                            Salvar
+
+                        </button>
+
+                    </div>
+
+                </footer>
+
+            </form>
+
+        </section>
+
+        <!-- CAIXA ABERTO -->
 
         <section th:if="${modo == 'caixaAberto'}"
                  class="open-cash-page">
-
-            <!-- SEM CAIXA -->
 
             <section th:if="${caixaAberto == null}"
                      class="no-cash-card">
@@ -381,7 +1139,7 @@
                 </h2>
 
                 <p>
-                    Abra o caixa para registrar movimentações e receber automaticamente os procedimentos concluídos.
+                    Abra o caixa para registrar movimentações, receber procedimentos e baixar contas.
                 </p>
 
                 <form th:action="@{/financeiro/abrir}"
@@ -389,14 +1147,14 @@
 
                     <button type="submit"
                             class="btn-primary btn-open-cash">
+
                         Abrir caixa
+
                     </button>
 
                 </form>
 
             </section>
-
-            <!-- COM CAIXA -->
 
             <div th:if="${caixaAberto != null}"
                  class="open-cash-content">
@@ -406,8 +1164,11 @@
                     <div class="cash-header-main">
 
                         <span class="open-cash-indicator">
+
                             <i></i>
+
                             Caixa aberto
+
                         </span>
 
                         <div>
@@ -427,15 +1188,15 @@
 
                         <button type="submit"
                                 class="btn-danger"
-                                onclick="return confirm('Deseja realmente fechar o caixa? Após o fechamento não será possível alterar suas movimentações.')">
+                                onclick="return confirm('Deseja realmente fechar o caixa?')">
+
                             Fechar caixa
+
                         </button>
 
                     </form>
 
                 </section>
-
-                <!-- RESUMO -->
 
                 <section class="financial-summary">
 
@@ -448,14 +1209,14 @@
                         <div>
 
                             <span>
-                                Total de entradas
+                                Entradas
                             </span>
 
                             <strong th:text="${'R$ ' + #numbers.formatDecimal(caixaAberto.totalEntrada, 1, 'POINT', 2, 'COMMA')}">
                             </strong>
 
                             <small>
-                                Valores recebidos no caixa
+                                Valores recebidos
                             </small>
 
                         </div>
@@ -471,14 +1232,14 @@
                         <div>
 
                             <span>
-                                Total de saídas
+                                Saídas
                             </span>
 
                             <strong th:text="${'R$ ' + #numbers.formatDecimal(caixaAberto.totalSaida, 1, 'POINT', 2, 'COMMA')}">
                             </strong>
 
                             <small>
-                                Valores retirados do caixa
+                                Valores pagos
                             </small>
 
                         </div>
@@ -510,11 +1271,7 @@
 
                 </section>
 
-                <!-- WORKSPACE -->
-
                 <section class="cash-workspace">
-
-                    <!-- NOVA MOVIMENTAÇÃO -->
 
                     <section class="movement-card">
 
@@ -534,14 +1291,16 @@
                                 </h3>
 
                                 <p>
-                                    Registre manualmente uma entrada ou saída.
+                                    Registre uma entrada ou saída manual.
                                 </p>
 
                             </div>
 
                             <span th:if="${movimentacaoForm.codigo != null}"
                                   class="editing-badge">
+
                                 Editando
+
                             </span>
 
                         </header>
@@ -566,7 +1325,7 @@
                                        th:field="*{descricao}"
                                        maxlength="100"
                                        required
-                                       placeholder="Ex.: Pagamento de consulta">
+                                       placeholder="Ex.: Suprimento de caixa">
 
                             </div>
 
@@ -637,10 +1396,13 @@
                                     </span>
 
                                     <input id="valor"
-                                           type="number"
-                                           th:field="*{valor}"
-                                           min="0.01"
-                                           step="0.01"
+                                           name="valor"
+                                           type="text"
+                                           inputmode="decimal"
+                                           data-money-br
+                                           th:value="${movimentacaoForm.valor != null
+                                                ? #numbers.formatDecimal(movimentacaoForm.valor, 1, 'POINT', 2, 'COMMA')
+                                                : ''}"
                                            required
                                            placeholder="0,00">
 
@@ -678,7 +1440,9 @@
                                 <a th:if="${movimentacaoForm.codigo != null}"
                                    th:href="@{/financeiro/caixa-aberto}"
                                    class="btn-secondary">
+
                                     Cancelar
+
                                 </a>
 
                                 <button type="submit"
@@ -686,7 +1450,9 @@
                                         th:text="${movimentacaoForm.codigo == null
                                             ? 'Salvar movimentação'
                                             : 'Salvar alterações'}">
+
                                     Salvar
+
                                 </button>
 
                             </div>
@@ -695,8 +1461,6 @@
 
                     </section>
 
-                    <!-- MOVIMENTAÇÕES -->
-
                     <section class="movement-history-card">
 
                         <header class="movement-history-header">
@@ -704,7 +1468,7 @@
                             <div>
 
                                 <span class="section-eyebrow">
-                                    Histórico do caixa
+                                    Extrato atual
                                 </span>
 
                                 <h3>
@@ -744,7 +1508,9 @@
                                     <th>Tipo</th>
                                     <th>Valor</th>
                                     <th>Observação</th>
-                                    <th class="column-actions">Ações</th>
+                                    <th class="column-actions">
+                                        Ações
+                                    </th>
                                 </tr>
 
                                 </thead>
@@ -752,7 +1518,10 @@
                                 <tbody>
 
                                 <tr th:each="movimentacao : ${caixaAberto.movimentacoes}"
-                                    th:classappend="${movimentacao.descricao == 'FINALIZAÇÃO DE PROCEDIMENTO'}
+                                    th:with="automatica=${movimentacao.descricao == 'FINALIZAÇÃO DE PROCEDIMENTO'
+                                        || movimentacao.descricao == 'PAGAMENTO DE CONTA'
+                                        || movimentacao.descricao == 'RECEBIMENTO DE CONTA'}"
+                                    th:classappend="${automatica}
                                         ? ' automatic-movement-row'
                                         : ''">
 
@@ -771,7 +1540,9 @@
                                             <span th:class="${movimentacao.tipo == 'ENTRADA'
                                                 ? 'movement-icon movement-icon-entry'
                                                 : 'movement-icon movement-icon-exit'}"
-                                                  th:text="${movimentacao.tipo == 'ENTRADA' ? '↑' : '↓'}">
+                                                  th:text="${movimentacao.tipo == 'ENTRADA'
+                                                    ? '↑'
+                                                    : '↓'}">
                                             </span>
 
                                             <div>
@@ -780,10 +1551,18 @@
                                                 </strong>
 
                                                 <small th:if="${movimentacao.descricao == 'FINALIZAÇÃO DE PROCEDIMENTO'}">
-                                                    Gerada automaticamente pelo atendimento
+                                                    Procedimento concluído
                                                 </small>
 
-                                                <small th:if="${movimentacao.descricao != 'FINALIZAÇÃO DE PROCEDIMENTO'}">
+                                                <small th:if="${movimentacao.descricao == 'PAGAMENTO DE CONTA'}">
+                                                    Conta a pagar
+                                                </small>
+
+                                                <small th:if="${movimentacao.descricao == 'RECEBIMENTO DE CONTA'}">
+                                                    Conta a receber
+                                                </small>
+
+                                                <small th:if="${!automatica}">
                                                     Movimentação manual
                                                 </small>
 
@@ -799,8 +1578,8 @@
                                             ? 'type-badge type-entry'
                                             : 'type-badge type-exit'}"
                                               th:text="${movimentacao.tipo == 'ENTRADA'
-                                            ? 'Entrada'
-                                            : 'Saída'}">
+                                                ? 'Entrada'
+                                                : 'Saída'}">
                                         </span>
 
                                     </td>
@@ -827,12 +1606,14 @@
 
                                     <td>
 
-                                        <div class="table-actions"
-                                             th:if="${movimentacao.descricao != 'FINALIZAÇÃO DE PROCEDIMENTO'}">
+                                        <div th:if="${!automatica}"
+                                             class="table-actions">
 
                                             <a th:href="@{/financeiro/caixa-aberto(editar=${movimentacao.codigo})}"
                                                class="action-link action-edit">
+
                                                 Alterar
+
                                             </a>
 
                                             <form th:action="@{/financeiro/caixas/{codigo}/movimentacoes/{movimentacaoCodigo}/excluir(
@@ -844,16 +1625,20 @@
                                                 <button type="submit"
                                                         class="action-link action-delete"
                                                         onclick="return confirm('Deseja realmente excluir esta movimentação?')">
+
                                                     Excluir
+
                                                 </button>
 
                                             </form>
 
                                         </div>
 
-                                        <span th:if="${movimentacao.descricao == 'FINALIZAÇÃO DE PROCEDIMENTO'}"
+                                        <span th:if="${automatica}"
                                               class="automatic-badge">
+
                                             Automática
+
                                         </span>
 
                                     </td>
@@ -898,9 +1683,244 @@
 
         </section>
 
-        <!-- =====================================================
-             DETALHE DO CAIXA
-        ====================================================== -->
+        <!-- HISTÓRICO DE CAIXAS -->
+
+        <section th:if="${modo == 'caixas'}"
+                 class="finance-consult">
+
+            <section class="filter-card">
+
+                <div class="filter-header">
+
+                    <div>
+
+                        <span class="section-eyebrow">
+                            Histórico
+                        </span>
+
+                        <h2>
+                            Consultar caixas
+                        </h2>
+
+                        <p>
+                            Selecione o período para visualizar os caixas registrados.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <form method="get"
+                      th:action="@{/financeiro/caixas}"
+                      class="period-filter">
+
+                    <div class="field">
+
+                        <label for="inicio">
+                            Data inicial
+                        </label>
+
+                        <input id="inicio"
+                               name="inicio"
+                               type="date"
+                               th:value="${inicio}"
+                               required>
+
+                    </div>
+
+                    <div class="field">
+
+                        <label for="fim">
+                            Data final
+                        </label>
+
+                        <input id="fim"
+                               name="fim"
+                               type="date"
+                               th:value="${fim}"
+                               required>
+
+                    </div>
+
+                    <button type="submit"
+                            class="btn-primary filter-button">
+
+                        Pesquisar
+
+                    </button>
+
+                </form>
+
+            </section>
+
+            <section class="cash-list-card">
+
+                <header class="cash-list-header">
+
+                    <div>
+
+                        <span class="section-eyebrow">
+                            Movimentação financeira
+                        </span>
+
+                        <h2>
+                            Caixas
+                        </h2>
+
+                        <p th:text="${#lists.size(caixas) + ' caixa(s) encontrado(s)'}">
+                        </p>
+
+                    </div>
+
+                    <div class="status-legend">
+
+                        <span>
+                            <i class="legend-dot legend-open"></i>
+                            Aberto
+                        </span>
+
+                        <span>
+                            <i class="legend-dot legend-closed"></i>
+                            Fechado
+                        </span>
+
+                    </div>
+
+                </header>
+
+                <div class="table-responsive">
+
+                    <table class="finance-table">
+
+                        <thead>
+
+                        <tr>
+                            <th>Caixa</th>
+                            <th>Abertura</th>
+                            <th>Fechamento</th>
+                            <th>Status</th>
+                            <th>Entradas</th>
+                            <th>Saídas</th>
+                            <th>Saldo</th>
+                            <th class="column-actions">
+                                Ações
+                            </th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                        <tr th:each="caixa : ${caixas}">
+
+                            <td>
+
+                                <div class="cash-identity">
+
+                                    <span class="cash-icon">
+                                        $
+                                    </span>
+
+                                    <div>
+
+                                        <strong th:text="${'Caixa #' + caixa.codigo}">
+                                        </strong>
+
+                                        <small th:text="${#temporals.format(caixa.dataAbertura, 'dd/MM/yyyy')}">
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+                                <span class="date-time-value"
+                                      th:text="${#temporals.format(caixa.dataAbertura, 'dd/MM/yyyy HH:mm')}">
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="date-time-value"
+                                      th:text="${caixa.dataFechamento != null
+                                        ? #temporals.format(caixa.dataFechamento, 'dd/MM/yyyy HH:mm')
+                                        : '-'}">
+                                </span>
+                            </td>
+
+                            <td>
+                                <span th:class="${caixa.aberto
+                                        ? 'status-badge status-open'
+                                        : 'status-badge status-closed'}"
+                                      th:text="${caixa.aberto
+                                        ? 'Aberto'
+                                        : 'Fechado'}">
+                                </span>
+                            </td>
+
+                            <td>
+                                <strong class="money money-entry"
+                                        th:text="${'R$ ' + #numbers.formatDecimal(caixa.totalEntrada, 1, 'POINT', 2, 'COMMA')}">
+                                </strong>
+                            </td>
+
+                            <td>
+                                <strong class="money money-exit"
+                                        th:text="${'R$ ' + #numbers.formatDecimal(caixa.totalSaida, 1, 'POINT', 2, 'COMMA')}">
+                                </strong>
+                            </td>
+
+                            <td>
+                                <strong class="money cash-total"
+                                        th:text="${'R$ ' + #numbers.formatDecimal(caixa.total, 1, 'POINT', 2, 'COMMA')}">
+                                </strong>
+                            </td>
+
+                            <td>
+                                <a th:href="@{/financeiro/caixas/{codigo}(codigo=${caixa.codigo})}"
+                                   class="action-link action-view">
+                                    Ver histórico
+                                </a>
+                            </td>
+
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(caixas)}">
+
+                            <td colspan="8">
+
+                                <div class="empty-state">
+
+                                    <div class="empty-state-icon">
+                                        $
+                                    </div>
+
+                                    <strong>
+                                        Nenhum caixa encontrado
+                                    </strong>
+
+                                    <span>
+                                        Não existem caixas registrados no período.
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </section>
+
+        <!-- DETALHE CAIXA -->
 
         <section th:if="${modo == 'detalhe' && caixaDetalhe != null}"
                  class="cash-detail-page">
@@ -909,9 +1929,11 @@
 
                 <div>
 
-                    <a th:href="@{/financeiro}"
+                    <a th:href="@{/financeiro/caixas}"
                        class="back-link">
+
                         ← Voltar para histórico
+
                     </a>
 
                     <span class="page-eyebrow">
@@ -930,8 +1952,8 @@
                     ? 'status-badge status-open'
                     : 'status-badge status-closed'}"
                       th:text="${caixaDetalhe.aberto
-                    ? 'Aberto'
-                    : 'Fechado'}">
+                        ? 'Aberto'
+                        : 'Fechado'}">
                 </span>
 
             </header>
@@ -1037,7 +2059,10 @@
                         <tbody>
 
                         <tr th:each="movimentacao : ${caixaDetalhe.movimentacoes}"
-                            th:classappend="${movimentacao.descricao == 'FINALIZAÇÃO DE PROCEDIMENTO'}
+                            th:with="automatica=${movimentacao.descricao == 'FINALIZAÇÃO DE PROCEDIMENTO'
+                                || movimentacao.descricao == 'PAGAMENTO DE CONTA'
+                                || movimentacao.descricao == 'RECEBIMENTO DE CONTA'}"
+                            th:classappend="${automatica}
                                 ? ' automatic-movement-row'
                                 : ''">
 
@@ -1056,7 +2081,9 @@
                                     <span th:class="${movimentacao.tipo == 'ENTRADA'
                                         ? 'movement-icon movement-icon-entry'
                                         : 'movement-icon movement-icon-exit'}"
-                                          th:text="${movimentacao.tipo == 'ENTRADA' ? '↑' : '↓'}">
+                                          th:text="${movimentacao.tipo == 'ENTRADA'
+                                            ? '↑'
+                                            : '↓'}">
                                     </span>
 
                                     <div>
@@ -1064,11 +2091,11 @@
                                         <strong th:text="${movimentacao.descricao}">
                                         </strong>
 
-                                        <small th:if="${movimentacao.descricao == 'FINALIZAÇÃO DE PROCEDIMENTO'}">
+                                        <small th:if="${automatica}">
                                             Movimentação automática
                                         </small>
 
-                                        <small th:if="${movimentacao.descricao != 'FINALIZAÇÃO DE PROCEDIMENTO'}">
+                                        <small th:if="${!automatica}">
                                             Movimentação manual
                                         </small>
 
@@ -1084,8 +2111,8 @@
                                     ? 'type-badge type-entry'
                                     : 'type-badge type-exit'}"
                                       th:text="${movimentacao.tipo == 'ENTRADA'
-                                    ? 'Entrada'
-                                    : 'Saída'}">
+                                        ? 'Entrada'
+                                        : 'Saída'}">
                                 </span>
 
                             </td>

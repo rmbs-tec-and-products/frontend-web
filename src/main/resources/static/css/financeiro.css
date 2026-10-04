@@ -7,7 +7,8 @@
     gap: 18px;
 }
 
-.finance-page-header {
+.finance-page-header,
+.cash-detail-header {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
@@ -44,7 +45,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     text-decoration: none;
     cursor: pointer;
@@ -72,14 +73,16 @@
 }
 
 .btn-danger {
-    border: 1px solid rgba(239, 68, 68, .45);
-    background: rgba(239, 68, 68, .12);
+    border: 1px solid rgba(239, 68, 68, .4);
+    background: rgba(239, 68, 68, .1);
     color: #fca5a5;
 }
 
 .btn-danger:hover {
-    background: rgba(239, 68, 68, .20);
+    background: rgba(239, 68, 68, .18);
 }
+
+/* TABS */
 
 .finance-tabs {
     display: flex;
@@ -92,7 +95,7 @@
     padding: 9px 14px 11px;
     color: var(--text-muted);
     text-decoration: none;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
 }
 
@@ -107,9 +110,9 @@
 .finance-tabs a.active::after {
     content: "";
     position: absolute;
-    left: 0;
     right: 0;
     bottom: -1px;
+    left: 0;
     height: 2px;
     background: var(--primary);
 }
@@ -117,53 +120,15 @@
 .finance-consult,
 .open-cash-page,
 .open-cash-content,
-.cash-detail-page {
+.cash-detail-page,
+.account-editor,
+.account-form {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
-.filter-card,
-.cash-list-card,
-.cash-header-card,
-.summary-card,
-.movement-card,
-.movement-history-card,
-.no-cash-card,
-.detail-summary-card {
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    background: var(--bg-surface);
-}
-
-.filter-card {
-    padding: 18px 20px;
-}
-
-.filter-header h2,
-.cash-list-header h2 {
-    margin: 3px 0 4px;
-    font-size: 18px;
-}
-
-.filter-header p,
-.cash-list-header p {
-    margin: 0;
-    color: var(--text-muted);
-    font-size: 12px;
-}
-
-.period-filter {
-    display: grid;
-    grid-template-columns: 200px 200px auto;
-    align-items: end;
-    gap: 10px;
-    margin-top: 15px;
-}
-
-.filter-button {
-    height: 40px;
-}
+/* CAMPOS */
 
 .field {
     min-width: 0;
@@ -175,11 +140,12 @@
 .field label {
     margin: 0;
     color: var(--text-secondary);
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
 }
 
 .field input,
+.field select,
 .field textarea {
     width: 100%;
     padding: 8px 10px;
@@ -190,7 +156,8 @@
     font-family: inherit;
 }
 
-.field input {
+.field input,
+.field select {
     height: 40px;
 }
 
@@ -199,6 +166,7 @@
 }
 
 .field input:focus,
+.field select:focus,
 .field textarea:focus {
     outline: none;
     border-color: var(--primary);
@@ -209,338 +177,13 @@
     color: #f87171;
 }
 
-.cash-list-card,
-.movement-history-card {
-    overflow: hidden;
+/* RESUMOS */
+
+.account-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
 }
-
-.cash-list-header,
-.movement-history-header {
-    padding: 17px 20px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-}
-
-.cash-list-header h2,
-.movement-history-header h3 {
-    margin: 3px 0 4px;
-    font-size: 18px;
-}
-
-.cash-list-header p,
-.movement-history-header p {
-    margin: 0;
-    color: var(--text-muted);
-    font-size: 11px;
-}
-
-.status-legend,
-.movement-legend {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-.status-legend span,
-.movement-legend span {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--text-muted);
-    font-size: 10px;
-}
-
-.legend-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-}
-
-.legend-open,
-.legend-entry {
-    background: #22c55e;
-}
-
-.legend-closed {
-    background: #64748b;
-}
-
-.legend-exit {
-    background: #ef4444;
-}
-
-.table-responsive {
-    overflow-x: auto;
-}
-
-.finance-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.finance-table th,
-.finance-table td {
-    padding: 12px 14px;
-    border-bottom: 1px solid var(--border);
-    text-align: left;
-    vertical-align: middle;
-}
-
-.finance-table th {
-    background: var(--bg-surface-soft);
-    color: var(--text-muted);
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: .05em;
-}
-
-.finance-table tbody tr:last-child td {
-    border-bottom: 0;
-}
-
-.finance-table tbody tr {
-    transition: background .15s ease;
-}
-
-.finance-table tbody tr:hover {
-    background: rgba(255, 255, 255, .015);
-}
-
-.cash-identity {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-}
-
-.cash-icon {
-    width: 34px;
-    height: 34px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid rgba(59, 130, 246, .22);
-    border-radius: 9px;
-    background: var(--primary-soft);
-    color: #93c5fd;
-    font-weight: 800;
-}
-
-.cash-identity > div {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.cash-identity strong {
-    color: var(--text-primary);
-    font-size: 12px;
-}
-
-.cash-identity small {
-    color: var(--text-muted);
-    font-size: 9px;
-}
-
-.date-time-value,
-.movement-date {
-    color: var(--text-secondary);
-    font-size: 11px;
-    white-space: nowrap;
-}
-
-.status-badge,
-.type-badge,
-.automatic-badge,
-.editing-badge {
-    display: inline-flex;
-    align-items: center;
-    min-height: 25px;
-    padding: 0 8px;
-    border-radius: 999px;
-    font-size: 10px;
-    font-weight: 800;
-}
-
-.status-open,
-.type-entry {
-    border: 1px solid rgba(34, 197, 94, .18);
-    background: rgba(34, 197, 94, .08);
-    color: #86efac;
-}
-
-.status-closed {
-    border: 1px solid var(--border);
-    background: var(--bg-surface-soft);
-    color: var(--text-muted);
-}
-
-.type-exit {
-    border: 1px solid rgba(239, 68, 68, .18);
-    background: rgba(239, 68, 68, .08);
-    color: #fca5a5;
-}
-
-.money {
-    font-size: 12px;
-    white-space: nowrap;
-}
-
-.money-entry {
-    color: #86efac;
-}
-
-.money-exit {
-    color: #fca5a5;
-}
-
-.cash-total {
-    color: var(--text-primary);
-}
-
-.column-actions {
-    width: 150px;
-}
-
-.action-link {
-    appearance: none;
-    border: 0;
-    background: transparent;
-    padding: 5px 7px;
-    border-radius: 5px;
-    font-size: 11px;
-    font-weight: 700;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.action-view,
-.action-edit {
-    color: #93c5fd;
-}
-
-.action-view:hover,
-.action-edit:hover {
-    background: rgba(59, 130, 246, .12);
-}
-
-.action-delete {
-    color: #fca5a5;
-}
-
-.action-delete:hover {
-    background: rgba(239, 68, 68, .12);
-}
-
-.table-actions {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.table-actions form {
-    margin: 0;
-}
-
-/* SEM CAIXA */
-
-.no-cash-card {
-    min-height: 360px;
-    padding: 50px 24px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-.no-cash-icon {
-    width: 58px;
-    height: 58px;
-    margin-bottom: 14px;
-    border: 1px solid rgba(59, 130, 246, .25);
-    border-radius: 16px;
-    background: var(--primary-soft);
-    color: #93c5fd;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 25px;
-    font-weight: 800;
-}
-
-.no-cash-card h2 {
-    margin: 5px 0 6px;
-    font-size: 22px;
-}
-
-.no-cash-card p {
-    max-width: 520px;
-    margin: 0 0 20px;
-    color: var(--text-muted);
-    font-size: 12px;
-    line-height: 1.5;
-}
-
-.btn-open-cash {
-    min-width: 130px;
-}
-
-/* CABEÇALHO CAIXA ABERTO */
-
-.cash-header-card {
-    min-height: 78px;
-    padding: 14px 17px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 18px;
-}
-
-.cash-header-main {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.open-cash-indicator {
-    min-height: 30px;
-    padding: 0 10px;
-    border: 1px solid rgba(34, 197, 94, .20);
-    border-radius: 999px;
-    background: rgba(34, 197, 94, .07);
-    color: #86efac;
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    font-size: 10px;
-    font-weight: 800;
-    white-space: nowrap;
-}
-
-.open-cash-indicator i {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #22c55e;
-    box-shadow: 0 0 0 4px rgba(34, 197, 94, .08);
-}
-
-.cash-header-main h2 {
-    margin: 0 0 3px;
-    font-size: 18px;
-}
-
-.cash-header-main p {
-    margin: 0;
-    color: var(--text-muted);
-    font-size: 11px;
-}
-
-/* RESUMO */
 
 .financial-summary {
     display: grid;
@@ -549,7 +192,10 @@
 }
 
 .summary-card {
-    padding: 16px;
+    padding: 15px;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    background: var(--bg-surface);
     display: flex;
     align-items: center;
     gap: 12px;
@@ -563,7 +209,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 800;
 }
 
@@ -583,7 +229,7 @@
 }
 
 .summary-card strong {
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .summary-card small {
@@ -591,21 +237,25 @@
     font-size: 9px;
 }
 
-.summary-entry .summary-card-icon {
+.summary-entry .summary-card-icon,
+.summary-received .summary-card-icon {
     background: rgba(34, 197, 94, .08);
     color: #4ade80;
 }
 
-.summary-entry strong {
+.summary-entry strong,
+.summary-received strong {
     color: #86efac;
 }
 
-.summary-exit .summary-card-icon {
+.summary-exit .summary-card-icon,
+.summary-paid .summary-card-icon {
     background: rgba(239, 68, 68, .08);
     color: #f87171;
 }
 
-.summary-exit strong {
+.summary-exit strong,
+.summary-paid strong {
     color: #fca5a5;
 }
 
@@ -618,7 +268,875 @@
     color: var(--text-primary);
 }
 
-/* WORKSPACE */
+/* VENCIDAS */
+
+.overdue-alert {
+    padding: 12px 15px;
+    border: 1px solid rgba(245, 158, 11, .28);
+    border-radius: 10px;
+    background: rgba(245, 158, 11, .06);
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.overdue-icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    background: rgba(245, 158, 11, .12);
+    color: #fbbf24;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+}
+
+.overdue-alert > div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.overdue-alert strong {
+    color: #fde68a;
+    font-size: 11px;
+}
+
+.overdue-alert span {
+    color: var(--text-muted);
+    font-size: 10px;
+}
+
+.overdue-alert b {
+    color: var(--text-secondary);
+}
+
+/* FILTROS */
+
+.filter-card,
+.cash-list-card,
+.account-list-card,
+.cash-header-card,
+.movement-card,
+.movement-history-card,
+.no-cash-card,
+.detail-summary-card,
+.account-form-card {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--bg-surface);
+}
+
+.filter-card {
+    padding: 17px 19px;
+}
+
+.filter-header,
+.cash-list-header,
+.movement-history-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.filter-header h2,
+.cash-list-header h2,
+.movement-history-header h3 {
+    margin: 3px 0 4px;
+    font-size: 17px;
+}
+
+.filter-header p,
+.cash-list-header p,
+.movement-history-header p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 10px;
+}
+
+.account-filter {
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns:
+        145px
+        145px
+        140px
+        140px
+        minmax(180px, 1fr)
+        auto
+        auto;
+    align-items: end;
+    gap: 9px;
+}
+
+.period-filter {
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: 200px 200px auto;
+    align-items: end;
+    gap: 10px;
+}
+
+.filter-button {
+    height: 40px;
+}
+
+.current-cash {
+    min-height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 9px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.current-cash i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+}
+
+.current-cash-open {
+    border: 1px solid rgba(34, 197, 94, .2);
+    background: rgba(34, 197, 94, .07);
+    color: #86efac;
+}
+
+.current-cash-open i {
+    background: #22c55e;
+}
+
+.current-cash-closed {
+    border: 1px solid rgba(245, 158, 11, .2);
+    background: rgba(245, 158, 11, .06);
+    color: #fbbf24;
+}
+
+.current-cash-closed i {
+    background: #f59e0b;
+}
+
+/* ATALHOS CONTA */
+
+.account-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.account-action-card {
+    min-height: 69px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    background: var(--bg-surface);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: inherit;
+    text-decoration: none;
+}
+
+.account-action-card:hover {
+    border-color: var(--border-strong);
+    background: var(--bg-surface-soft);
+}
+
+.account-action-icon {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+}
+
+.account-action-pay .account-action-icon {
+    background: rgba(239, 68, 68, .08);
+    color: #f87171;
+}
+
+.account-action-receive .account-action-icon {
+    background: rgba(34, 197, 94, .08);
+    color: #4ade80;
+}
+
+.account-action-card > div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.account-action-card strong {
+    color: var(--text-secondary);
+    font-size: 11px;
+}
+
+.account-action-card small {
+    color: var(--text-muted);
+    font-size: 9px;
+}
+
+/* TABELAS */
+
+.cash-list-card,
+.account-list-card,
+.movement-history-card {
+    overflow: hidden;
+}
+
+.cash-list-header,
+.movement-history-header {
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--border);
+}
+
+.status-legend,
+.movement-legend {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.status-legend span,
+.movement-legend span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--text-muted);
+    font-size: 9px;
+}
+
+.legend-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+}
+
+.legend-open,
+.legend-entry,
+.legend-done {
+    background: #22c55e;
+}
+
+.legend-closed {
+    background: #64748b;
+}
+
+.legend-exit,
+.legend-overdue {
+    background: #ef4444;
+}
+
+.legend-pending {
+    background: #f59e0b;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.finance-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.finance-table th,
+.finance-table td {
+    padding: 11px 13px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: middle;
+}
+
+.finance-table th {
+    background: var(--bg-surface-soft);
+    color: var(--text-muted);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    white-space: nowrap;
+}
+
+.finance-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.finance-table tbody tr:hover {
+    background: rgba(255, 255, 255, .015);
+}
+
+/* CONTAS */
+
+.account-overdue-row {
+    background: rgba(239, 68, 68, .018);
+}
+
+.due-date {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    white-space: nowrap;
+}
+
+.due-date strong {
+    color: var(--text-secondary);
+    font-size: 11px;
+}
+
+.due-date small {
+    color: #fca5a5;
+    font-size: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.account-identity {
+    min-width: 210px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.account-icon {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+}
+
+.account-icon-pay {
+    background: rgba(239, 68, 68, .08);
+    color: #f87171;
+}
+
+.account-icon-receive {
+    background: rgba(34, 197, 94, .08);
+    color: #4ade80;
+}
+
+.account-identity > div {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.account-identity strong {
+    color: var(--text-primary);
+    font-size: 11px;
+}
+
+.account-identity small {
+    max-width: 250px;
+    overflow: hidden;
+    color: var(--text-muted);
+    font-size: 9px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.payment-method {
+    color: var(--text-secondary);
+    font-size: 10px;
+}
+
+.account-status,
+.type-badge,
+.status-badge,
+.automatic-badge,
+.editing-badge,
+.recurring-badge {
+    min-height: 24px;
+    padding: 0 8px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 9px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.account-status-pending {
+    border: 1px solid rgba(245, 158, 11, .18);
+    background: rgba(245, 158, 11, .07);
+    color: #fbbf24;
+}
+
+.account-status-overdue {
+    border: 1px solid rgba(239, 68, 68, .2);
+    background: rgba(239, 68, 68, .08);
+    color: #fca5a5;
+}
+
+.account-status-done,
+.status-open,
+.type-entry {
+    border: 1px solid rgba(34, 197, 94, .18);
+    background: rgba(34, 197, 94, .08);
+    color: #86efac;
+}
+
+.account-status-cancelled,
+.status-closed {
+    border: 1px solid var(--border);
+    background: var(--bg-surface-soft);
+    color: var(--text-muted);
+}
+
+.type-exit {
+    border: 1px solid rgba(239, 68, 68, .18);
+    background: rgba(239, 68, 68, .08);
+    color: #fca5a5;
+}
+
+.recurring-badge {
+    border: 1px solid rgba(59, 130, 246, .2);
+    background: var(--primary-soft);
+    color: #93c5fd;
+}
+
+.muted-value {
+    color: var(--text-muted);
+    font-size: 10px;
+}
+
+.money {
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.money-entry {
+    color: #86efac;
+}
+
+.money-exit {
+    color: #fca5a5;
+}
+
+.cash-total {
+    color: var(--text-primary);
+}
+
+.account-actions-column {
+    min-width: 190px;
+}
+
+.column-actions {
+    width: 150px;
+}
+
+.table-actions {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.table-actions form {
+    margin: 0;
+}
+
+.action-link {
+    appearance: none;
+    padding: 5px 7px;
+    border: 0;
+    border-radius: 5px;
+    background: transparent;
+    font-size: 10px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.action-view,
+.action-edit {
+    color: #93c5fd;
+}
+
+.action-pay {
+    color: #fca5a5;
+}
+
+.action-receive {
+    color: #86efac;
+}
+
+.action-delete {
+    color: #fca5a5;
+}
+
+.action-link:hover {
+    background: var(--bg-surface-hover);
+}
+
+/* FORM CONTA */
+
+.account-code {
+    min-width: 100px;
+    padding: 10px 13px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--bg-surface);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.account-code span {
+    color: var(--text-muted);
+    font-size: 8px;
+    text-transform: uppercase;
+}
+
+.account-code strong {
+    font-size: 16px;
+}
+
+.account-form-card {
+    padding: 19px;
+}
+
+.form-section-header {
+    margin-bottom: 17px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 11px;
+}
+
+.form-section-number {
+    width: 31px;
+    height: 31px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    background: var(--primary-soft);
+    color: #60a5fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.form-section-header h3 {
+    margin: 3px 0 3px;
+    font-size: 16px;
+}
+
+.form-section-header p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 10px;
+}
+
+.account-type-selector {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.account-type-option {
+    position: relative;
+    cursor: pointer;
+}
+
+.account-type-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.account-type-option > span {
+    min-height: 70px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--input-bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+}
+
+.account-type-option b {
+    color: var(--text-secondary);
+    font-size: 11px;
+}
+
+.account-type-option small {
+    color: var(--text-muted);
+    font-size: 9px;
+}
+
+.account-type-pay input:checked + span {
+    border-color: rgba(239, 68, 68, .35);
+    background: rgba(239, 68, 68, .06);
+}
+
+.account-type-pay input:checked + span b {
+    color: #fca5a5;
+}
+
+.account-type-receive input:checked + span {
+    border-color: rgba(34, 197, 94, .35);
+    background: rgba(34, 197, 94, .06);
+}
+
+.account-type-receive input:checked + span b {
+    color: #86efac;
+}
+
+.account-form-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(160px, .7fr) minmax(170px, .7fr) minmax(180px, 1fr);
+    gap: 12px;
+}
+
+.account-observation-field {
+    margin-top: 14px;
+}
+
+.recurring-option {
+    margin: 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.recurring-option > input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.recurring-checkbox {
+    width: 25px;
+    height: 25px;
+    flex-shrink: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    background: var(--input-bg);
+    color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.recurring-option > input:checked + .recurring-checkbox {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: #fff;
+}
+
+.recurring-option > span:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.recurring-option strong {
+    color: var(--text-secondary);
+    font-size: 11px;
+}
+
+.recurring-option small {
+    color: var(--text-muted);
+    font-size: 9px;
+    line-height: 1.45;
+}
+
+.recurring-section.recurring-disabled .recurring-option {
+    display: none;
+}
+
+.recurring-disabled-message {
+    display: none;
+    padding: 11px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-surface-soft);
+    color: var(--text-muted);
+    font-size: 10px;
+}
+
+.recurring-section.recurring-disabled .recurring-disabled-message {
+    display: block;
+}
+
+.account-preview {
+    padding: 13px 15px;
+    border: 1px solid rgba(59, 130, 246, .2);
+    border-radius: 10px;
+    background: rgba(59, 130, 246, .05);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.account-preview-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+}
+
+.preview-pay {
+    background: rgba(239, 68, 68, .09);
+    color: #f87171;
+}
+
+.preview-receive {
+    background: rgba(34, 197, 94, .09);
+    color: #4ade80;
+}
+
+.account-preview > div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.account-preview > div > span {
+    color: var(--text-muted);
+    font-size: 8px;
+    text-transform: uppercase;
+}
+
+.account-preview strong {
+    color: var(--text-secondary);
+    font-size: 11px;
+}
+
+.account-preview small {
+    color: var(--text-muted);
+    font-size: 9px;
+}
+
+.account-form-actions {
+    padding: 13px 15px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-surface);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.account-form-actions > div {
+    display: flex;
+    gap: 8px;
+}
+
+.required-info {
+    color: var(--text-muted);
+    font-size: 9px;
+}
+
+/* CAIXA */
+
+.no-cash-card {
+    min-height: 350px;
+    padding: 45px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.no-cash-icon {
+    width: 55px;
+    height: 55px;
+    margin-bottom: 13px;
+    border: 1px solid rgba(59, 130, 246, .25);
+    border-radius: 15px;
+    background: var(--primary-soft);
+    color: #93c5fd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+    font-weight: 800;
+}
+
+.no-cash-card h2 {
+    margin: 5px 0 6px;
+    font-size: 21px;
+}
+
+.no-cash-card p {
+    max-width: 520px;
+    margin: 0 0 19px;
+    color: var(--text-muted);
+    font-size: 11px;
+}
+
+.cash-header-card {
+    min-height: 76px;
+    padding: 14px 17px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.cash-header-main {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.open-cash-indicator {
+    min-height: 29px;
+    padding: 0 10px;
+    border: 1px solid rgba(34, 197, 94, .2);
+    border-radius: 999px;
+    background: rgba(34, 197, 94, .07);
+    color: #86efac;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 9px;
+    font-weight: 800;
+}
+
+.open-cash-indicator i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #22c55e;
+}
+
+.cash-header-main h2 {
+    margin: 0 0 3px;
+    font-size: 17px;
+}
+
+.cash-header-main p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 10px;
+}
 
 .cash-workspace {
     display: grid;
@@ -628,11 +1146,11 @@
 }
 
 .movement-card {
-    padding: 18px;
+    padding: 17px;
 }
 
 .movement-card-header {
-    margin-bottom: 17px;
+    margin-bottom: 16px;
     padding-bottom: 14px;
     border-bottom: 1px solid var(--border);
     display: flex;
@@ -641,19 +1159,20 @@
 }
 
 .movement-card-header h3 {
-    margin: 3px 0 3px;
-    font-size: 17px;
+    margin: 3px 0;
+    font-size: 16px;
 }
 
 .movement-card-header p {
     margin: 0;
     color: var(--text-muted);
-    font-size: 11px;
+    font-size: 10px;
 }
 
-.editing-badge {
+.editing-badge,
+.automatic-badge {
     height: fit-content;
-    border: 1px solid rgba(59, 130, 246, .20);
+    border: 1px solid rgba(59, 130, 246, .2);
     background: var(--primary-soft);
     color: #93c5fd;
 }
@@ -661,16 +1180,16 @@
 .movement-card form {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 13px;
 }
 
 .money-input {
     height: 40px;
-    display: flex;
-    align-items: center;
     border: 1px solid var(--border);
     border-radius: 8px;
     background: var(--input-bg);
+    display: flex;
+    align-items: center;
 }
 
 .money-input:focus-within {
@@ -681,7 +1200,7 @@
 .money-input > span {
     padding-left: 10px;
     color: var(--text-muted);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
 }
 
@@ -705,11 +1224,10 @@
 .movement-type-option input {
     position: absolute;
     opacity: 0;
-    pointer-events: none;
 }
 
 .movement-type-option > span {
-    min-height: 58px;
+    min-height: 56px;
     padding: 9px 10px;
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -722,12 +1240,12 @@
 
 .movement-type-option strong {
     color: var(--text-secondary);
-    font-size: 11px;
+    font-size: 10px;
 }
 
 .movement-type-option small {
     color: var(--text-muted);
-    font-size: 9px;
+    font-size: 8px;
 }
 
 .movement-entry-option input:checked + span {
@@ -760,15 +1278,13 @@
 
 .movement-preview span {
     color: var(--text-muted);
-    font-size: 9px;
+    font-size: 8px;
     text-transform: uppercase;
-    letter-spacing: .05em;
 }
 
 .movement-preview strong {
     color: var(--text-secondary);
-    font-size: 10px;
-    line-height: 1.45;
+    font-size: 9px;
 }
 
 .movement-actions {
@@ -815,41 +1331,71 @@
 
 .movement-description strong {
     color: var(--text-primary);
-    font-size: 11px;
+    font-size: 10px;
 }
 
 .movement-description small {
     color: var(--text-muted);
-    font-size: 9px;
+    font-size: 8px;
 }
 
 .observation-text {
     display: block;
     max-width: 260px;
     overflow: hidden;
+    color: var(--text-muted);
+    font-size: 9px;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: var(--text-muted);
-    font-size: 10px;
 }
 
 .automatic-movement-row {
     background: rgba(59, 130, 246, .018);
 }
 
-.automatic-badge {
-    border: 1px solid rgba(59, 130, 246, .20);
-    background: var(--primary-soft);
-    color: #93c5fd;
+/* HISTÓRICO */
+
+.cash-identity {
+    display: flex;
+    align-items: center;
+    gap: 9px;
 }
 
-/* DETALHE */
-
-.cash-detail-header {
+.cash-icon {
+    width: 33px;
+    height: 33px;
+    flex-shrink: 0;
+    border: 1px solid rgba(59, 130, 246, .22);
+    border-radius: 9px;
+    background: var(--primary-soft);
+    color: #93c5fd;
     display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+}
+
+.cash-identity > div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.cash-identity strong {
+    color: var(--text-primary);
+    font-size: 11px;
+}
+
+.cash-identity small {
+    color: var(--text-muted);
+    font-size: 8px;
+}
+
+.date-time-value,
+.movement-date {
+    color: var(--text-secondary);
+    font-size: 10px;
+    white-space: nowrap;
 }
 
 .cash-detail-header > div {
@@ -859,31 +1405,26 @@
 }
 
 .cash-detail-header h2 {
-    margin: 4px 0 4px;
-    font-size: 24px;
+    margin: 4px 0;
+    font-size: 23px;
 }
 
 .back-link {
-    margin-bottom: 12px;
+    margin-bottom: 11px;
     color: #60a5fa;
     text-decoration: none;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
 }
 
 .detail-summary-grid {
     display: grid;
-    grid-template-columns:
-        1.2fr
-        1.2fr
-        1fr
-        1fr
-        1fr;
+    grid-template-columns: 1.2fr 1.2fr 1fr 1fr 1fr;
     gap: 10px;
 }
 
 .detail-summary-card {
-    padding: 13px 14px;
+    padding: 13px;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -891,14 +1432,13 @@
 
 .detail-summary-card span {
     color: var(--text-muted);
-    font-size: 9px;
+    font-size: 8px;
     text-transform: uppercase;
-    letter-spacing: .05em;
 }
 
 .detail-summary-card strong {
     color: var(--text-primary);
-    font-size: 12px;
+    font-size: 11px;
 }
 
 .detail-entry strong {
@@ -916,7 +1456,7 @@
 /* EMPTY */
 
 .empty-state {
-    padding: 38px 20px;
+    padding: 36px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -939,8 +1479,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 800;
+}
+
+.empty-action {
+    margin-top: 8px;
 }
 
 /* TOAST */
@@ -956,21 +1500,20 @@
     display: flex;
     align-items: center;
     gap: 11px;
-    box-sizing: border-box;
     box-shadow: 0 16px 40px rgba(0, 0, 0, .32);
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
 }
 
 .finance-toast-success {
-    background: #064e3b;
     border: 1px solid #059669;
+    background: #064e3b;
     color: #d1fae5;
 }
 
 .finance-toast-error {
-    background: #4c1717;
     border: 1px solid #dc2626;
+    background: #4c1717;
     color: #fee2e2;
 }
 
@@ -988,9 +1531,29 @@
     cursor: pointer;
 }
 
-@media (max-width: 1250px) {
+/* RESPONSIVO */
+
+@media (max-width: 1300px) {
+    .account-filter {
+        grid-template-columns: repeat(4, minmax(130px, 1fr));
+    }
+
+    .account-search-field {
+        grid-column: span 2;
+    }
+
+    .account-form-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 1100px) {
+    .account-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .cash-workspace {
-        grid-template-columns: 300px minmax(0, 1fr);
+        grid-template-columns: 1fr;
     }
 
     .detail-summary-grid {
@@ -998,30 +1561,30 @@
     }
 }
 
-@media (max-width: 1050px) {
-    .cash-workspace {
-        grid-template-columns: 1fr;
-    }
-
-    .financial-summary {
-        grid-template-columns: repeat(3, minmax(160px, 1fr));
-    }
-}
-
 @media (max-width: 800px) {
     .finance-page-header,
-    .cash-header-card,
     .cash-detail-header,
+    .cash-header-card,
+    .filter-header,
     .cash-list-header,
-    .movement-history-header {
+    .movement-history-header,
+    .account-form-actions {
         align-items: flex-start;
         flex-direction: column;
     }
 
+    .account-filter,
     .period-filter,
     .financial-summary,
-    .detail-summary-grid {
+    .detail-summary-grid,
+    .account-actions,
+    .account-type-selector,
+    .account-form-grid {
         grid-template-columns: 1fr;
+    }
+
+    .account-search-field {
+        grid-column: auto;
     }
 
     .status-legend,
@@ -1029,14 +1592,24 @@
         flex-wrap: wrap;
     }
 
-    .btn-danger {
+    .account-form-actions > div {
         width: 100%;
+        justify-content: flex-end;
     }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 650px) {
+    .account-summary,
     .movement-type-selector {
         grid-template-columns: 1fr;
+    }
+
+    .finance-tabs {
+        overflow-x: auto;
+    }
+
+    .finance-tabs a {
+        white-space: nowrap;
     }
 
     .finance-toast {
