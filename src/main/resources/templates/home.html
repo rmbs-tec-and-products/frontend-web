@@ -1,15 +1,20 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
 
     <title>SysOdonto</title>
 
-    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <link rel="stylesheet"
+          th:href="@{/css/app.css}">
 
+    <link rel="stylesheet"
+          th:href="@{/css/home.css}">
 </head>
 
 <body>
@@ -20,37 +25,566 @@
 
     <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-    <main class="content">
+    <main class="content dashboard-page">
 
-        <h1>SysOdonto</h1>
+        <header class="dashboard-header">
 
-        <p>
-            Bem-vindo,
-            <strong th:text="${username}"></strong>. </p>
+            <div>
 
-        <div class="dashboard-grid">
+                <span class="page-eyebrow">
+                    Visão geral
+                </span>
 
-            <div class="dashboard-card">
-                <h3>Pacientes</h3>
-                <p>Cadastro, consulta e prontuário.</p>
+                <h1>
+                    Início
+                </h1>
+
+                <p>
+                    Bem-vindo,
+                    <strong th:text="${username}">
+                        usuário
+                    </strong>.
+                    Veja o resumo da clínica para hoje.
+                </p>
+
             </div>
 
-            <div class="dashboard-card">
-                <h3>Agenda</h3>
-                <p>Agendamentos e consultas.</p>
+            <div class="dashboard-date">
+
+                <span>
+                    Hoje
+                </span>
+
+                <strong th:text="${#temporals.format(hoje, 'dd/MM/yyyy')}">
+                </strong>
+
             </div>
 
-            <div class="dashboard-card">
-                <h3>Odontogramas</h3>
-                <p>Tratamentos e procedimentos.</p>
-            </div>
+        </header>
 
-            <div class="dashboard-card">
-                <h3>Financeiro</h3>
-                <p>Caixa, contas a pagar e receber.</p>
-            </div>
+        <!-- INDICADORES DO DIA -->
 
-        </div>
+        <section class="dashboard-stats">
+
+            <a th:href="@{/agenda}"
+               class="stat-card">
+
+                <div class="stat-icon stat-icon-agenda">
+                    ◷
+                </div>
+
+                <div>
+
+                    <span>
+                        Atendimentos hoje
+                    </span>
+
+                    <strong th:text="${totalAgendamentosHoje}">
+                        0
+                    </strong>
+
+                    <small>
+                        Agendamentos do dia
+                    </small>
+
+                </div>
+
+            </a>
+
+            <a th:href="@{/agenda}"
+               class="stat-card">
+
+                <div class="stat-icon stat-icon-patient">
+                    P
+                </div>
+
+                <div>
+
+                    <span>
+                        Pacientes hoje
+                    </span>
+
+                    <strong th:text="${totalPacientesHoje}">
+                        0
+                    </strong>
+
+                    <small>
+                        Pacientes agendados
+                    </small>
+
+                </div>
+
+            </a>
+
+            <a th:href="@{/agenda}"
+               class="stat-card">
+
+                <div class="stat-icon stat-icon-dentist">
+                    D
+                </div>
+
+                <div>
+
+                    <span>
+                        Dentistas hoje
+                    </span>
+
+                    <strong th:text="${totalDentistasHoje}">
+                        0
+                    </strong>
+
+                    <small>
+                        Profissionais com agenda
+                    </small>
+
+                </div>
+
+            </a>
+
+        </section>
+
+        <!-- CONTEÚDO PRINCIPAL -->
+
+        <section class="dashboard-main-grid">
+
+            <section class="dashboard-panel agenda-panel">
+
+                <header class="panel-header">
+
+                    <div>
+
+                        <span class="section-eyebrow">
+                            Agenda
+                        </span>
+
+                        <h2>
+                            Atendimentos de hoje
+                        </h2>
+
+                        <p th:text="${totalAgendamentosHoje + ' atendimento(s) agendado(s)'}">
+                        </p>
+
+                    </div>
+
+                    <a th:href="@{/agenda}"
+                       class="panel-link">
+                        Ver agenda →
+                    </a>
+
+                </header>
+
+                <div th:if="${!#lists.isEmpty(agendaHojeResumo)}"
+                     class="today-schedule">
+
+                    <a th:each="agendamento : ${agendaHojeResumo}"
+                       th:href="@{/agenda/{codigo}/editar(codigo=${agendamento.codigo})}"
+                       class="schedule-item">
+
+                        <div class="schedule-time">
+
+                            <strong th:text="${#temporals.format(agendamento.data, 'HH:mm')}">
+                            </strong>
+
+                            <span>
+                                horário
+                            </span>
+
+                        </div>
+
+                        <div class="schedule-line">
+                        </div>
+
+                        <div class="schedule-info">
+
+                            <strong th:text="${agendamento.pacienteNome}">
+                            </strong>
+
+                            <span th:text="${agendamento.dentistaNome}">
+                            </span>
+
+                        </div>
+
+                        <span class="schedule-arrow">
+                            →
+                        </span>
+
+                    </a>
+
+                </div>
+
+                <div th:if="${#lists.isEmpty(agendaHojeResumo)}"
+                     class="panel-empty">
+
+                    <div class="panel-empty-icon">
+                        ◷
+                    </div>
+
+                    <strong>
+                        Nenhum atendimento hoje
+                    </strong>
+
+                    <span>
+                        A agenda está livre para esta data.
+                    </span>
+
+                    <a th:href="@{/agenda/novo(data=${hoje})}"
+                       class="btn-primary">
+                        + Novo agendamento
+                    </a>
+
+                </div>
+
+                <a th:if="${totalAgendamentosHoje > 6}"
+                   th:href="@{/agenda}"
+                   class="view-all">
+
+                    Ver todos os
+                    <span th:text="${totalAgendamentosHoje}">
+                    </span>
+                    atendimentos
+
+                </a>
+
+            </section>
+
+            <!-- CAIXA -->
+
+            <section class="dashboard-panel cash-panel">
+
+                <header class="panel-header">
+
+                    <div>
+
+                        <span class="section-eyebrow">
+                            Financeiro
+                        </span>
+
+                        <h2>
+                            Caixa
+                        </h2>
+
+                    </div>
+
+                    <a th:href="@{/financeiro/caixa-aberto}"
+                       class="panel-link">
+                        Abrir financeiro →
+                    </a>
+
+                </header>
+
+                <div th:if="${caixaAberto != null}"
+                     class="cash-open-dashboard">
+
+                    <div class="cash-status">
+
+                        <span class="cash-status-dot">
+                        </span>
+
+                        Caixa aberto
+
+                    </div>
+
+                    <span class="cash-label">
+                        Saldo atual
+                    </span>
+
+                    <strong class="cash-balance"
+                            th:text="${caixaAberto.total != null
+                                ? 'R$ ' + #numbers.formatDecimal(caixaAberto.total, 1, 'POINT', 2, 'COMMA')
+                                : 'R$ 0,00'}">
+                    </strong>
+
+                    <div class="cash-values">
+
+                        <div>
+
+                            <span>
+                                Entradas
+                            </span>
+
+                            <strong class="cash-entry"
+                                    th:text="${caixaAberto.totalEntrada != null
+                                        ? 'R$ ' + #numbers.formatDecimal(caixaAberto.totalEntrada, 1, 'POINT', 2, 'COMMA')
+                                        : 'R$ 0,00'}">
+                            </strong>
+
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Saídas
+                            </span>
+
+                            <strong class="cash-exit"
+                                    th:text="${caixaAberto.totalSaida != null
+                                        ? 'R$ ' + #numbers.formatDecimal(caixaAberto.totalSaida, 1, 'POINT', 2, 'COMMA')
+                                        : 'R$ 0,00'}">
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                    <div class="cash-opened-at">
+
+                        Aberto em
+
+                        <strong th:text="${#temporals.format(caixaAberto.dataAbertura, 'dd/MM/yyyy HH:mm')}">
+                        </strong>
+
+                    </div>
+
+                </div>
+
+                <div th:if="${caixaAberto == null}"
+                     class="cash-closed-dashboard">
+
+                    <div class="cash-closed-icon">
+                        $
+                    </div>
+
+                    <strong>
+                        Nenhum caixa aberto
+                    </strong>
+
+                    <span>
+                        Abra o caixa antes de concluir procedimentos ou registrar movimentações.
+                    </span>
+
+                    <a th:href="@{/financeiro/caixa-aberto}"
+                       class="btn-primary">
+
+                        Ir para Financeiro
+
+                    </a>
+
+                </div>
+
+            </section>
+
+        </section>
+
+        <!-- PARTE INFERIOR -->
+
+        <section class="dashboard-bottom-grid">
+
+            <!-- ESTOQUE -->
+
+            <section class="dashboard-panel">
+
+                <header class="panel-header">
+
+                    <div>
+
+                        <span class="section-eyebrow">
+                            Estoque
+                        </span>
+
+                        <h2>
+                            Materiais para reposição
+                        </h2>
+
+                        <p th:text="${totalProdutosEstoqueBaixo > 0
+                            ? totalProdutosEstoqueBaixo + ' produto(s) no estoque mínimo'
+                            : 'Produtos dentro dos níveis definidos'}">
+                        </p>
+
+                    </div>
+
+                    <a th:href="@{/produtos}"
+                       class="panel-link">
+                        Ver produtos →
+                    </a>
+
+                </header>
+
+                <div th:if="${!#lists.isEmpty(produtosEstoqueBaixo)}"
+                     class="stock-list">
+
+                    <a th:each="produto : ${produtosEstoqueBaixo}"
+                       th:href="@{/produtos/{codigo}/editar(codigo=${produto.codigo})}"
+                       class="stock-item">
+
+                        <span class="stock-warning-dot">
+                        </span>
+
+                        <div class="stock-product">
+
+                            <strong th:text="${produto.nome}">
+                            </strong>
+
+                            <span th:text="${produto.fornecedorNome != null
+                                ? produto.fornecedorNome
+                                : 'Sem fornecedor'}">
+                            </span>
+
+                        </div>
+
+                        <div class="stock-quantity">
+
+                            <strong th:text="${produto.quantidade}">
+                            </strong>
+
+                            <span>
+                                atual
+                            </span>
+
+                        </div>
+
+                        <div class="stock-minimum">
+
+                            <strong th:text="${produto.quantidadeMinima}">
+                            </strong>
+
+                            <span>
+                                mínimo
+                            </span>
+
+                        </div>
+
+                    </a>
+
+                </div>
+
+                <div th:if="${#lists.isEmpty(produtosEstoqueBaixo)}"
+                     class="stock-ok">
+
+                    <span class="stock-ok-icon">
+                        ✓
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Estoque dentro dos limites
+                        </strong>
+
+                        <span>
+                            Nenhum material atingiu a quantidade mínima.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- ACESSOS RÁPIDOS -->
+
+            <section class="dashboard-panel">
+
+                <header class="panel-header">
+
+                    <div>
+
+                        <span class="section-eyebrow">
+                            Atalhos
+                        </span>
+
+                        <h2>
+                            Acesso rápido
+                        </h2>
+
+                        <p>
+                            Ações utilizadas no dia a dia da clínica.
+                        </p>
+
+                    </div>
+
+                </header>
+
+                <div class="quick-actions">
+
+                    <a th:href="@{/pacientes/novo}"
+                       class="quick-action">
+
+                        <span class="quick-icon">
+                            +
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Novo paciente
+                            </strong>
+
+                            <span>
+                                Cadastrar paciente
+                            </span>
+
+                        </div>
+
+                    </a>
+
+                    <a th:href="@{/agenda/novo(data=${hoje})}"
+                       class="quick-action">
+
+                        <span class="quick-icon">
+                            ◷
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Novo agendamento
+                            </strong>
+
+                            <span>
+                                Agendar atendimento
+                            </span>
+
+                        </div>
+
+                    </a>
+
+                    <a th:href="@{/odontogramas}"
+                       class="quick-action">
+
+                        <span class="quick-icon">
+                            +
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Odontograma
+                            </strong>
+
+                            <span>
+                                Consultar tratamentos
+                            </span>
+
+                        </div>
+
+                    </a>
+
+                    <a th:href="@{/financeiro/caixa-aberto}"
+                       class="quick-action">
+
+                        <span class="quick-icon">
+                            $
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Financeiro
+                            </strong>
+
+                            <span>
+                                Caixa e movimentações
+                            </span>
+
+                        </div>
+
+                    </a>
+
+                </div>
+
+            </section>
+
+        </section>
 
     </main>
 

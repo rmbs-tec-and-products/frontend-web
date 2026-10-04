@@ -11,8 +11,12 @@
 
     <link rel="stylesheet"
           th:href="@{/css/app.css}">
+
     <link rel="stylesheet"
           th:href="@{/css/dentista.css}">
+
+    <script th:src="@{/js/dentista.js}"
+            defer></script>
 </head>
 
 <body>
@@ -25,71 +29,120 @@
 
     <main class="content dentista-page">
 
-        <div class="page-header">
+        <!-- TOASTS -->
+
+        <div th:if="${mensagemSucesso}"
+             class="dentista-toast dentista-toast-success">
+
+            <span class="dentista-toast-icon">
+                ✓
+            </span>
+
+            <span th:text="${mensagemSucesso}">
+            </span>
+
+            <button type="button"
+                    class="dentista-toast-close"
+                    aria-label="Fechar">
+                ×
+            </button>
+
+        </div>
+
+        <div th:if="${mensagemErro}"
+             class="dentista-toast dentista-toast-error">
+
+            <span class="dentista-toast-icon">
+                !
+            </span>
+
+            <span th:text="${mensagemErro}">
+            </span>
+
+            <button type="button"
+                    class="dentista-toast-close"
+                    aria-label="Fechar">
+                ×
+            </button>
+
+        </div>
+
+        <!-- CABEÇALHO -->
+
+        <header class="dentist-page-header">
 
             <div>
-                <h1>Dentistas</h1>
 
-                <p class="page-subtitle">
+                <span class="page-eyebrow">
+                    Equipe clínica
+                </span>
+
+                <h1>
+                    Dentistas
+                </h1>
+
+                <p>
                     Gerencie os profissionais responsáveis pelos atendimentos.
                 </p>
+
             </div>
 
             <a th:if="${modo == 'consultar'}"
                th:href="@{/dentistas/novo}"
                class="btn-primary">
+
                 + Novo dentista
+
             </a>
 
-        </div>
+        </header>
 
-        <div th:if="${mensagemSucesso}"
-             class="feedback feedback-success">
+        <!-- ABAS -->
 
-            <span class="feedback-icon">✓</span>
-
-            <span th:text="${mensagemSucesso}">
-            </span>
-
-        </div>
-
-        <div th:if="${mensagemErro}"
-             class="feedback feedback-error">
-
-            <span class="feedback-icon">!</span>
-
-            <span th:text="${mensagemErro}">
-            </span>
-
-        </div>
-
-        <div class="dentist-tabs">
-
-            <a th:href="@{/dentistas/novo}"
-               th:classappend="${modo == 'novo'} ? ' active' : ''">
-                Novo
-            </a>
+        <nav class="dentist-tabs">
 
             <a th:href="@{/dentistas}"
                th:classappend="${modo == 'consultar'} ? ' active' : ''">
+
                 Consultar
+
             </a>
 
-        </div>
+            <a th:href="@{/dentistas/novo}"
+               th:classappend="${modo == 'novo'} ? ' active' : ''">
 
-        <section th:if="${modo == 'consultar'}">
+                Novo dentista
 
-            <div class="search-card">
+            </a>
+
+        </nav>
+
+        <!-- =====================================================
+             CONSULTAR
+        ====================================================== -->
+
+        <section th:if="${modo == 'consultar'}"
+                 class="dentist-consult">
+
+            <section class="search-card">
 
                 <div class="search-header">
 
-                    <h2>
-                        Consultar dentistas
-                    </h2>
+                    <div>
 
-                    <p>
-                        Pesquise pelo nome do profissional.
-                    </p>
+                        <span class="section-eyebrow">
+                            Localizar profissional
+                        </span>
+
+                        <h2>
+                            Consulta
+                        </h2>
+
+                        <p>
+                            Pesquise pelo nome do dentista.
+                        </p>
+
+                    </div>
 
                 </div>
 
@@ -99,18 +152,18 @@
 
                     <div class="search-input-wrapper">
 
-                        <span class="search-icon">⌕</span>
+                        <span class="search-icon">
+                            ⌕
+                        </span>
 
-                        <input
-                                name="pesquisa"
-                                type="text"
-                                th:value="${pesquisa}"
-                                placeholder="Digite o nome do dentista...">
+                        <input name="pesquisa"
+                               type="text"
+                               th:value="${pesquisa}"
+                               placeholder="Digite o nome do dentista">
 
                     </div>
 
-                    <button
-                            type="submit"
+                    <button type="submit"
                             class="btn-primary">
                         Pesquisar
                     </button>
@@ -123,23 +176,28 @@
 
                 </form>
 
-            </div>
+            </section>
 
-            <div class="table-card">
+            <section class="dentist-list-card">
 
-                <div class="table-header">
+                <header class="dentist-list-header">
 
                     <div>
 
-                        <h2>Dentistas</h2>
-
-                        <span class="result-count"
-                              th:text="${#lists.size(dentistas) + ' dentista(s) encontrado(s)'}">
+                        <span class="section-eyebrow">
+                            Corpo clínico
                         </span>
+
+                        <h2>
+                            Profissionais cadastrados
+                        </h2>
+
+                        <p th:text="${#lists.size(dentistas) + ' dentista(s) encontrado(s)'}">
+                        </p>
 
                     </div>
 
-                </div>
+                </header>
 
                 <div class="table-responsive">
 
@@ -148,19 +206,10 @@
                         <thead>
 
                         <tr>
-
-                            <th class="column-code">
-                                Código
-                            </th>
-
-                            <th>
-                                Nome
-                            </th>
-
-                            <th class="column-actions">
-                                Ações
-                            </th>
-
+                            <th>Profissional</th>
+                            <th class="column-code">Código</th>
+                            <th class="column-agenda">Agenda</th>
+                            <th class="column-actions">Ações</th>
                         </tr>
 
                         </thead>
@@ -168,6 +217,33 @@
                         <tbody>
 
                         <tr th:each="dentista : ${dentistas}">
+
+                            <td>
+
+                                <a th:href="@{/dentistas/{codigo}/editar(codigo=${dentista.codigo})}"
+                                   class="dentist-identity">
+
+                                    <span class="dentist-avatar"
+                                          th:text="${dentista.nome != null && !dentista.nome.isBlank()
+                                            ? #strings.substring(dentista.nome, 0, 1)
+                                            : 'D'}">
+                                        D
+                                    </span>
+
+                                    <span class="dentist-identity-text">
+
+                                        <strong th:text="${dentista.nome}">
+                                        </strong>
+
+                                        <small>
+                                            Profissional clínico
+                                        </small>
+
+                                    </span>
+
+                                </a>
+
+                            </td>
 
                             <td>
 
@@ -179,9 +255,11 @@
 
                             <td>
 
-                                <a th:href="@{/dentistas/{codigo}/editar(codigo=${dentista.codigo})}"
-                                   class="dentist-name"
-                                   th:text="${dentista.nome}">
+                                <a th:href="@{/agenda(dentistaCodigo=${dentista.codigo})}"
+                                   class="agenda-link">
+
+                                    Ver agenda
+
                                 </a>
 
                             </td>
@@ -191,18 +269,21 @@
                                 <div class="table-actions">
 
                                     <a th:href="@{/dentistas/{codigo}/editar(codigo=${dentista.codigo})}"
-                                       class="btn-table-edit">
+                                       class="action-link action-edit">
+
                                         Editar
+
                                     </a>
 
                                     <form th:action="@{/dentistas/{codigo}/excluir(codigo=${dentista.codigo})}"
                                           method="post">
 
-                                        <button
-                                                type="submit"
-                                                class="btn-table-delete"
+                                        <button type="submit"
+                                                class="action-link action-delete"
                                                 onclick="return confirm('Deseja realmente excluir este dentista?')">
+
                                             Excluir
+
                                         </button>
 
                                     </form>
@@ -215,12 +296,12 @@
 
                         <tr th:if="${#lists.isEmpty(dentistas)}">
 
-                            <td colspan="3">
+                            <td colspan="4">
 
                                 <div class="empty-state">
 
-                                    <div class="empty-icon">
-                                        ⌕
+                                    <div class="empty-state-icon">
+                                        +
                                     </div>
 
                                     <strong>
@@ -228,8 +309,15 @@
                                     </strong>
 
                                     <span>
-                                        Tente pesquisar utilizando outro nome.
+                                        Cadastre um novo profissional ou altere o termo pesquisado.
                                     </span>
+
+                                    <a th:href="@{/dentistas/novo}"
+                                       class="btn-primary empty-action">
+
+                                        + Novo dentista
+
+                                    </a>
 
                                 </div>
 
@@ -243,70 +331,116 @@
 
                 </div>
 
-            </div>
+            </section>
 
         </section>
 
-        <section th:if="${modo == 'novo'}">
+        <!-- =====================================================
+             NOVO / EDITAR
+        ====================================================== -->
 
-            <div class="edit-status"
-                 th:if="${dentistaForm.codigo != null}">
+        <section th:if="${modo == 'novo'}"
+                 class="dentist-editor">
 
-                <span>
-                    Editando dentista
-                </span>
+            <header class="dentist-editor-header">
 
-                <strong th:text="${'#' + dentistaForm.codigo}">
-                </strong>
+                <div class="editor-title">
 
-            </div>
+                    <a th:href="@{/dentistas}"
+                       class="back-link">
+
+                        ← Voltar para dentistas
+
+                    </a>
+
+                    <div>
+
+                        <span class="page-eyebrow"
+                              th:text="${dentistaForm.codigo == null
+                                ? 'Novo profissional'
+                                : 'Editando profissional'}">
+                        </span>
+
+                        <h2 th:text="${dentistaForm.codigo == null
+                            ? 'Novo dentista'
+                            : dentistaForm.nome}">
+                        </h2>
+
+                        <p th:text="${dentistaForm.codigo == null
+                            ? 'Cadastre o profissional que realizará os atendimentos da clínica.'
+                            : 'Atualize as informações do profissional selecionado.'}">
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div th:if="${dentistaForm.codigo != null}"
+                     class="dentist-editor-code">
+
+                    <span>
+                        Código
+                    </span>
+
+                    <strong th:text="${dentistaForm.codigo}">
+                    </strong>
+
+                </div>
+
+            </header>
 
             <form th:action="@{/dentistas/salvar}"
                   th:object="${dentistaForm}"
-                  method="post">
+                  method="post"
+                  class="dentist-form">
 
-                <input
-                        type="hidden"
-                        th:field="*{codigo}">
+                <input type="hidden"
+                       th:field="*{codigo}">
 
                 <section class="form-card">
 
-                    <div class="section-header">
+                    <header class="form-card-header">
 
-                        <div class="section-number">
+                        <span class="section-number">
                             1
-                        </div>
+                        </span>
 
                         <div>
 
-                            <h2>
+                            <span class="section-eyebrow">
+                                Identificação
+                            </span>
+
+                            <h3>
                                 Dados do dentista
-                            </h2>
+                            </h3>
 
                             <p>
-                                Informe o nome do profissional.
+                                Informe o nome do profissional responsável pelos atendimentos.
                             </p>
 
                         </div>
 
-                    </div>
+                    </header>
 
                     <div class="dentist-grid">
 
                         <div class="field">
 
                             <label for="nome">
+
                                 Nome
                                 <span class="required">*</span>
+
                             </label>
 
-                            <input
-                                    id="nome"
-                                    type="text"
-                                    th:field="*{nome}"
-                                    maxlength="100"
-                                    required
-                                    placeholder="Ex.: Dr. João Silva">
+                            <input id="nome"
+                                   type="text"
+                                   th:field="*{nome}"
+                                   maxlength="100"
+                                   required
+                                   autocomplete="off"
+                                   placeholder="Ex.: Dr. João Silva">
 
                         </div>
 
@@ -314,7 +448,34 @@
 
                 </section>
 
-                <div class="form-action-bar">
+                <section class="dentist-preview">
+
+                    <div class="preview-avatar"
+                         id="dentist-preview-avatar">
+
+                        D
+
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Resumo do profissional
+                        </span>
+
+                        <strong id="dentist-preview-text">
+                            Informe o nome do dentista.
+                        </strong>
+
+                        <small>
+                            Após o cadastro, o profissional poderá ser utilizado nos agendamentos.
+                        </small>
+
+                    </div>
+
+                </section>
+
+                <footer class="form-action-bar">
 
                     <span class="required-info">
 
@@ -327,21 +488,24 @@
 
                         <a th:href="@{/dentistas}"
                            class="btn-secondary">
+
                             Cancelar
+
                         </a>
 
-                        <button
-                                type="submit"
+                        <button type="submit"
                                 class="btn-primary"
                                 th:text="${dentistaForm.codigo == null
                                     ? 'Cadastrar dentista'
                                     : 'Salvar alterações'}">
+
                             Salvar
+
                         </button>
 
                     </div>
 
-                </div>
+                </footer>
 
             </form>
 

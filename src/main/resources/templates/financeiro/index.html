@@ -4,7 +4,6 @@
 
 <head>
     <meta charset="UTF-8">
-
     <meta name="viewport"
           content="width=device-width, initial-scale=1">
 
@@ -15,6 +14,9 @@
 
     <link rel="stylesheet"
           th:href="@{/css/financeiro.css}">
+
+    <script th:src="@{/js/financeiro.js}"
+            defer></script>
 </head>
 
 <body>
@@ -27,75 +29,110 @@
 
     <main class="content financeiro-page">
 
-        <div class="page-header">
-
-            <div>
-
-                <h1>Financeiro</h1>
-
-                <p class="page-subtitle">
-                    Controle de caixa, entradas e saídas.
-                </p>
-
-            </div>
-
-        </div>
+        <!-- TOASTS -->
 
         <div th:if="${mensagemSucesso}"
-             class="feedback feedback-success">
+             class="finance-toast finance-toast-success">
 
-            <span class="feedback-icon">
-                ✓
-            </span>
+            <span class="finance-toast-icon">✓</span>
 
             <span th:text="${mensagemSucesso}">
             </span>
 
+            <button type="button"
+                    class="finance-toast-close"
+                    aria-label="Fechar">
+                ×
+            </button>
+
         </div>
 
         <div th:if="${mensagemErro}"
-             class="feedback feedback-error">
+             class="finance-toast finance-toast-error">
 
-            <span class="feedback-icon">
-                !
-            </span>
+            <span class="finance-toast-icon">!</span>
 
             <span th:text="${mensagemErro}">
             </span>
 
+            <button type="button"
+                    class="finance-toast-close"
+                    aria-label="Fechar">
+                ×
+            </button>
+
         </div>
 
-        <div class="finance-tabs">
+        <!-- CABEÇALHO -->
+
+        <header class="finance-page-header">
+
+            <div>
+
+                <span class="page-eyebrow">
+                    Gestão financeira
+                </span>
+
+                <h1>
+                    Financeiro
+                </h1>
+
+                <p>
+                    Controle de caixas, entradas, saídas e movimentações dos atendimentos.
+                </p>
+
+            </div>
+
+            <a th:if="${modo == 'consultar' || modo == 'detalhe'}"
+               th:href="@{/financeiro/caixa-aberto}"
+               class="btn-primary">
+                Ir para caixa aberto
+            </a>
+
+        </header>
+
+        <!-- TABS -->
+
+        <nav class="finance-tabs">
 
             <a th:href="@{/financeiro}"
                th:classappend="${modo == 'consultar' || modo == 'detalhe'} ? ' active' : ''">
-
-                Consultar
-
+                Histórico de caixas
             </a>
 
             <a th:href="@{/financeiro/caixa-aberto}"
                th:classappend="${modo == 'caixaAberto'} ? ' active' : ''">
-
                 Caixa aberto
-
             </a>
 
-        </div>
+        </nav>
 
-        <!-- CONSULTAR -->
+        <!-- =====================================================
+             CONSULTA
+        ====================================================== -->
 
-        <section th:if="${modo == 'consultar'}">
+        <section th:if="${modo == 'consultar'}"
+                 class="finance-consult">
 
-            <div class="filter-card">
+            <section class="filter-card">
 
-                <div class="section-title">
+                <div class="filter-header">
 
-                    <h2>Consultar caixas</h2>
+                    <div>
 
-                    <p>
-                        Informe o período desejado.
-                    </p>
+                        <span class="section-eyebrow">
+                            Histórico
+                        </span>
+
+                        <h2>
+                            Consultar caixas
+                        </h2>
+
+                        <p>
+                            Selecione o período para visualizar os caixas registrados.
+                        </p>
+
+                    </div>
 
                 </div>
 
@@ -106,7 +143,7 @@
                     <div class="field">
 
                         <label for="inicio">
-                            Início
+                            Data inicial
                         </label>
 
                         <input id="inicio"
@@ -120,7 +157,7 @@
                     <div class="field">
 
                         <label for="fim">
-                            Fim
+                            Data final
                         </label>
 
                         <input id="fim"
@@ -133,51 +170,63 @@
 
                     <button type="submit"
                             class="btn-primary filter-button">
-
                         Pesquisar
-
                     </button>
 
                 </form>
 
-            </div>
+            </section>
 
-            <div class="table-card">
+            <section class="cash-list-card">
 
-                <div class="table-header">
+                <header class="cash-list-header">
 
                     <div>
 
-                        <h2>Caixas</h2>
+                        <span class="section-eyebrow">
+                            Movimentação financeira
+                        </span>
 
-                        <span class="result-count"
-                              th:text="${#lists.size(caixas) + ' caixa(s) encontrado(s)'}">
+                        <h2>
+                            Caixas
+                        </h2>
+
+                        <p th:text="${#lists.size(caixas) + ' caixa(s) encontrado(s)'}">
+                        </p>
+
+                    </div>
+
+                    <div class="status-legend">
+
+                        <span>
+                            <i class="legend-dot legend-open"></i>
+                            Aberto
+                        </span>
+
+                        <span>
+                            <i class="legend-dot legend-closed"></i>
+                            Fechado
                         </span>
 
                     </div>
 
-                </div>
+                </header>
 
                 <div class="table-responsive">
 
-                    <table class="finance-table">
+                    <table class="finance-table cash-history-table">
 
                         <thead>
 
                         <tr>
-
-                            <th>Código</th>
+                            <th>Caixa</th>
                             <th>Abertura</th>
                             <th>Fechamento</th>
                             <th>Status</th>
                             <th>Entradas</th>
                             <th>Saídas</th>
                             <th>Saldo</th>
-
-                            <th class="column-actions">
-                                Ações
-                            </th>
-
+                            <th class="column-actions">Ações</th>
                         </tr>
 
                         </thead>
@@ -188,47 +237,75 @@
 
                             <td>
 
-                                <span class="code-badge"
-                                      th:text="${caixa.codigo}">
-                                </span>
+                                <div class="cash-identity">
 
-                            </td>
+                                    <span class="cash-icon">
+                                        $
+                                    </span>
 
-                            <td th:text="${#temporals.format(caixa.dataAbertura, 'dd/MM/yyyy HH:mm')}">
-                            </td>
+                                    <div>
 
-                            <td th:text="${caixa.dataFechamento != null
-                                ? #temporals.format(caixa.dataFechamento, 'dd/MM/yyyy HH:mm')
-                                : '-'}">
-                            </td>
+                                        <strong th:text="${'Caixa #' + caixa.codigo}">
+                                        </strong>
 
-                            <td>
+                                        <small th:text="${#temporals.format(caixa.dataAbertura, 'dd/MM/yyyy')}">
+                                        </small>
 
-                                <span th:class="${caixa.aberto ? 'status-badge status-open' : 'status-badge status-closed'}"
-                                      th:text="${caixa.aberto ? 'Aberto' : 'Fechado'}">
-                                </span>
+                                    </div>
 
-                            </td>
-
-                            <td>
-
-                                <span class="money money-entry"
-                                      th:text="${'R$ ' + #numbers.formatDecimal(caixa.totalEntrada, 1, 'POINT', 2, 'COMMA')}">
-                                </span>
+                                </div>
 
                             </td>
 
                             <td>
 
-                                <span class="money money-exit"
-                                      th:text="${'R$ ' + #numbers.formatDecimal(caixa.totalSaida, 1, 'POINT', 2, 'COMMA')}">
+                                <span class="date-time-value"
+                                      th:text="${#temporals.format(caixa.dataAbertura, 'dd/MM/yyyy HH:mm')}">
                                 </span>
 
                             </td>
 
                             <td>
 
-                                <strong class="money"
+                                <span class="date-time-value"
+                                      th:text="${caixa.dataFechamento != null
+                                        ? #temporals.format(caixa.dataFechamento, 'dd/MM/yyyy HH:mm')
+                                        : '-'}">
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span th:class="${caixa.aberto
+                                        ? 'status-badge status-open'
+                                        : 'status-badge status-closed'}"
+                                      th:text="${caixa.aberto
+                                        ? 'Aberto'
+                                        : 'Fechado'}">
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <strong class="money money-entry"
+                                        th:text="${'R$ ' + #numbers.formatDecimal(caixa.totalEntrada, 1, 'POINT', 2, 'COMMA')}">
+                                </strong>
+
+                            </td>
+
+                            <td>
+
+                                <strong class="money money-exit"
+                                        th:text="${'R$ ' + #numbers.formatDecimal(caixa.totalSaida, 1, 'POINT', 2, 'COMMA')}">
+                                </strong>
+
+                            </td>
+
+                            <td>
+
+                                <strong class="money cash-total"
                                         th:text="${'R$ ' + #numbers.formatDecimal(caixa.total, 1, 'POINT', 2, 'COMMA')}">
                                 </strong>
 
@@ -237,10 +314,8 @@
                             <td>
 
                                 <a th:href="@{/financeiro/caixas/{codigo}(codigo=${caixa.codigo})}"
-                                   class="btn-table-view">
-
+                                   class="action-link action-view">
                                     Ver histórico
-
                                 </a>
 
                             </td>
@@ -253,7 +328,7 @@
 
                                 <div class="empty-state">
 
-                                    <div class="empty-icon">
+                                    <div class="empty-state-icon">
                                         $
                                     </div>
 
@@ -262,7 +337,7 @@
                                     </strong>
 
                                     <span>
-                                        Não existem caixas no período informado.
+                                        Não existem caixas registrados no período informado.
                                     </span>
 
                                 </div>
@@ -277,68 +352,71 @@
 
                 </div>
 
-            </div>
+            </section>
 
         </section>
 
-        <!-- CAIXA ABERTO -->
+        <!-- =====================================================
+             CAIXA ABERTO
+        ====================================================== -->
 
-        <section th:if="${modo == 'caixaAberto'}">
+        <section th:if="${modo == 'caixaAberto'}"
+                 class="open-cash-page">
 
-            <div th:if="${caixaAberto == null}"
-                 class="no-cash-card">
+            <!-- SEM CAIXA -->
+
+            <section th:if="${caixaAberto == null}"
+                     class="no-cash-card">
 
                 <div class="no-cash-icon">
                     $
                 </div>
+
+                <span class="section-eyebrow">
+                    Caixa fechado
+                </span>
 
                 <h2>
                     Nenhum caixa aberto
                 </h2>
 
                 <p>
-                    Abra o caixa para começar a registrar entradas e saídas.
+                    Abra o caixa para registrar movimentações e receber automaticamente os procedimentos concluídos.
                 </p>
 
                 <form th:action="@{/financeiro/abrir}"
                       method="post">
 
                     <button type="submit"
-                            class="btn-primary">
-
+                            class="btn-primary btn-open-cash">
                         Abrir caixa
-
                     </button>
 
                 </form>
 
-            </div>
+            </section>
 
-            <div th:if="${caixaAberto != null}">
+            <!-- COM CAIXA -->
 
-                <div class="cash-header-card">
+            <div th:if="${caixaAberto != null}"
+                 class="open-cash-content">
 
-                    <div class="cash-header-info">
+                <section class="cash-header-card">
 
-                        <div>
+                    <div class="cash-header-main">
 
-                            <span class="summary-label">
-                                Caixa aberto
-                            </span>
-
-                            <strong th:text="${#temporals.format(caixaAberto.dataAbertura, 'dd/MM/yyyy')}">
-                            </strong>
-
-                        </div>
+                        <span class="open-cash-indicator">
+                            <i></i>
+                            Caixa aberto
+                        </span>
 
                         <div>
 
-                            <span class="summary-label">
-                                Aberto em
-                            </span>
+                            <h2 th:text="${'Caixa #' + caixaAberto.codigo}">
+                            </h2>
 
-                            <strong th:text="${#temporals.format(caixaAberto.dataAbertura, 'dd/MM/yyyy HH:mm')}">
-                            </strong>
+                            <p th:text="${'Aberto em ' + #temporals.format(caixaAberto.dataAbertura, 'dd/MM/yyyy HH:mm')}">
+                            </p>
 
                         </div>
 
@@ -349,76 +427,129 @@
 
                         <button type="submit"
                                 class="btn-danger"
-                                onclick="return confirm('Deseja realmente fechar o caixa?')">
-
+                                onclick="return confirm('Deseja realmente fechar o caixa? Após o fechamento não será possível alterar suas movimentações.')">
                             Fechar caixa
-
                         </button>
 
                     </form>
 
-                </div>
+                </section>
 
-                <div class="summary-grid">
+                <!-- RESUMO -->
 
-                    <div class="summary-card">
+                <section class="financial-summary">
 
-                        <span class="summary-label">
-                            Total entradas
-                        </span>
+                    <article class="summary-card summary-entry">
 
-                        <strong class="summary-value value-entry"
-                                th:text="${'R$ ' + #numbers.formatDecimal(caixaAberto.totalEntrada, 1, 'POINT', 2, 'COMMA')}">
-                        </strong>
+                        <div class="summary-card-icon">
+                            ↑
+                        </div>
 
-                    </div>
+                        <div>
 
-                    <div class="summary-card">
+                            <span>
+                                Total de entradas
+                            </span>
 
-                        <span class="summary-label">
-                            Total saídas
-                        </span>
+                            <strong th:text="${'R$ ' + #numbers.formatDecimal(caixaAberto.totalEntrada, 1, 'POINT', 2, 'COMMA')}">
+                            </strong>
 
-                        <strong class="summary-value value-exit"
-                                th:text="${'R$ ' + #numbers.formatDecimal(caixaAberto.totalSaida, 1, 'POINT', 2, 'COMMA')}">
-                        </strong>
-
-                    </div>
-
-                    <div class="summary-card">
-
-                        <span class="summary-label">
-                            Saldo
-                        </span>
-
-                        <strong class="summary-value"
-                                th:text="${'R$ ' + #numbers.formatDecimal(caixaAberto.total, 1, 'POINT', 2, 'COMMA')}">
-                        </strong>
-
-                    </div>
-
-                </div>
-
-                <div class="cash-workspace">
-
-                    <section class="movement-card">
-
-                        <div class="section-title">
-
-                            <h2 th:text="${movimentacaoForm.codigo == null
-                                ? 'Nova movimentação'
-                                : 'Alterar movimentação'}">
-                            </h2>
-
-                            <p>
-                                Registre uma entrada ou saída do caixa.
-                            </p>
+                            <small>
+                                Valores recebidos no caixa
+                            </small>
 
                         </div>
 
+                    </article>
+
+                    <article class="summary-card summary-exit">
+
+                        <div class="summary-card-icon">
+                            ↓
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Total de saídas
+                            </span>
+
+                            <strong th:text="${'R$ ' + #numbers.formatDecimal(caixaAberto.totalSaida, 1, 'POINT', 2, 'COMMA')}">
+                            </strong>
+
+                            <small>
+                                Valores retirados do caixa
+                            </small>
+
+                        </div>
+
+                    </article>
+
+                    <article class="summary-card summary-balance">
+
+                        <div class="summary-card-icon">
+                            =
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Saldo atual
+                            </span>
+
+                            <strong th:text="${'R$ ' + #numbers.formatDecimal(caixaAberto.total, 1, 'POINT', 2, 'COMMA')}">
+                            </strong>
+
+                            <small>
+                                Entradas menos saídas
+                            </small>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+                <!-- WORKSPACE -->
+
+                <section class="cash-workspace">
+
+                    <!-- NOVA MOVIMENTAÇÃO -->
+
+                    <section class="movement-card">
+
+                        <header class="movement-card-header">
+
+                            <div>
+
+                                <span class="section-eyebrow"
+                                      th:text="${movimentacaoForm.codigo == null
+                                        ? 'Movimentação manual'
+                                        : 'Editando movimentação'}">
+                                </span>
+
+                                <h3 th:text="${movimentacaoForm.codigo == null
+                                    ? 'Nova movimentação'
+                                    : 'Alterar movimentação'}">
+                                </h3>
+
+                                <p>
+                                    Registre manualmente uma entrada ou saída.
+                                </p>
+
+                            </div>
+
+                            <span th:if="${movimentacaoForm.codigo != null}"
+                                  class="editing-badge">
+                                Editando
+                            </span>
+
+                        </header>
+
                         <form th:action="@{/financeiro/caixas/{codigo}/movimentacoes/salvar(codigo=${caixaAberto.codigo})}"
                               th:object="${movimentacaoForm}"
-                              method="post">
+                              method="post"
+                              id="movement-form">
 
                             <input type="hidden"
                                    th:field="*{codigo}">
@@ -439,35 +570,51 @@
 
                             </div>
 
-                            <div class="field type-field">
+                            <div class="field">
 
                                 <label>
                                     Tipo
                                     <span class="required">*</span>
                                 </label>
 
-                                <div class="radio-group">
+                                <div class="movement-type-selector">
 
-                                    <label class="radio-option">
+                                    <label class="movement-type-option movement-entry-option">
 
                                         <input type="radio"
                                                th:field="*{tipo}"
                                                value="ENTRADA">
 
                                         <span>
-                                            Entrada
+
+                                            <strong>
+                                                ↑ Entrada
+                                            </strong>
+
+                                            <small>
+                                                Valor recebido
+                                            </small>
+
                                         </span>
 
                                     </label>
 
-                                    <label class="radio-option">
+                                    <label class="movement-type-option movement-exit-option">
 
                                         <input type="radio"
                                                th:field="*{tipo}"
                                                value="SAIDA">
 
                                         <span>
-                                            Saída
+
+                                            <strong>
+                                                ↓ Saída
+                                            </strong>
+
+                                            <small>
+                                                Valor retirado
+                                            </small>
+
                                         </span>
 
                                     </label>
@@ -483,13 +630,21 @@
                                     <span class="required">*</span>
                                 </label>
 
-                                <input id="valor"
-                                       type="number"
-                                       th:field="*{valor}"
-                                       min="0.01"
-                                       step="0.01"
-                                       required
-                                       placeholder="0,00">
+                                <div class="money-input">
+
+                                    <span>
+                                        R$
+                                    </span>
+
+                                    <input id="valor"
+                                           type="number"
+                                           th:field="*{valor}"
+                                           min="0.01"
+                                           step="0.01"
+                                           required
+                                           placeholder="0,00">
+
+                                </div>
 
                             </div>
 
@@ -501,8 +656,20 @@
 
                                 <textarea id="observacao"
                                           th:field="*{observacao}"
-                                          rows="6"
+                                          rows="4"
                                           placeholder="Informações complementares"></textarea>
+
+                            </div>
+
+                            <div class="movement-preview">
+
+                                <span>
+                                    Prévia
+                                </span>
+
+                                <strong id="movement-preview-text">
+                                    Informe os dados da movimentação.
+                                </strong>
 
                             </div>
 
@@ -511,9 +678,7 @@
                                 <a th:if="${movimentacaoForm.codigo != null}"
                                    th:href="@{/financeiro/caixa-aberto}"
                                    class="btn-secondary">
-
                                     Cancelar
-
                                 </a>
 
                                 <button type="submit"
@@ -521,9 +686,7 @@
                                         th:text="${movimentacaoForm.codigo == null
                                             ? 'Salvar movimentação'
                                             : 'Salvar alterações'}">
-
                                     Salvar
-
                                 </button>
 
                             </div>
@@ -532,58 +695,101 @@
 
                     </section>
 
-                    <section class="table-card movement-table-card">
+                    <!-- MOVIMENTAÇÕES -->
 
-                        <div class="table-header">
+                    <section class="movement-history-card">
+
+                        <header class="movement-history-header">
 
                             <div>
 
-                                <h2>
-                                    Movimentações
-                                </h2>
+                                <span class="section-eyebrow">
+                                    Histórico do caixa
+                                </span>
 
-                                <span class="result-count"
-                                      th:text="${#lists.size(caixaAberto.movimentacoes) + ' movimentação(ões)'}">
+                                <h3>
+                                    Movimentações
+                                </h3>
+
+                                <p th:text="${#lists.size(caixaAberto.movimentacoes) + ' movimentação(ões) registrada(s)'}">
+                                </p>
+
+                            </div>
+
+                            <div class="movement-legend">
+
+                                <span>
+                                    <i class="legend-dot legend-entry"></i>
+                                    Entrada
+                                </span>
+
+                                <span>
+                                    <i class="legend-dot legend-exit"></i>
+                                    Saída
                                 </span>
 
                             </div>
 
-                        </div>
+                        </header>
 
                         <div class="table-responsive">
 
-                            <table class="finance-table">
+                            <table class="finance-table movement-table">
 
                                 <thead>
 
                                 <tr>
-
                                     <th>Data</th>
-                                    <th>Descrição</th>
+                                    <th>Movimentação</th>
                                     <th>Tipo</th>
                                     <th>Valor</th>
                                     <th>Observação</th>
-
-                                    <th class="column-actions">
-                                        Ações
-                                    </th>
-
+                                    <th class="column-actions">Ações</th>
                                 </tr>
 
                                 </thead>
 
                                 <tbody>
 
-                                <tr th:each="movimentacao : ${caixaAberto.movimentacoes}">
+                                <tr th:each="movimentacao : ${caixaAberto.movimentacoes}"
+                                    th:classappend="${movimentacao.descricao == 'FINALIZAÇÃO DE PROCEDIMENTO'}
+                                        ? ' automatic-movement-row'
+                                        : ''">
 
-                                    <td class="movement-date"
-                                        th:text="${#temporals.format(movimentacao.data, 'dd/MM/yyyy HH:mm')}">
+                                    <td>
+
+                                        <span class="movement-date"
+                                              th:text="${#temporals.format(movimentacao.data, 'dd/MM/yyyy HH:mm')}">
+                                        </span>
+
                                     </td>
 
                                     <td>
 
-                                        <strong th:text="${movimentacao.descricao}">
-                                        </strong>
+                                        <div class="movement-description">
+
+                                            <span th:class="${movimentacao.tipo == 'ENTRADA'
+                                                ? 'movement-icon movement-icon-entry'
+                                                : 'movement-icon movement-icon-exit'}"
+                                                  th:text="${movimentacao.tipo == 'ENTRADA' ? '↑' : '↓'}">
+                                            </span>
+
+                                            <div>
+
+                                                <strong th:text="${movimentacao.descricao}">
+                                                </strong>
+
+                                                <small th:if="${movimentacao.descricao == 'FINALIZAÇÃO DE PROCEDIMENTO'}">
+                                                    Gerada automaticamente pelo atendimento
+                                                </small>
+
+                                                <small th:if="${movimentacao.descricao != 'FINALIZAÇÃO DE PROCEDIMENTO'}">
+                                                    Movimentação manual
+                                                </small>
+
+                                            </div>
+
+                                        </div>
 
                                     </td>
 
@@ -613,8 +819,8 @@
 
                                         <span class="observation-text"
                                               th:text="${movimentacao.observacao != null && !movimentacao.observacao.isBlank()
-                                            ? movimentacao.observacao
-                                            : '-'}">
+                                                ? movimentacao.observacao
+                                                : '-'}">
                                         </span>
 
                                     </td>
@@ -625,23 +831,20 @@
                                              th:if="${movimentacao.descricao != 'FINALIZAÇÃO DE PROCEDIMENTO'}">
 
                                             <a th:href="@{/financeiro/caixa-aberto(editar=${movimentacao.codigo})}"
-                                               class="btn-table-edit">
-
+                                               class="action-link action-edit">
                                                 Alterar
-
                                             </a>
 
                                             <form th:action="@{/financeiro/caixas/{codigo}/movimentacoes/{movimentacaoCodigo}/excluir(
-                                                codigo=${caixaAberto.codigo},
-                                                movimentacaoCodigo=${movimentacao.codigo})}"
+                                                    codigo=${caixaAberto.codigo},
+                                                    movimentacaoCodigo=${movimentacao.codigo}
+                                               )}"
                                                   method="post">
 
                                                 <button type="submit"
-                                                        class="btn-table-delete"
+                                                        class="action-link action-delete"
                                                         onclick="return confirm('Deseja realmente excluir esta movimentação?')">
-
                                                     Excluir
-
                                                 </button>
 
                                             </form>
@@ -649,7 +852,7 @@
                                         </div>
 
                                         <span th:if="${movimentacao.descricao == 'FINALIZAÇÃO DE PROCEDIMENTO'}"
-                                              class="result-count">
+                                              class="automatic-badge">
                                             Automática
                                         </span>
 
@@ -663,7 +866,7 @@
 
                                         <div class="empty-state">
 
-                                            <div class="empty-icon">
+                                            <div class="empty-state-icon">
                                                 $
                                             </div>
 
@@ -689,54 +892,66 @@
 
                     </section>
 
-                </div>
+                </section>
 
             </div>
 
         </section>
 
-        <!-- DETALHE -->
+        <!-- =====================================================
+             DETALHE DO CAIXA
+        ====================================================== -->
 
-        <section th:if="${modo == 'detalhe' && caixaDetalhe != null}">
+        <section th:if="${modo == 'detalhe' && caixaDetalhe != null}"
+                 class="cash-detail-page">
 
-            <div class="detail-header">
+            <header class="cash-detail-header">
 
                 <div>
 
                     <a th:href="@{/financeiro}"
                        class="back-link">
-
-                        ← Voltar
-
+                        ← Voltar para histórico
                     </a>
 
-                    <h2 th:text="${'Caixa de ' + #temporals.format(caixaDetalhe.dataAbertura, 'dd/MM/yyyy')}">
+                    <span class="page-eyebrow">
+                        Histórico do caixa
+                    </span>
+
+                    <h2 th:text="${'Caixa #' + caixaDetalhe.codigo}">
                     </h2>
 
-                    <p>
-                        Histórico completo do caixa.
+                    <p th:text="${'Aberto em ' + #temporals.format(caixaDetalhe.dataAbertura, 'dd/MM/yyyy HH:mm')}">
                     </p>
 
                 </div>
 
-            </div>
+                <span th:class="${caixaDetalhe.aberto
+                    ? 'status-badge status-open'
+                    : 'status-badge status-closed'}"
+                      th:text="${caixaDetalhe.aberto
+                    ? 'Aberto'
+                    : 'Fechado'}">
+                </span>
 
-            <div class="summary-grid">
+            </header>
 
-                <div class="summary-card">
+            <section class="detail-summary-grid">
 
-                    <span class="summary-label">
+                <article class="detail-summary-card">
+
+                    <span>
                         Abertura
                     </span>
 
                     <strong th:text="${#temporals.format(caixaDetalhe.dataAbertura, 'dd/MM/yyyy HH:mm')}">
                     </strong>
 
-                </div>
+                </article>
 
-                <div class="summary-card">
+                <article class="detail-summary-card">
 
-                    <span class="summary-label">
+                    <span>
                         Fechamento
                     </span>
 
@@ -745,62 +960,63 @@
                         : 'Em aberto'}">
                     </strong>
 
-                </div>
+                </article>
 
-                <div class="summary-card">
+                <article class="detail-summary-card detail-entry">
 
-                    <span class="summary-label">
+                    <span>
                         Entradas
                     </span>
 
-                    <strong class="value-entry"
-                            th:text="${'R$ ' + #numbers.formatDecimal(caixaDetalhe.totalEntrada, 1, 'POINT', 2, 'COMMA')}">
+                    <strong th:text="${'R$ ' + #numbers.formatDecimal(caixaDetalhe.totalEntrada, 1, 'POINT', 2, 'COMMA')}">
                     </strong>
 
-                </div>
+                </article>
 
-                <div class="summary-card">
+                <article class="detail-summary-card detail-exit">
 
-                    <span class="summary-label">
+                    <span>
                         Saídas
                     </span>
 
-                    <strong class="value-exit"
-                            th:text="${'R$ ' + #numbers.formatDecimal(caixaDetalhe.totalSaida, 1, 'POINT', 2, 'COMMA')}">
+                    <strong th:text="${'R$ ' + #numbers.formatDecimal(caixaDetalhe.totalSaida, 1, 'POINT', 2, 'COMMA')}">
                     </strong>
 
-                </div>
+                </article>
 
-                <div class="summary-card">
+                <article class="detail-summary-card detail-balance">
 
-                    <span class="summary-label">
+                    <span>
                         Saldo
                     </span>
 
                     <strong th:text="${'R$ ' + #numbers.formatDecimal(caixaDetalhe.total, 1, 'POINT', 2, 'COMMA')}">
                     </strong>
 
-                </div>
+                </article>
 
-            </div>
+            </section>
 
-            <div class="table-card">
+            <section class="movement-history-card">
 
-                <div class="table-header">
+                <header class="movement-history-header">
 
                     <div>
 
-                        <h2>
-                            Movimentações
-                        </h2>
-
-                        <span class="result-count"
-                              th:text="${#lists.size(caixaDetalhe.movimentacoes) + ' movimentação(ões)'}">
+                        <span class="section-eyebrow">
+                            Extrato
                         </span>
+
+                        <h3>
+                            Movimentações
+                        </h3>
+
+                        <p th:text="${#lists.size(caixaDetalhe.movimentacoes) + ' movimentação(ões) registrada(s)'}">
+                        </p>
 
                     </div>
 
-                </div>
+                </header>
 
                 <div class="table-responsive">
 
@@ -809,25 +1025,57 @@
                         <thead>
 
                         <tr>
-
                             <th>Data</th>
-                            <th>Descrição</th>
+                            <th>Movimentação</th>
                             <th>Tipo</th>
                             <th>Valor</th>
                             <th>Observação</th>
-
                         </tr>
 
                         </thead>
 
                         <tbody>
 
-                        <tr th:each="movimentacao : ${caixaDetalhe.movimentacoes}">
+                        <tr th:each="movimentacao : ${caixaDetalhe.movimentacoes}"
+                            th:classappend="${movimentacao.descricao == 'FINALIZAÇÃO DE PROCEDIMENTO'}
+                                ? ' automatic-movement-row'
+                                : ''">
 
-                            <td th:text="${#temporals.format(movimentacao.data, 'dd/MM/yyyy HH:mm')}">
+                            <td>
+
+                                <span class="movement-date"
+                                      th:text="${#temporals.format(movimentacao.data, 'dd/MM/yyyy HH:mm')}">
+                                </span>
+
                             </td>
 
-                            <td th:text="${movimentacao.descricao}">
+                            <td>
+
+                                <div class="movement-description">
+
+                                    <span th:class="${movimentacao.tipo == 'ENTRADA'
+                                        ? 'movement-icon movement-icon-entry'
+                                        : 'movement-icon movement-icon-exit'}"
+                                          th:text="${movimentacao.tipo == 'ENTRADA' ? '↑' : '↓'}">
+                                    </span>
+
+                                    <div>
+
+                                        <strong th:text="${movimentacao.descricao}">
+                                        </strong>
+
+                                        <small th:if="${movimentacao.descricao == 'FINALIZAÇÃO DE PROCEDIMENTO'}">
+                                            Movimentação automática
+                                        </small>
+
+                                        <small th:if="${movimentacao.descricao != 'FINALIZAÇÃO DE PROCEDIMENTO'}">
+                                            Movimentação manual
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
                             </td>
 
                             <td>
@@ -842,12 +1090,24 @@
 
                             </td>
 
-                            <td th:text="${'R$ ' + #numbers.formatDecimal(movimentacao.valor, 1, 'POINT', 2, 'COMMA')}">
+                            <td>
+
+                                <strong th:class="${movimentacao.tipo == 'ENTRADA'
+                                    ? 'money money-entry'
+                                    : 'money money-exit'}"
+                                        th:text="${'R$ ' + #numbers.formatDecimal(movimentacao.valor, 1, 'POINT', 2, 'COMMA')}">
+                                </strong>
+
                             </td>
 
-                            <td th:text="${movimentacao.observacao != null && !movimentacao.observacao.isBlank()
-                                ? movimentacao.observacao
-                                : '-'}">
+                            <td>
+
+                                <span class="observation-text"
+                                      th:text="${movimentacao.observacao != null && !movimentacao.observacao.isBlank()
+                                        ? movimentacao.observacao
+                                        : '-'}">
+                                </span>
+
                             </td>
 
                         </tr>
@@ -874,7 +1134,7 @@
 
                 </div>
 
-            </div>
+            </section>
 
         </section>
 
@@ -883,5 +1143,4 @@
 </div>
 
 </body>
-
 </html>

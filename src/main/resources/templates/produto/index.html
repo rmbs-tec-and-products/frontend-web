@@ -11,8 +11,12 @@
 
     <link rel="stylesheet"
           th:href="@{/css/app.css}">
+
     <link rel="stylesheet"
           th:href="@{/css/produto.css}">
+
+    <script th:src="@{/js/produto.js}"
+            defer></script>
 </head>
 
 <body>
@@ -25,71 +29,108 @@
 
     <main class="content produto-page">
 
-        <div class="page-header">
+        <div th:if="${mensagemSucesso}"
+             class="produto-toast produto-toast-success">
+
+            <span class="produto-toast-icon">
+                ✓
+            </span>
+
+            <span th:text="${mensagemSucesso}">
+            </span>
+
+            <button type="button"
+                    class="produto-toast-close"
+                    aria-label="Fechar">
+                ×
+            </button>
+
+        </div>
+
+        <div th:if="${mensagemErro}"
+             class="produto-toast produto-toast-error">
+
+            <span class="produto-toast-icon">
+                !
+            </span>
+
+            <span th:text="${mensagemErro}">
+            </span>
+
+            <button type="button"
+                    class="produto-toast-close"
+                    aria-label="Fechar">
+                ×
+            </button>
+
+        </div>
+
+        <header class="product-page-header">
 
             <div>
-                <h1>Produtos</h1>
 
-                <p class="page-subtitle">
+                <span class="page-eyebrow">
+                    Estoque e materiais
+                </span>
+
+                <h1>
+                    Produtos
+                </h1>
+
+                <p>
                     Gerencie materiais, estoque, valores e fornecedores.
                 </p>
+
             </div>
 
             <a th:if="${modo == 'consultar'}"
                th:href="@{/produtos/novo}"
                class="btn-primary">
+
                 + Novo produto
+
             </a>
 
-        </div>
+        </header>
 
-        <div th:if="${mensagemSucesso}"
-             class="feedback feedback-success">
-
-            <span class="feedback-icon">✓</span>
-
-            <span th:text="${mensagemSucesso}">
-            </span>
-
-        </div>
-
-        <div th:if="${mensagemErro}"
-             class="feedback feedback-error">
-
-            <span class="feedback-icon">!</span>
-
-            <span th:text="${mensagemErro}">
-            </span>
-
-        </div>
-
-        <div class="product-tabs">
-
-            <a th:href="@{/produtos/novo}"
-               th:classappend="${modo == 'novo'} ? ' active' : ''">
-                Novo
-            </a>
+        <nav class="product-tabs">
 
             <a th:href="@{/produtos}"
                th:classappend="${modo == 'consultar'} ? ' active' : ''">
                 Consultar
             </a>
 
-        </div>
+            <a th:href="@{/produtos/novo}"
+               th:classappend="${modo == 'novo'} ? ' active' : ''">
+                Novo produto
+            </a>
 
-        <!-- CONSULTA -->
+        </nav>
 
-        <section th:if="${modo == 'consultar'}">
+        <!-- CONSULTAR -->
 
-            <div class="search-card">
+        <section th:if="${modo == 'consultar'}"
+                 class="product-consult">
+
+            <section class="search-card">
 
                 <div class="search-header">
 
-                    <h2>Consultar produtos</h2>
+                    <div>
 
-                    <p>
-                        Pesquise por produto, descrição ou fornecedor.
-                    </p>
+                        <span class="section-eyebrow">
+                            Localizar material
+                        </span>
+
+                        <h2>
+                            Consulta
+                        </h2>
+
+                        <p>
+                            Pesquise por produto, descrição ou fornecedor.
+                        </p>
+
+                    </div>
 
                 </div>
 
@@ -99,18 +140,18 @@
 
                     <div class="search-input-wrapper">
 
-                        <span class="search-icon">⌕</span>
+                        <span class="search-icon">
+                            ⌕
+                        </span>
 
-                        <input
-                                name="pesquisa"
-                                type="text"
-                                th:value="${pesquisa}"
-                                placeholder="Nome, descrição ou fornecedor...">
+                        <input name="pesquisa"
+                               type="text"
+                               th:value="${pesquisa}"
+                               placeholder="Nome, descrição ou fornecedor">
 
                     </div>
 
-                    <button
-                            type="submit"
+                    <button type="submit"
                             class="btn-primary">
                         Pesquisar
                     </button>
@@ -123,23 +164,42 @@
 
                 </form>
 
-            </div>
+            </section>
 
-            <div class="table-card">
+            <section class="product-list-card">
 
-                <div class="table-header">
+                <header class="product-list-header">
 
                     <div>
 
-                        <h2>Produtos</h2>
+                        <span class="section-eyebrow">
+                            Controle de estoque
+                        </span>
 
-                        <span class="result-count"
-                              th:text="${#lists.size(produtos) + ' produto(s) encontrado(s)'}">
+                        <h2>
+                            Produtos cadastrados
+                        </h2>
+
+                        <p th:text="${#lists.size(produtos) + ' produto(s) encontrado(s)'}">
+                        </p>
+
+                    </div>
+
+                    <div class="stock-legend">
+
+                        <span>
+                            <i class="stock-dot stock-dot-ok"></i>
+                            Estoque normal
+                        </span>
+
+                        <span>
+                            <i class="stock-dot stock-dot-low"></i>
+                            Estoque baixo
                         </span>
 
                     </div>
 
-                </div>
+                </header>
 
                 <div class="table-responsive">
 
@@ -148,46 +208,108 @@
                         <thead>
 
                         <tr>
-
-                            <th class="column-code">
-                                Código
-                            </th>
-
-                            <th>
-                                Produto
-                            </th>
-
-                            <th>
-                                Estoque
-                            </th>
-
-                            <th>
-                                Unidade
-                            </th>
-
-                            <th>
-                                Mínimo
-                            </th>
-
-                            <th>
-                                Valor
-                            </th>
-
-                            <th>
-                                Fornecedor
-                            </th>
-
-                            <th class="column-actions">
-                                Ações
-                            </th>
-
+                            <th>Produto</th>
+                            <th>Estoque</th>
+                            <th>Mínimo</th>
+                            <th>Valor</th>
+                            <th>Fornecedor</th>
+                            <th class="column-code">Código</th>
+                            <th class="column-actions">Ações</th>
                         </tr>
 
                         </thead>
 
                         <tbody>
 
-                        <tr th:each="produto : ${produtos}">
+                        <tr th:each="produto : ${produtos}"
+                            th:classappend="${produto.quantidadeMinima != null
+                                && produto.quantidade != null
+                                && produto.quantidade <= produto.quantidadeMinima}
+                                ? ' stock-row-low'
+                                : ''">
+
+                            <td>
+
+                                <a th:href="@{/produtos/{codigo}/editar(codigo=${produto.codigo})}"
+                                   class="product-identity">
+
+                                    <span class="product-icon">
+                                        □
+                                    </span>
+
+                                    <span class="product-identity-text">
+
+                                        <strong th:text="${produto.nome}">
+                                        </strong>
+
+                                        <small th:text="${produto.descricao != null && !produto.descricao.isBlank()
+                                            ? produto.descricao
+                                            : 'Material odontológico'}">
+                                        </small>
+
+                                    </span>
+
+                                </a>
+
+                            </td>
+
+                            <td>
+
+                                <div class="stock-value"
+                                     th:classappend="${produto.quantidadeMinima != null
+                                        && produto.quantidade != null
+                                        && produto.quantidade <= produto.quantidadeMinima}
+                                        ? ' stock-value-low'
+                                        : ' stock-value-ok'">
+
+                                    <span class="stock-indicator">
+                                    </span>
+
+                                    <strong th:text="${produto.quantidade != null ? produto.quantidade : 0}">
+                                    </strong>
+
+                                    <small th:text="${produto.unidade != null && !produto.unidade.isBlank()
+                                        ? produto.unidade
+                                        : 'un.'}">
+                                    </small>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+
+                                <span class="minimum-stock"
+                                      th:text="${produto.quantidadeMinima != null
+                                        ? produto.quantidadeMinima
+                                        : '-'}">
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span class="product-value"
+                                      th:text="${produto.valor != null
+                                        ? 'R$ ' + #numbers.formatDecimal(produto.valor, 1, 'POINT', 2, 'COMMA')
+                                        : '-'}">
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span th:if="${produto.fornecedorNome != null}"
+                                      class="supplier-badge"
+                                      th:text="${produto.fornecedorNome}">
+                                </span>
+
+                                <span th:if="${produto.fornecedorNome == null}"
+                                      class="no-supplier">
+                                    Sem fornecedor
+                                </span>
+
+                            </td>
 
                             <td>
 
@@ -199,79 +321,18 @@
 
                             <td>
 
-                                <a th:href="@{/produtos/{codigo}/editar(codigo=${produto.codigo})}"
-                                   class="product-name"
-                                   th:text="${produto.nome}">
-                                </a>
-
-                                <div class="product-description"
-                                     th:if="${produto.descricao != null && !produto.descricao.isBlank()}"
-                                     th:text="${produto.descricao}">
-                                </div>
-
-                            </td>
-
-                            <td>
-
-                                <span th:text="${produto.quantidade}">
-                                </span>
-
-                            </td>
-
-                            <td>
-
-                                <span th:text="${produto.unidade != null && !produto.unidade.isBlank()
-                                    ? produto.unidade
-                                    : '-'}">
-                                </span>
-
-                            </td>
-
-                            <td>
-
-                                <span th:text="${produto.quantidadeMinima != null
-                                    ? produto.quantidadeMinima
-                                    : '-'}">
-                                </span>
-
-                            </td>
-
-                            <td>
-
-                                <span th:text="${produto.valor != null
-                                    ? 'R$ ' + #numbers.formatDecimal(produto.valor, 1, 'POINT', 2, 'COMMA')
-                                    : '-'}">
-                                </span>
-
-                            </td>
-
-                            <td>
-
-                                <span th:text="${produto.fornecedorNome != null
-                                    ? produto.fornecedorNome
-                                    : 'Sem fornecedor'}"
-                                      th:classappend="${produto.fornecedorNome == null
-                                        ? ' no-supplier'
-                                        : ''}">
-                                </span>
-
-                            </td>
-
-                            <td>
-
                                 <div class="table-actions">
 
                                     <a th:href="@{/produtos/{codigo}/editar(codigo=${produto.codigo})}"
-                                       class="btn-table-edit">
+                                       class="action-link action-edit">
                                         Editar
                                     </a>
 
                                     <form th:action="@{/produtos/{codigo}/excluir(codigo=${produto.codigo})}"
                                           method="post">
 
-                                        <button
-                                                type="submit"
-                                                class="btn-table-delete"
+                                        <button type="submit"
+                                                class="action-link action-delete"
                                                 onclick="return confirm('Deseja realmente excluir este produto?')">
                                             Excluir
                                         </button>
@@ -286,12 +347,12 @@
 
                         <tr th:if="${#lists.isEmpty(produtos)}">
 
-                            <td colspan="8">
+                            <td colspan="7">
 
                                 <div class="empty-state">
 
-                                    <div class="empty-icon">
-                                        ⌕
+                                    <div class="empty-state-icon">
+                                        +
                                     </div>
 
                                     <strong>
@@ -299,8 +360,13 @@
                                     </strong>
 
                                     <span>
-                                        Tente pesquisar utilizando outro termo.
+                                        Cadastre um novo produto ou altere o termo pesquisado.
                                     </span>
+
+                                    <a th:href="@{/produtos/novo}"
+                                       class="btn-primary empty-action">
+                                        + Novo produto
+                                    </a>
 
                                 </div>
 
@@ -314,50 +380,95 @@
 
                 </div>
 
-            </div>
+            </section>
 
         </section>
 
-        <!-- CADASTRO / EDIÇÃO -->
+        <!-- NOVO / EDITAR -->
 
-        <section th:if="${modo == 'novo'}">
+        <section th:if="${modo == 'novo'}"
+                 class="product-editor">
 
-            <div class="edit-status"
-                 th:if="${produtoForm.codigo != null}">
+            <header class="product-editor-header">
 
-                <span>Editando produto</span>
+                <div class="editor-title">
 
-                <strong th:text="${'#' + produtoForm.codigo}">
-                </strong>
+                    <a th:href="@{/produtos}"
+                       class="back-link">
+                        ← Voltar para produtos
+                    </a>
 
-            </div>
+                    <div>
 
-            <form
-                    th:action="@{/produtos/salvar}"
-                    th:object="${produtoForm}"
-                    method="post">
+                        <span class="page-eyebrow"
+                              th:text="${produtoForm.codigo == null
+                                ? 'Novo material'
+                                : 'Editando produto'}">
+                        </span>
 
-                <input
-                        type="hidden"
-                        th:field="*{codigo}">
+                        <h2 th:text="${produtoForm.codigo == null
+                                ? 'Novo produto'
+                                : produtoForm.nome}">
+                        </h2>
+
+                        <p th:text="${produtoForm.codigo == null
+                                ? 'Cadastre as informações do material e configure o controle de estoque.'
+                                : 'Atualize estoque, valores e informações comerciais do produto.'}">
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div th:if="${produtoForm.codigo != null}"
+                     class="product-editor-code">
+
+                    <span>
+                        Código
+                    </span>
+
+                    <strong th:text="${produtoForm.codigo}">
+                    </strong>
+
+                </div>
+
+            </header>
+
+            <form th:action="@{/produtos/salvar}"
+                  th:object="${produtoForm}"
+                  method="post"
+                  class="product-form">
+
+                <input type="hidden"
+                       th:field="*{codigo}">
+
+                <!-- IDENTIFICAÇÃO -->
 
                 <section class="form-card">
 
-                    <div class="section-header">
+                    <header class="form-card-header">
 
-                        <div class="section-number">
+                        <span class="section-number">
                             1
-                        </div>
+                        </span>
 
                         <div>
-                            <h2>Identificação</h2>
+
+                            <span class="section-eyebrow">
+                                Identificação
+                            </span>
+
+                            <h3>
+                                Dados do produto
+                            </h3>
 
                             <p>
-                                Dados principais do produto.
+                                Informe o nome, unidade de controle e descrição do material.
                             </p>
+
                         </div>
 
-                    </div>
+                    </header>
 
                     <div class="product-main-grid">
 
@@ -368,13 +479,12 @@
                                 <span class="required">*</span>
                             </label>
 
-                            <input
-                                    id="nome"
-                                    type="text"
-                                    th:field="*{nome}"
-                                    maxlength="100"
-                                    required
-                                    placeholder="Ex.: Resina Composta A2">
+                            <input id="nome"
+                                   type="text"
+                                   th:field="*{nome}"
+                                   maxlength="100"
+                                   required
+                                   placeholder="Ex.: Resina Composta A2">
 
                         </div>
 
@@ -385,13 +495,12 @@
                                 <span class="required">*</span>
                             </label>
 
-                            <input
-                                    id="unidade"
-                                    type="text"
-                                    th:field="*{unidade}"
-                                    maxlength="100"
-                                    required
-                                    placeholder="Ex.: Unidade, Caixa, Frasco">
+                            <input id="unidade"
+                                   type="text"
+                                   th:field="*{unidade}"
+                                   maxlength="100"
+                                   required
+                                   placeholder="Ex.: Unidade, Caixa, Frasco">
 
                         </div>
 
@@ -403,91 +512,116 @@
                             Descrição
                         </label>
 
-                        <textarea
-                                id="descricao"
-                                th:field="*{descricao}"
-                                rows="3"
-                                placeholder="Descrição do produto"></textarea>
+                        <textarea id="descricao"
+                                  th:field="*{descricao}"
+                                  rows="3"
+                                  placeholder="Descrição ou observações sobre o produto"></textarea>
 
                     </div>
 
                 </section>
 
+                <!-- ESTOQUE -->
+
                 <section class="form-card">
 
-                    <div class="section-header">
+                    <header class="form-card-header">
 
-                        <div class="section-number">
+                        <span class="section-number">
                             2
-                        </div>
+                        </span>
 
                         <div>
-                            <h2>Estoque e embalagem</h2>
+
+                            <span class="section-eyebrow">
+                                Controle
+                            </span>
+
+                            <h3>
+                                Estoque e embalagem
+                            </h3>
 
                             <p>
-                                Controle as quantidades disponíveis e estoque mínimo.
+                                Configure a quantidade disponível e o limite mínimo para reposição.
                             </p>
+
                         </div>
 
-                    </div>
+                    </header>
 
                     <div class="stock-grid">
 
                         <div class="field">
 
                             <label for="quantidade">
-                                Quantidade
+                                Estoque atual
                                 <span class="required">*</span>
                             </label>
 
-                            <input
-                                    id="quantidade"
-                                    type="number"
-                                    min="0"
-                                    th:field="*{quantidade}"
-                                    required>
+                            <input id="quantidade"
+                                   type="number"
+                                   min="0"
+                                   th:field="*{quantidade}"
+                                   required>
 
                         </div>
 
                         <div class="field">
 
                             <label for="quantidadeMinima">
-                                Quantidade mínima
+                                Estoque mínimo
                             </label>
 
-                            <input
-                                    id="quantidadeMinima"
-                                    type="number"
-                                    min="0"
-                                    th:field="*{quantidadeMinima}">
+                            <input id="quantidadeMinima"
+                                   type="number"
+                                   min="0"
+                                   th:field="*{quantidadeMinima}">
 
                         </div>
 
                         <div class="field">
 
                             <label for="embalagem">
-                                Embalagem
+                                Embalagens
                             </label>
 
-                            <input
-                                    id="embalagem"
-                                    type="number"
-                                    min="0"
-                                    th:field="*{embalagem}">
+                            <input id="embalagem"
+                                   type="number"
+                                   min="0"
+                                   th:field="*{embalagem}">
 
                         </div>
 
                         <div class="field">
 
                             <label for="qtdEmbalagem">
-                                Qtd. por embalagem
+                                Quantidade por embalagem
                             </label>
 
-                            <input
-                                    id="qtdEmbalagem"
-                                    type="number"
-                                    min="0"
-                                    th:field="*{qtdEmbalagem}">
+                            <input id="qtdEmbalagem"
+                                   type="number"
+                                   min="0"
+                                   th:field="*{qtdEmbalagem}">
+
+                        </div>
+
+                    </div>
+
+                    <div id="stock-alert"
+                         class="stock-alert">
+
+                        <span class="stock-alert-icon">
+                            !
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Atenção ao estoque
+                            </strong>
+
+                            <span id="stock-alert-text">
+                            </span>
 
                         </div>
 
@@ -495,39 +629,56 @@
 
                 </section>
 
+                <!-- COMERCIAL -->
+
                 <section class="form-card">
 
-                    <div class="section-header">
+                    <header class="form-card-header">
 
-                        <div class="section-number">
+                        <span class="section-number">
                             3
-                        </div>
+                        </span>
 
                         <div>
-                            <h2>Valores e fornecedor</h2>
+
+                            <span class="section-eyebrow">
+                                Comercial
+                            </span>
+
+                            <h3>
+                                Valores e fornecedor
+                            </h3>
 
                             <p>
-                                Dados comerciais e fornecedor responsável.
+                                Registre os valores de referência e o fornecedor do material.
                             </p>
+
                         </div>
 
-                    </div>
+                    </header>
 
                     <div class="commercial-grid">
 
                         <div class="field">
 
                             <label for="valor">
-                                Valor
+                                Valor atual
                             </label>
 
-                            <input
-                                    id="valor"
-                                    type="number"
-                                    min="0"
-                                    step="0.01"
-                                    th:field="*{valor}"
-                                    placeholder="0,00">
+                            <div class="money-input">
+
+                                <span>
+                                    R$
+                                </span>
+
+                                <input id="valor"
+                                       type="number"
+                                       min="0"
+                                       step="0.01"
+                                       th:field="*{valor}"
+                                       placeholder="0,00">
+
+                            </div>
 
                         </div>
 
@@ -537,13 +688,20 @@
                                 Último valor
                             </label>
 
-                            <input
-                                    id="ultimoValor"
-                                    type="number"
-                                    min="0"
-                                    step="0.01"
-                                    th:field="*{ultimoValor}"
-                                    placeholder="0,00">
+                            <div class="money-input">
+
+                                <span>
+                                    R$
+                                </span>
+
+                                <input id="ultimoValor"
+                                       type="number"
+                                       min="0"
+                                       step="0.01"
+                                       th:field="*{ultimoValor}"
+                                       placeholder="0,00">
+
+                            </div>
 
                         </div>
 
@@ -553,16 +711,14 @@
                                 Fornecedor
                             </label>
 
-                            <select
-                                    id="fornecedorCodigo"
+                            <select id="fornecedorCodigo"
                                     th:field="*{fornecedorCodigo}">
 
                                 <option value="">
                                     Sem fornecedor
                                 </option>
 
-                                <option
-                                        th:each="fornecedor : ${fornecedores}"
+                                <option th:each="fornecedor : ${fornecedores}"
                                         th:value="${fornecedor.codigo}"
                                         th:text="${fornecedor.nome}">
                                 </option>
@@ -575,7 +731,29 @@
 
                 </section>
 
-                <div class="form-action-bar">
+                <!-- RESUMO -->
+
+                <section class="product-preview">
+
+                    <div class="preview-icon">
+                        □
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Resumo do produto
+                        </span>
+
+                        <strong id="product-preview-text">
+                            Informe os dados do produto.
+                        </strong>
+
+                    </div>
+
+                </section>
+
+                <footer class="form-action-bar">
 
                     <span class="required-info">
 
@@ -591,8 +769,7 @@
                             Cancelar
                         </a>
 
-                        <button
-                                type="submit"
+                        <button type="submit"
                                 class="btn-primary"
                                 th:text="${produtoForm.codigo == null
                                     ? 'Cadastrar produto'
@@ -602,7 +779,7 @@
 
                     </div>
 
-                </div>
+                </footer>
 
             </form>
 

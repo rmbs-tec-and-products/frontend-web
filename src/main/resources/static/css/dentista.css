@@ -1,47 +1,52 @@
-/* ==========================================================
-   DENTISTA
-========================================================== */
-
 .dentista-page {
-    max-width: 1500px;
+    width: 100%;
+    max-width: 1600px;
     margin: 0 auto;
-    width: auto;
-    min-width: 0;
-}
-
-.page-header {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.dentist-page-header {
+    display: flex;
+    align-items: flex-end;
     justify-content: space-between;
-    gap: 20px;
-    margin-bottom: 24px;
+    gap: 24px;
 }
 
-.page-header h1 {
+.dentist-page-header h1 {
+    margin: 3px 0 5px;
+    font-size: 27px;
+}
+
+.dentist-page-header p,
+.dentist-editor-header p {
     margin: 0;
-    font-size: 28px;
-}
-
-.page-subtitle {
-    margin: 6px 0 0;
     color: var(--text-muted);
-    font-size: 14px;
+    font-size: 13px;
 }
 
-/* ==========================================================
-   BOTÕES
-========================================================== */
+.page-eyebrow,
+.section-eyebrow {
+    color: #60a5fa;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+/* BOTÕES */
 
 .btn-primary,
 .btn-secondary {
+    min-height: 38px;
+    padding: 0 15px;
+    border-radius: 7px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 40px;
-    padding: 0 18px;
-    border-radius: 7px;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 700;
     text-decoration: none;
     cursor: pointer;
 }
@@ -49,7 +54,7 @@
 .btn-primary {
     border: 1px solid var(--primary);
     background: var(--primary);
-    color: #ffffff;
+    color: #fff;
 }
 
 .btn-primary:hover {
@@ -67,60 +72,21 @@
     color: var(--text-primary);
 }
 
-/* ==========================================================
-   FEEDBACK
-========================================================== */
-
-.feedback {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 16px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    font-size: 14px;
-}
-
-.feedback-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    font-weight: bold;
-}
-
-.feedback-success {
-    background: var(--success-soft);
-    border: 1px solid rgba(34, 197, 94, 0.3);
-    color: #86efac;
-}
-
-.feedback-error {
-    background: var(--danger-soft);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    color: #fca5a5;
-}
-
-/* ==========================================================
-   ABAS
-========================================================== */
+/* ABAS */
 
 .dentist-tabs {
     display: flex;
-    gap: 6px;
-    margin-bottom: 24px;
+    gap: 4px;
     border-bottom: 1px solid var(--border);
 }
 
 .dentist-tabs a {
     position: relative;
-    padding: 10px 16px 12px;
-    text-decoration: none;
+    padding: 9px 14px 11px;
     color: var(--text-muted);
-    font-size: 14px;
-    font-weight: 600;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
 }
 
 .dentist-tabs a:hover {
@@ -141,186 +107,89 @@
     background: var(--primary);
 }
 
-/* ==========================================================
-   CARDS
-========================================================== */
+/* LAYOUT */
 
-.form-card,
+.dentist-consult,
+.dentist-editor,
+.dentist-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
 .search-card,
-.table-card {
+.dentist-list-card,
+.form-card {
     background: var(--bg-surface);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    box-shadow: var(--shadow);
+    border-radius: 14px;
 }
 
-.form-card {
-    padding: 24px;
-    margin-bottom: 20px;
-}
+/* PESQUISA */
 
 .search-card {
-    padding: 22px;
-    margin-bottom: 20px;
+    padding: 18px 20px;
 }
 
-.table-card {
-    overflow: hidden;
-}
-
-/* ==========================================================
-   SEÇÃO
-========================================================== */
-
-.section-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    margin-bottom: 24px;
-    padding-bottom: 18px;
-    border-bottom: 1px solid var(--border);
-}
-
-.section-number {
-    flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 9px;
-    background: var(--primary-soft);
-    color: #60a5fa;
-    font-weight: 700;
-}
-
-.section-header h2 {
-    margin: 0;
+.search-header h2,
+.dentist-list-header h2 {
+    margin: 3px 0 4px;
     font-size: 18px;
 }
 
-.section-header p {
-    margin: 4px 0 0;
-    color: var(--text-muted);
-    font-size: 13px;
-}
-
-/* ==========================================================
-   FORMULÁRIO
-========================================================== */
-
-.dentist-grid {
-    display: grid;
-    grid-template-columns: minmax(300px, 700px);
-}
-
-.field {
-    min-width: 0;
-}
-
-.field label {
-    display: block;
-    margin: 0 0 7px;
-    color: var(--text-secondary);
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.field input {
-    width: 100%;
-    height: 42px;
-    padding: 9px 12px;
-    border: 1px solid var(--border-strong);
-    border-radius: 7px;
-    background: var(--input-bg);
-    color: var(--text-primary);
-    font-family: inherit;
-    font-size: 14px;
-    outline: none;
-}
-
-.field input:focus {
-    border-color: var(--primary);
-    box-shadow:
-            0 0 0 3px var(--primary-soft);
-}
-
-.required {
-    color: #f87171;
-}
-
-/* ==========================================================
-   PESQUISA
-========================================================== */
-
-.search-header h2 {
+.search-header p,
+.dentist-list-header p {
     margin: 0;
-    font-size: 18px;
-}
-
-.search-header p {
-    margin: 5px 0 0;
     color: var(--text-muted);
-    font-size: 13px;
+    font-size: 12px;
 }
 
 .search-form {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-top: 18px;
+    gap: 9px;
+    margin-top: 15px;
 }
 
 .search-input-wrapper {
     position: relative;
     flex: 1;
-    max-width: 650px;
+    max-width: 700px;
 }
 
 .search-input-wrapper input {
     width: 100%;
-    height: 42px;
-    padding: 9px 12px 9px 38px;
-    border: 1px solid var(--border-strong);
-    border-radius: 7px;
+    height: 40px;
+    padding: 8px 11px 8px 36px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
     background: var(--input-bg);
     color: var(--text-primary);
-    outline: none;
 }
 
 .search-input-wrapper input:focus {
+    outline: none;
     border-color: var(--primary);
-    box-shadow:
-            0 0 0 3px var(--primary-soft);
+    box-shadow: 0 0 0 3px var(--primary-soft);
 }
 
 .search-icon {
     position: absolute;
-    left: 13px;
+    left: 12px;
     top: 50%;
     transform: translateY(-50%);
     color: var(--text-muted);
 }
 
-/* ==========================================================
-   TABELA
-========================================================== */
+/* LISTA */
 
-.table-header {
-    padding: 18px 20px;
+.dentist-list-card {
+    overflow: hidden;
+}
+
+.dentist-list-header {
+    padding: 17px 20px;
     border-bottom: 1px solid var(--border);
-}
-
-.table-header h2 {
-    margin: 0;
-    font-size: 17px;
-}
-
-.result-count {
-    display: block;
-    margin-top: 4px;
-    color: var(--text-muted);
-    font-size: 12px;
 }
 
 .table-responsive {
@@ -332,182 +201,454 @@
     border-collapse: collapse;
 }
 
-.dentist-table thead {
-    background: var(--bg-surface-soft);
+.dentist-table th,
+.dentist-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: middle;
 }
 
 .dentist-table th {
-    padding: 11px 16px;
-    border-bottom: 1px solid var(--border);
+    background: var(--bg-surface-soft);
     color: var(--text-muted);
-    text-align: left;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 10px;
     text-transform: uppercase;
+    letter-spacing: .05em;
 }
 
-.dentist-table td {
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--border);
-    color: var(--text-secondary);
-    font-size: 14px;
+.dentist-table tbody tr {
+    transition: background .15s ease;
 }
 
 .dentist-table tbody tr:hover {
-    background: var(--bg-surface-hover);
+    background: rgba(255, 255, 255, .015);
 }
 
-.dentist-name {
-    color: var(--text-primary);
-    font-weight: 600;
+.dentist-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.dentist-identity {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
     text-decoration: none;
 }
 
-.dentist-name:hover {
-    color: #60a5fa;
+.dentist-avatar {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    border: 1px solid rgba(59, 130, 246, .25);
+    border-radius: 10px;
+    background: var(--primary-soft);
+    color: #93c5fd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.dentist-identity-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.dentist-identity-text strong {
+    color: var(--text-primary);
+    font-size: 13px;
+}
+
+.dentist-identity-text small {
+    color: var(--text-muted);
+    font-size: 10px;
 }
 
 .dentist-code {
     display: inline-flex;
-    padding: 4px 8px;
-    border-radius: 5px;
-    background: var(--bg-surface-hover);
-    color: var(--text-secondary);
-    font-size: 12px;
+    min-width: 30px;
+    height: 26px;
+    padding: 0 7px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: #1e293b;
+    color: #e2e8f0;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.agenda-link {
+    display: inline-flex;
+    min-height: 27px;
+    padding: 0 9px;
+    align-items: center;
+    border: 1px solid rgba(34, 197, 94, .18);
+    border-radius: 999px;
+    background: rgba(34, 197, 94, .07);
+    color: #86efac;
+    font-size: 10px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.agenda-link:hover {
+    background: rgba(34, 197, 94, .13);
 }
 
 .column-code {
-    width: 100px;
+    width: 90px;
+}
+
+.column-agenda {
+    width: 120px;
 }
 
 .column-actions {
-    width: 170px;
+    width: 150px;
 }
-
-/* ==========================================================
-   AÇÕES
-========================================================== */
 
 .table-actions {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 5px;
 }
 
 .table-actions form {
     margin: 0;
 }
 
-.btn-table-edit,
-.btn-table-delete {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 32px;
-    padding: 0 11px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 600;
+.action-link {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    padding: 5px 7px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 700;
     text-decoration: none;
     cursor: pointer;
 }
 
-.btn-table-edit {
-    border: 1px solid rgba(59, 130, 246, 0.35);
-    background: var(--primary-soft);
+.action-edit {
     color: #93c5fd;
 }
 
-.btn-table-delete {
-    border: 1px solid rgba(239, 68, 68, 0.35);
-    background: var(--danger-soft);
+.action-edit:hover {
+    background: rgba(59, 130, 246, .12);
+}
+
+.action-delete {
     color: #fca5a5;
 }
 
-/* ==========================================================
-   EMPTY
-========================================================== */
+.action-delete:hover {
+    background: rgba(239, 68, 68, .12);
+}
+
+/* EDIÇÃO */
+
+.dentist-editor-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.editor-title {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.editor-title h2 {
+    margin: 3px 0 4px;
+    font-size: 24px;
+}
+
+.back-link {
+    width: fit-content;
+    color: #60a5fa;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.dentist-editor-code {
+    min-width: 105px;
+    padding: 10px 13px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--bg-surface);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.dentist-editor-code span {
+    color: var(--text-muted);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+.dentist-editor-code strong {
+    font-size: 18px;
+}
+
+/* FORM */
+
+.form-card {
+    padding: 20px;
+}
+
+.form-card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.section-number {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    background: var(--primary-soft);
+    color: #60a5fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.form-card-header h3 {
+    margin: 3px 0 3px;
+    font-size: 17px;
+}
+
+.form-card-header p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.dentist-grid {
+    display: grid;
+    grid-template-columns: minmax(300px, 700px);
+}
+
+.field {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.field label {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.field input {
+    width: 100%;
+    height: 40px;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--input-bg);
+    color: var(--text-primary);
+    font-family: inherit;
+}
+
+.field input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-soft);
+}
+
+.required {
+    color: #f87171;
+}
+
+/* PREVIEW */
+
+.dentist-preview {
+    min-height: 72px;
+    padding: 13px 16px;
+    border: 1px solid rgba(59, 130, 246, .20);
+    border-radius: 10px;
+    background: rgba(59, 130, 246, .06);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.preview-avatar {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border: 1px solid rgba(59, 130, 246, .25);
+    border-radius: 10px;
+    background: var(--primary-soft);
+    color: #93c5fd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.dentist-preview > div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.dentist-preview span {
+    color: var(--text-muted);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.dentist-preview strong {
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+.dentist-preview small {
+    color: var(--text-muted);
+    font-size: 10px;
+}
+
+/* AÇÕES FORM */
+
+.form-action-bar {
+    padding: 13px 16px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-surface);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.required-info {
+    color: var(--text-muted);
+    font-size: 11px;
+}
+
+.form-action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+/* EMPTY */
 
 .empty-state {
+    padding: 38px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 7px;
-    padding: 45px 20px;
+    gap: 5px;
     color: var(--text-muted);
+    text-align: center;
 }
 
 .empty-state strong {
     color: var(--text-secondary);
 }
 
-.empty-icon {
-    font-size: 30px;
-}
-
-/* ==========================================================
-   EDIÇÃO
-========================================================== */
-
-.edit-status {
-    display: inline-flex;
-    gap: 6px;
-    margin-bottom: 14px;
-    padding: 6px 10px;
-    border-radius: 6px;
+.empty-state-icon {
+    width: 36px;
+    height: 36px;
+    margin-bottom: 4px;
+    border-radius: 50%;
     background: var(--primary-soft);
-    color: #93c5fd;
-    font-size: 12px;
-}
-
-/* ==========================================================
-   BARRA FINAL
-========================================================== */
-
-.form-action-bar {
+    color: #60a5fa;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 16px 18px;
-    margin-top: 20px;
-    border: 1px solid var(--border);
+    justify-content: center;
+    font-size: 20px;
+}
+
+.empty-action {
+    margin-top: 10px;
+}
+
+/* TOAST */
+
+.dentista-toast {
+    position: fixed;
+    top: 76px;
+    right: 24px;
+    z-index: 9999;
+    width: min(480px, calc(100vw - 48px));
+    padding: 13px 15px;
     border-radius: 10px;
-    background: var(--bg-surface);
-    box-shadow: var(--shadow);
-}
-
-.form-action-buttons {
     display: flex;
-    gap: 10px;
+    align-items: center;
+    gap: 11px;
+    box-sizing: border-box;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, .32);
+    font-size: 13px;
+    font-weight: 700;
 }
 
-.required-info {
-    color: var(--text-muted);
-    font-size: 12px;
+.dentista-toast-success {
+    background: #064e3b;
+    border: 1px solid #059669;
+    color: #d1fae5;
 }
 
-/* ==========================================================
-   RESPONSIVO
-========================================================== */
+.dentista-toast-error {
+    background: #4c1717;
+    border: 1px solid #dc2626;
+    color: #fee2e2;
+}
+
+.dentista-toast-icon {
+    font-size: 17px;
+}
+
+.dentista-toast-close {
+    margin-left: auto;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-size: 19px;
+    cursor: pointer;
+}
+
+/* RESPONSIVO */
 
 @media (max-width: 800px) {
-    .dentist-grid {
-        grid-template-columns: 1fr;
+    .dentist-page-header,
+    .dentist-editor-header {
+        align-items: flex-start;
+        flex-direction: column;
     }
 
-    .page-header {
-        flex-direction: column;
-        align-items: flex-start;
+    .dentist-grid {
+        grid-template-columns: 1fr;
     }
 
     .search-form {
         flex-direction: column;
         align-items: stretch;
-    }
-
-    .search-input-wrapper {
-        max-width: none;
     }
 
     .form-action-bar {
@@ -517,5 +658,13 @@
 
     .form-action-buttons {
         justify-content: flex-end;
+    }
+}
+
+@media (max-width: 700px) {
+    .dentista-toast {
+        top: 68px;
+        right: 12px;
+        width: calc(100vw - 24px);
     }
 }

@@ -1,6 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
-
-    console.log("paciente.js carregado");
+document.addEventListener("DOMContentLoaded", function () {
 
     configurarCampoDependente(
         "anamnese.algumTratamento",
@@ -31,43 +29,43 @@ document.addEventListener("DOMContentLoaded", () => {
         "anamnese.fumante",
         "grupo-fumante"
     );
-});
 
+    configurarToasts();
+    configurarEstadoMaiusculo();
+});
 
 function configurarCampoDependente(
     nomeCampo,
     idContainer
 ) {
 
-    const radios = document.getElementsByName(nomeCampo);
+    const radios =
+        document.getElementsByName(
+            nomeCampo
+        );
 
     const container =
-        document.getElementById(idContainer);
-
-    if (!container) {
-        console.warn(
-            `Container não encontrado: ${idContainer}`
+        document.getElementById(
+            idContainer
         );
 
-        return;
-    }
-
-    if (!radios || radios.length === 0) {
-        console.warn(
-            `Radio não encontrado: ${nomeCampo}`
-        );
-
+    if (!container
+            || !radios
+            || radios.length === 0) {
         return;
     }
 
     function atualizar(limpar) {
 
-        let valorSelecionado = null;
+        let valorSelecionado =
+            null;
 
         for (const radio of radios) {
 
             if (radio.checked) {
-                valorSelecionado = radio.value;
+                valorSelecionado =
+                    radio.value;
+
                 break;
             }
         }
@@ -75,66 +73,113 @@ function configurarCampoDependente(
         const mostrar =
             valorSelecionado === "true";
 
-        if (mostrar) {
-
-            container.style.display = "block";
-
-        } else {
-
-            container.style.display = "none";
-
-        }
+        container.classList.toggle(
+            "visible",
+            mostrar
+        );
 
         const campos =
             container.querySelectorAll(
                 "input, select, textarea"
             );
 
-        campos.forEach(campo => {
+        campos.forEach(
+            function (campo) {
 
-            campo.disabled = !mostrar;
+                campo.disabled =
+                    !mostrar;
 
-            if (!mostrar && limpar) {
+                if (!mostrar
+                        && limpar) {
 
-                if (
-                    campo.type === "checkbox" ||
-                    campo.type === "radio"
-                ) {
+                    if (campo.type === "checkbox"
+                            || campo.type === "radio") {
 
-                    campo.checked = false;
+                        campo.checked =
+                            false;
 
-                } else if (
-                    campo.type === "number"
-                ) {
+                    } else if (campo.type === "number") {
 
-                    campo.value = "0";
+                        campo.value =
+                            "0";
 
-                } else {
+                    } else {
 
-                    campo.value = "";
+                        campo.value =
+                            "";
+                    }
                 }
             }
-        });
+        );
     }
-
 
     for (const radio of radios) {
 
         radio.addEventListener(
             "change",
-            () => atualizar(true)
+            function () {
+                atualizar(true);
+            }
         );
     }
 
-
-    /*
-     * Ao carregar a página:
-     *
-     * NOVO:
-     * false -> campo permanece escondido.
-     *
-     * EDIÇÃO:
-     * true -> campo aparece com o valor existente.
-     */
     atualizar(false);
+}
+
+function configurarToasts() {
+
+    document.querySelectorAll(
+        ".paciente-toast"
+    ).forEach(
+        function (toast) {
+
+            const close =
+                toast.querySelector(
+                    ".paciente-toast-close"
+                );
+
+            if (close) {
+
+                close.addEventListener(
+                    "click",
+                    function () {
+                        toast.remove();
+                    }
+                );
+            }
+
+            window.setTimeout(
+                function () {
+
+                    if (toast.isConnected) {
+                        toast.remove();
+                    }
+                },
+                6500
+            );
+        }
+    );
+}
+
+function configurarEstadoMaiusculo() {
+
+    const estado =
+        document.getElementById(
+            "estado"
+        );
+
+    if (!estado) {
+        return;
+    }
+
+    estado.addEventListener(
+        "input",
+        function () {
+
+            estado.value =
+                estado.value
+                    .toUpperCase()
+                    .slice(0, 2);
+        }
+    );
 }

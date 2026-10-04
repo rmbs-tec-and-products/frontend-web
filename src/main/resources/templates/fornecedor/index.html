@@ -14,6 +14,9 @@
 
     <link rel="stylesheet"
           th:href="@{/css/fornecedor.css}">
+
+    <script th:src="@{/js/fornecedor.js}"
+            defer></script>
 </head>
 
 <body>
@@ -26,14 +29,58 @@
 
     <main class="content fornecedor-page">
 
-        <div class="page-header">
+        <div th:if="${mensagemSucesso}"
+             class="fornecedor-toast fornecedor-toast-success">
+
+            <span class="fornecedor-toast-icon">
+                ✓
+            </span>
+
+            <span th:text="${mensagemSucesso}">
+            </span>
+
+            <button type="button"
+                    class="fornecedor-toast-close"
+                    aria-label="Fechar">
+                ×
+            </button>
+
+        </div>
+
+        <div th:if="${mensagemErro}"
+             class="fornecedor-toast fornecedor-toast-error">
+
+            <span class="fornecedor-toast-icon">
+                !
+            </span>
+
+            <span th:text="${mensagemErro}">
+            </span>
+
+            <button type="button"
+                    class="fornecedor-toast-close"
+                    aria-label="Fechar">
+                ×
+            </button>
+
+        </div>
+
+        <header class="supplier-page-header">
 
             <div>
-                <h1>Fornecedores</h1>
 
-                <p class="page-subtitle">
+                <span class="page-eyebrow">
+                    Compras e estoque
+                </span>
+
+                <h1>
+                    Fornecedores
+                </h1>
+
+                <p>
                     Gerencie os fornecedores utilizados no cadastro de produtos.
                 </p>
+
             </div>
 
             <a th:if="${modo == 'consultar'}"
@@ -42,61 +89,46 @@
                 + Novo fornecedor
             </a>
 
-        </div>
+        </header>
 
-        <div th:if="${mensagemSucesso}"
-             class="feedback feedback-success">
-
-            <span class="feedback-icon">
-                ✓
-            </span>
-
-            <span th:text="${mensagemSucesso}">
-            </span>
-
-        </div>
-
-        <div th:if="${mensagemErro}"
-             class="feedback feedback-error">
-
-            <span class="feedback-icon">
-                !
-            </span>
-
-            <span th:text="${mensagemErro}">
-            </span>
-
-        </div>
-
-        <div class="supplier-tabs">
-
-            <a th:href="@{/fornecedores/novo}"
-               th:classappend="${modo == 'novo'} ? ' active' : ''">
-                Novo
-            </a>
+        <nav class="supplier-tabs">
 
             <a th:href="@{/fornecedores}"
                th:classappend="${modo == 'consultar'} ? ' active' : ''">
                 Consultar
             </a>
 
-        </div>
+            <a th:href="@{/fornecedores/novo}"
+               th:classappend="${modo == 'novo'} ? ' active' : ''">
+                Novo fornecedor
+            </a>
 
-        <!-- CONSULTA -->
+        </nav>
 
-        <section th:if="${modo == 'consultar'}">
+        <!-- CONSULTAR -->
 
-            <div class="search-card">
+        <section th:if="${modo == 'consultar'}"
+                 class="supplier-consult">
+
+            <section class="search-card">
 
                 <div class="search-header">
 
-                    <h2>
-                        Consultar fornecedores
-                    </h2>
+                    <div>
 
-                    <p>
-                        Pesquise pelo nome ou telefone.
-                    </p>
+                        <span class="section-eyebrow">
+                            Localizar fornecedor
+                        </span>
+
+                        <h2>
+                            Consulta
+                        </h2>
+
+                        <p>
+                            Pesquise pelo nome ou telefone do fornecedor.
+                        </p>
+
+                    </div>
 
                 </div>
 
@@ -110,16 +142,14 @@
                             ⌕
                         </span>
 
-                        <input
-                                name="pesquisa"
-                                type="text"
-                                th:value="${pesquisa}"
-                                placeholder="Nome ou telefone...">
+                        <input name="pesquisa"
+                               type="text"
+                               th:value="${pesquisa}"
+                               placeholder="Nome ou telefone">
 
                     </div>
 
-                    <button
-                            type="submit"
+                    <button type="submit"
                             class="btn-primary">
                         Pesquisar
                     </button>
@@ -132,25 +162,28 @@
 
                 </form>
 
-            </div>
+            </section>
 
-            <div class="table-card">
+            <section class="supplier-list-card">
 
-                <div class="table-header">
+                <header class="supplier-list-header">
 
                     <div>
 
+                        <span class="section-eyebrow">
+                            Base comercial
+                        </span>
+
                         <h2>
-                            Fornecedores
+                            Fornecedores cadastrados
                         </h2>
 
-                        <span class="result-count"
-                              th:text="${#lists.size(fornecedores) + ' fornecedor(es) encontrado(s)'}">
-                        </span>
+                        <p th:text="${#lists.size(fornecedores) + ' fornecedor(es) encontrado(s)'}">
+                        </p>
 
                     </div>
 
-                </div>
+                </header>
 
                 <div class="table-responsive">
 
@@ -159,21 +192,10 @@
                         <thead>
 
                         <tr>
-                            <th class="column-code">
-                                Código
-                            </th>
-
-                            <th>
-                                Nome
-                            </th>
-
-                            <th>
-                                Telefone
-                            </th>
-
-                            <th class="column-actions">
-                                Ações
-                            </th>
+                            <th>Fornecedor</th>
+                            <th>Telefone</th>
+                            <th class="column-code">Código</th>
+                            <th class="column-actions">Ações</th>
                         </tr>
 
                         </thead>
@@ -183,25 +205,48 @@
                         <tr th:each="fornecedor : ${fornecedores}">
 
                             <td>
-                                <span class="supplier-code"
-                                      th:text="${fornecedor.codigo}">
-                                </span>
-                            </td>
-
-                            <td>
 
                                 <a th:href="@{/fornecedores/{codigo}/editar(codigo=${fornecedor.codigo})}"
-                                   class="supplier-name"
-                                   th:text="${fornecedor.nome}">
+                                   class="supplier-identity">
+
+                                    <span class="supplier-avatar"
+                                          th:text="${#strings.substring(fornecedor.nome, 0, 1)}">
+                                        F
+                                    </span>
+
+                                    <span class="supplier-identity-text">
+
+                                        <strong th:text="${fornecedor.nome}">
+                                        </strong>
+
+                                        <small>
+                                            Fornecedor de materiais
+                                        </small>
+
+                                    </span>
+
                                 </a>
 
                             </td>
 
                             <td>
 
-                                <span th:text="${fornecedor.telefone != null && !fornecedor.telefone.isBlank()
-                                    ? fornecedor.telefone
-                                    : '-'}">
+                                <span th:if="${fornecedor.telefone != null && !fornecedor.telefone.isBlank()}"
+                                      class="phone-badge"
+                                      th:text="${fornecedor.telefone}">
+                                </span>
+
+                                <span th:if="${fornecedor.telefone == null || fornecedor.telefone.isBlank()}"
+                                      class="no-phone">
+                                    Não informado
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span class="supplier-code"
+                                      th:text="${fornecedor.codigo}">
                                 </span>
 
                             </td>
@@ -211,16 +256,15 @@
                                 <div class="table-actions">
 
                                     <a th:href="@{/fornecedores/{codigo}/editar(codigo=${fornecedor.codigo})}"
-                                       class="btn-table-edit">
+                                       class="action-link action-edit">
                                         Editar
                                     </a>
 
                                     <form th:action="@{/fornecedores/{codigo}/excluir(codigo=${fornecedor.codigo})}"
                                           method="post">
 
-                                        <button
-                                                type="submit"
-                                                class="btn-table-delete"
+                                        <button type="submit"
+                                                class="action-link action-delete"
                                                 onclick="return confirm('Deseja realmente excluir este fornecedor?')">
                                             Excluir
                                         </button>
@@ -239,8 +283,8 @@
 
                                 <div class="empty-state">
 
-                                    <div class="empty-icon">
-                                        ⌕
+                                    <div class="empty-state-icon">
+                                        +
                                     </div>
 
                                     <strong>
@@ -248,8 +292,13 @@
                                     </strong>
 
                                     <span>
-                                        Tente pesquisar utilizando outro termo.
+                                        Cadastre um novo fornecedor ou altere o termo pesquisado.
                                     </span>
+
+                                    <a th:href="@{/fornecedores/novo}"
+                                       class="btn-primary empty-action">
+                                        + Novo fornecedor
+                                    </a>
 
                                 </div>
 
@@ -263,56 +312,93 @@
 
                 </div>
 
-            </div>
+            </section>
 
         </section>
 
-        <!-- CADASTRO / EDIÇÃO -->
+        <!-- NOVO / EDITAR -->
 
-        <section th:if="${modo == 'novo'}">
+        <section th:if="${modo == 'novo'}"
+                 class="supplier-editor">
 
-            <div class="edit-status"
-                 th:if="${fornecedorForm.codigo != null}">
+            <header class="supplier-editor-header">
 
-                <span>
-                    Editando fornecedor
-                </span>
+                <div class="editor-title">
 
-                <strong th:text="${'#' + fornecedorForm.codigo}">
-                </strong>
+                    <a th:href="@{/fornecedores}"
+                       class="back-link">
+                        ← Voltar para fornecedores
+                    </a>
 
-            </div>
+                    <div>
 
-            <form
-                    th:action="@{/fornecedores/salvar}"
-                    th:object="${fornecedorForm}"
-                    method="post">
+                        <span class="page-eyebrow"
+                              th:text="${fornecedorForm.codigo == null
+                                ? 'Novo cadastro'
+                                : 'Editando fornecedor'}">
+                        </span>
 
-                <input
-                        type="hidden"
-                        th:field="*{codigo}">
+                        <h2 th:text="${fornecedorForm.codigo == null
+                                ? 'Novo fornecedor'
+                                : fornecedorForm.nome}">
+                        </h2>
+
+                        <p th:text="${fornecedorForm.codigo == null
+                                ? 'Cadastre as informações principais do fornecedor.'
+                                : 'Atualize as informações comerciais do fornecedor.'}">
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div th:if="${fornecedorForm.codigo != null}"
+                     class="supplier-editor-code">
+
+                    <span>
+                        Código
+                    </span>
+
+                    <strong th:text="${fornecedorForm.codigo}">
+                    </strong>
+
+                </div>
+
+            </header>
+
+            <form th:action="@{/fornecedores/salvar}"
+                  th:object="${fornecedorForm}"
+                  method="post"
+                  class="supplier-form">
+
+                <input type="hidden"
+                       th:field="*{codigo}">
 
                 <section class="form-card">
 
-                    <div class="section-header">
+                    <header class="form-card-header">
 
-                        <div class="section-number">
+                        <span class="section-number">
                             1
-                        </div>
+                        </span>
 
                         <div>
 
-                            <h2>
+                            <span class="section-eyebrow">
+                                Informações comerciais
+                            </span>
+
+                            <h3>
                                 Dados do fornecedor
-                            </h2>
+                            </h3>
 
                             <p>
-                                Informe os dados principais do fornecedor.
+                                Informe o nome da empresa ou fornecedor e seu telefone de contato.
                             </p>
 
                         </div>
 
-                    </div>
+                    </header>
 
                     <div class="supplier-grid">
 
@@ -323,13 +409,12 @@
                                 <span class="required">*</span>
                             </label>
 
-                            <input
-                                    id="nome"
-                                    type="text"
-                                    th:field="*{nome}"
-                                    maxlength="100"
-                                    required
-                                    placeholder="Ex.: Dental Prudente">
+                            <input id="nome"
+                                   type="text"
+                                   th:field="*{nome}"
+                                   maxlength="100"
+                                   required
+                                   placeholder="Ex.: Dental Prudente">
 
                         </div>
 
@@ -339,12 +424,11 @@
                                 Telefone
                             </label>
 
-                            <input
-                                    id="telefone"
-                                    type="text"
-                                    th:field="*{telefone}"
-                                    maxlength="25"
-                                    placeholder="Ex.: (18) 3222-4455">
+                            <input id="telefone"
+                                   type="text"
+                                   th:field="*{telefone}"
+                                   maxlength="25"
+                                   placeholder="Ex.: (18) 3222-4455">
 
                         </div>
 
@@ -352,14 +436,32 @@
 
                 </section>
 
-                <div class="form-action-bar">
+                <section class="supplier-preview">
+
+                    <div class="preview-avatar"
+                         id="supplier-preview-avatar">
+                        F
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Resumo do fornecedor
+                        </span>
+
+                        <strong id="supplier-preview-text">
+                            Informe os dados do fornecedor.
+                        </strong>
+
+                    </div>
+
+                </section>
+
+                <footer class="form-action-bar">
 
                     <span class="required-info">
 
-                        <span class="required">
-                            *
-                        </span>
-
+                        <span class="required">*</span>
                         Campos obrigatórios
 
                     </span>
@@ -371,8 +473,7 @@
                             Cancelar
                         </a>
 
-                        <button
-                                type="submit"
+                        <button type="submit"
                                 class="btn-primary"
                                 th:text="${fornecedorForm.codigo == null
                                     ? 'Cadastrar fornecedor'
@@ -382,7 +483,7 @@
 
                     </div>
 
-                </div>
+                </footer>
 
             </form>
 

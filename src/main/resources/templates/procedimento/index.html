@@ -11,8 +11,12 @@
 
     <link rel="stylesheet"
           th:href="@{/css/app.css}">
+
     <link rel="stylesheet"
           th:href="@{/css/procedimento.css}">
+
+    <script th:src="@{/js/procedimento.js}"
+            defer></script>
 </head>
 
 <body>
@@ -25,53 +29,109 @@
 
     <main class="content procedimento-page">
 
-        <div class="page-header">
+        <div th:if="${mensagemSucesso}"
+             class="procedimento-toast procedimento-toast-success">
+
+            <span class="procedimento-toast-icon">
+                ✓
+            </span>
+
+            <span th:text="${mensagemSucesso}">
+            </span>
+
+            <button type="button"
+                    class="procedimento-toast-close"
+                    aria-label="Fechar">
+                ×
+            </button>
+
+        </div>
+
+        <div th:if="${mensagemErro}"
+             class="procedimento-toast procedimento-toast-error">
+
+            <span class="procedimento-toast-icon">
+                !
+            </span>
+
+            <span th:text="${mensagemErro}">
+            </span>
+
+            <button type="button"
+                    class="procedimento-toast-close"
+                    aria-label="Fechar">
+                ×
+            </button>
+
+        </div>
+
+        <header class="procedure-page-header">
+
             <div>
-                <h1>Procedimentos</h1>
-                <p class="page-subtitle">
-                    Cadastre os procedimentos odontológicos e os produtos utilizados.
+
+                <span class="page-eyebrow">
+                    Catálogo clínico
+                </span>
+
+                <h1>
+                    Procedimentos
+                </h1>
+
+                <p>
+                    Cadastre os procedimentos odontológicos e os materiais utilizados.
                 </p>
+
             </div>
 
             <a th:if="${modo == 'consultar'}"
                th:href="@{/procedimentos/novo}"
                class="btn-primary">
+
                 + Novo procedimento
+
             </a>
-        </div>
 
-        <div th:if="${mensagemSucesso}"
-             class="feedback feedback-success">
-            <span class="feedback-icon">✓</span>
-            <span th:text="${mensagemSucesso}"></span>
-        </div>
+        </header>
 
-        <div th:if="${mensagemErro}"
-             class="feedback feedback-error">
-            <span class="feedback-icon">!</span>
-            <span th:text="${mensagemErro}"></span>
-        </div>
-
-        <div class="procedure-tabs">
-            <a th:href="@{/procedimentos/novo}"
-               th:classappend="${modo == 'novo'} ? ' active' : ''">
-                Novo
-            </a>
+        <nav class="procedure-tabs">
 
             <a th:href="@{/procedimentos}"
                th:classappend="${modo == 'consultar'} ? ' active' : ''">
                 Consultar
             </a>
-        </div>
+
+            <a th:href="@{/procedimentos/novo}"
+               th:classappend="${modo == 'novo'} ? ' active' : ''">
+                Novo procedimento
+            </a>
+
+        </nav>
 
         <!-- CONSULTAR -->
 
-        <section th:if="${modo == 'consultar'}">
+        <section th:if="${modo == 'consultar'}"
+                 class="procedure-consult">
 
-            <div class="search-card">
+            <section class="search-card">
+
                 <div class="search-header">
-                    <h2>Consultar procedimentos</h2>
-                    <p>Pesquise pelo nome do procedimento.</p>
+
+                    <div>
+
+                        <span class="section-eyebrow">
+                            Localizar procedimento
+                        </span>
+
+                        <h2>
+                            Consulta
+                        </h2>
+
+                        <p>
+                            Pesquise pelo nome do procedimento.
+                        </p>
+
+                    </div>
+
                 </div>
 
                 <form method="get"
@@ -79,13 +139,16 @@
                       class="search-form">
 
                     <div class="search-input-wrapper">
-                        <span class="search-icon">⌕</span>
 
-                        <input
-                                name="pesquisa"
-                                type="text"
-                                th:value="${pesquisa}"
-                                placeholder="Digite o nome do procedimento...">
+                        <span class="search-icon">
+                            ⌕
+                        </span>
+
+                        <input name="pesquisa"
+                               type="text"
+                               th:value="${pesquisa}"
+                               placeholder="Ex.: Restauração em Resina">
+
                     </div>
 
                     <button type="submit"
@@ -98,32 +161,46 @@
                        class="btn-secondary">
                         Limpar
                     </a>
+
                 </form>
-            </div>
 
-            <div class="table-card">
+            </section>
 
-                <div class="table-header">
+            <section class="procedure-list-card">
+
+                <header class="procedure-list-header">
+
                     <div>
-                        <h2>Procedimentos</h2>
 
-                        <span class="result-count"
-                              th:text="${#lists.size(procedimentos) + ' procedimento(s) encontrado(s)'}">
+                        <span class="section-eyebrow">
+                            Catálogo
                         </span>
+
+                        <h2>
+                            Procedimentos cadastrados
+                        </h2>
+
+                        <p th:text="${#lists.size(procedimentos) + ' procedimento(s) encontrado(s)'}">
+                        </p>
+
                     </div>
-                </div>
+
+                </header>
 
                 <div class="table-responsive">
 
                     <table class="procedure-table">
+
                         <thead>
+
                         <tr>
+                            <th>Procedimento</th>
+                            <th>Valor padrão</th>
+                            <th>Materiais</th>
                             <th class="column-code">Código</th>
-                            <th>Nome</th>
-                            <th>Valor</th>
-                            <th>Produtos</th>
                             <th class="column-actions">Ações</th>
                         </tr>
+
                         </thead>
 
                         <tbody>
@@ -131,136 +208,242 @@
                         <tr th:each="procedimento : ${procedimentos}">
 
                             <td>
-                                <span class="procedure-code"
-                                      th:text="${procedimento.codigo}">
-                                </span>
-                            </td>
 
-                            <td>
                                 <a th:href="@{/procedimentos/{codigo}/editar(codigo=${procedimento.codigo})}"
-                                   class="procedure-name"
-                                   th:text="${procedimento.nome}">
-                                </a>
-                            </td>
+                                   class="procedure-identity">
 
-                            <td th:text="${#numbers.formatDecimal(procedimento.valor, 1, 'POINT', 2, 'COMMA')}">
+                                    <span class="procedure-icon">
+                                        +
+                                    </span>
+
+                                    <span>
+
+                                        <strong th:text="${procedimento.nome}">
+                                        </strong>
+
+                                        <small>
+                                            Procedimento odontológico
+                                        </small>
+
+                                    </span>
+
+                                </a>
+
                             </td>
 
                             <td>
+
+                                <span class="procedure-value"
+                                      th:text="${'R$ ' + #numbers.formatDecimal(procedimento.valor, 1, 'POINT', 2, 'COMMA')}">
+                                </span>
+
+                            </td>
+
+                            <td>
+
                                 <span class="product-count"
                                       th:text="${#lists.size(procedimento.produtos) + ' produto(s)'}">
                                 </span>
+
                             </td>
 
                             <td>
+
+                                <span class="procedure-code"
+                                      th:text="${procedimento.codigo}">
+                                </span>
+
+                            </td>
+
+                            <td>
+
                                 <div class="table-actions">
 
                                     <a th:href="@{/procedimentos/{codigo}/editar(codigo=${procedimento.codigo})}"
-                                       class="btn-table-edit">
+                                       class="action-link action-edit">
                                         Editar
                                     </a>
 
                                     <form th:action="@{/procedimentos/{codigo}/excluir(codigo=${procedimento.codigo})}"
                                           method="post">
 
-                                        <button
-                                                type="submit"
-                                                class="btn-table-delete"
+                                        <button type="submit"
+                                                class="action-link action-delete"
                                                 onclick="return confirm('Deseja realmente excluir este procedimento?')">
                                             Excluir
                                         </button>
+
                                     </form>
 
                                 </div>
+
                             </td>
 
                         </tr>
 
                         <tr th:if="${#lists.isEmpty(procedimentos)}">
+
                             <td colspan="5">
+
                                 <div class="empty-state">
-                                    <div class="empty-icon">⌕</div>
+
+                                    <div class="empty-state-icon">
+                                        +
+                                    </div>
 
                                     <strong>
                                         Nenhum procedimento encontrado
                                     </strong>
 
                                     <span>
-                                        Tente pesquisar utilizando outro termo.
+                                        Cadastre um novo procedimento ou altere o termo pesquisado.
                                     </span>
+
+                                    <a th:href="@{/procedimentos/novo}"
+                                       class="btn-primary empty-action">
+                                        + Novo procedimento
+                                    </a>
+
                                 </div>
+
                             </td>
+
                         </tr>
 
                         </tbody>
+
                     </table>
 
                 </div>
-            </div>
+
+            </section>
 
         </section>
 
         <!-- NOVO / EDITAR -->
 
-        <section th:if="${modo == 'novo'}">
+        <section th:if="${modo == 'novo'}"
+                 class="procedure-editor">
 
-            <div class="edit-status"
-                 th:if="${procedimentoForm.codigo != null}">
-                <span>Editando procedimento</span>
-                <strong th:text="${'#' + procedimentoForm.codigo}"></strong>
-            </div>
+            <header class="procedure-editor-header">
 
-            <form
-                    th:action="@{/procedimentos/salvar}"
-                    th:object="${procedimentoForm}"
-                    method="post"
-                    id="procedimentoForm">
+                <div class="editor-title">
+
+                    <a th:href="@{/procedimentos}"
+                       class="back-link">
+                        ← Voltar para procedimentos
+                    </a>
+
+                    <div>
+
+                        <span class="page-eyebrow"
+                              th:text="${procedimentoForm.codigo == null
+                                ? 'Novo cadastro'
+                                : 'Editando procedimento'}">
+                        </span>
+
+                        <h2 th:text="${procedimentoForm.codigo == null
+                                ? 'Novo procedimento'
+                                : procedimentoForm.nome}">
+                        </h2>
+
+                        <p th:text="${procedimentoForm.codigo == null
+                                ? 'Defina o procedimento e os materiais consumidos durante sua execução.'
+                                : 'Atualize o valor e a composição de materiais deste procedimento.'}">
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div th:if="${procedimentoForm.codigo != null}"
+                     class="procedure-editor-code">
+
+                    <span>
+                        Código
+                    </span>
+
+                    <strong th:text="${procedimentoForm.codigo}">
+                    </strong>
+
+                </div>
+
+            </header>
+
+            <form th:action="@{/procedimentos/salvar}"
+                  th:object="${procedimentoForm}"
+                  method="post"
+                  id="procedimentoForm"
+                  class="procedure-form">
 
                 <input type="hidden"
                        th:field="*{codigo}">
 
                 <section class="form-card">
 
-                    <div class="section-header">
-                        <div class="section-number">1</div>
+                    <header class="form-card-header">
+
+                        <span class="section-number">
+                            1
+                        </span>
 
                         <div>
-                            <h2>Dados do procedimento</h2>
+
+                            <span class="section-eyebrow">
+                                Informações principais
+                            </span>
+
+                            <h3>
+                                Dados do procedimento
+                            </h3>
+
                             <p>
-                                Informe o nome e o valor padrão do procedimento.
+                                Informe o nome e o valor padrão utilizado no atendimento.
                             </p>
+
                         </div>
-                    </div>
+
+                    </header>
 
                     <div class="procedure-main-grid">
 
                         <div class="field">
+
                             <label for="nome">
                                 Nome
                                 <span class="required">*</span>
                             </label>
 
-                            <input
-                                    id="nome"
-                                    type="text"
-                                    th:field="*{nome}"
-                                    maxlength="200"
-                                    required
-                                    placeholder="Ex.: Restauração em Resina">
+                            <input id="nome"
+                                   type="text"
+                                   th:field="*{nome}"
+                                   maxlength="200"
+                                   required
+                                   placeholder="Ex.: Restauração em Resina">
+
                         </div>
 
                         <div class="field value-field">
+
                             <label for="valor">
-                                Valor
+                                Valor padrão
                             </label>
 
-                            <input
-                                    id="valor"
-                                    type="number"
-                                    min="0"
-                                    step="0.01"
-                                    th:field="*{valor}"
-                                    placeholder="0,00">
+                            <div class="money-input">
+
+                                <span>
+                                    R$
+                                </span>
+
+                                <input id="valor"
+                                       type="number"
+                                       min="0"
+                                       step="0.01"
+                                       th:field="*{valor}"
+                                       placeholder="0,00">
+
+                            </div>
+
                         </div>
 
                     </div>
@@ -269,75 +452,128 @@
 
                 <section class="form-card">
 
-                    <div class="section-header">
-                        <div class="section-number">2</div>
+                    <header class="form-card-header">
+
+                        <span class="section-number">
+                            2
+                        </span>
 
                         <div>
-                            <h2>Produtos utilizados</h2>
+
+                            <span class="section-eyebrow">
+                                Composição
+                            </span>
+
+                            <h3>
+                                Produtos utilizados
+                            </h3>
+
                             <p>
-                                Informe quais materiais fazem parte deste procedimento.
+                                Defina os materiais que serão baixados do estoque quando o procedimento for concluído.
                             </p>
+
                         </div>
+
+                    </header>
+
+                    <div class="product-selector-card">
+
+                        <div class="product-selector">
+
+                            <div class="field product-select-field">
+
+                                <label for="produtoSelecionado">
+                                    Produto
+                                </label>
+
+                                <select id="produtoSelecionado">
+
+                                    <option value="">
+                                        Selecione um produto
+                                    </option>
+
+                                    <option th:each="produto : ${produtosDisponiveis}"
+                                            th:value="${produto.codigo}"
+                                            th:text="${produto.nome}">
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="field quantity-field">
+
+                                <label for="quantidadeProduto">
+                                    Quantidade
+                                </label>
+
+                                <input id="quantidadeProduto"
+                                       type="number"
+                                       min="1"
+                                       value="1">
+
+                            </div>
+
+                            <button type="button"
+                                    id="btnAdicionarProduto"
+                                    class="btn-primary add-product-button">
+                                + Adicionar produto
+                            </button>
+
+                        </div>
+
                     </div>
 
-                    <div class="product-selector">
+                    <div class="composition-summary">
 
-                        <div class="field product-select-field">
-                            <label for="produtoSelecionado">
-                                Produto
-                            </label>
+                        <div>
 
-                            <select id="produtoSelecionado">
-                                <option value="">
-                                    Selecione um produto
-                                </option>
+                            <span>
+                                Materiais vinculados
+                            </span>
 
-                                <option
-                                        th:each="produto : ${produtosDisponiveis}"
-                                        th:value="${produto.codigo}"
-                                        th:text="${produto.nome}">
-                                </option>
-                            </select>
+                            <strong id="product-count-summary">
+                                0
+                            </strong>
+
                         </div>
 
-                        <div class="field quantity-field">
-                            <label for="quantidadeProduto">
-                                Quantidade
-                            </label>
-
-                            <input
-                                    id="quantidadeProduto"
-                                    type="number"
-                                    min="1"
-                                    value="1">
-                        </div>
-
-                        <button
-                                type="button"
-                                id="btnAdicionarProduto"
-                                class="btn-primary add-product-button">
-                            + Adicionar
-                        </button>
+                        <span class="composition-help">
+                            Estes produtos serão utilizados automaticamente na baixa de estoque.
+                        </span>
 
                     </div>
 
                     <div id="productEmptyState"
                          class="product-empty-state">
-                        Nenhum produto adicionado ao procedimento.
+
+                        <div class="empty-state-icon">
+                            +
+                        </div>
+
+                        <strong>
+                            Nenhum produto vinculado
+                        </strong>
+
+                        <span>
+                            O procedimento pode ser salvo sem produtos, ou você pode adicionar os materiais utilizados acima.
+                        </span>
+
                     </div>
 
                     <div class="selected-products-wrapper">
 
-                        <table
-                                id="tabelaProdutos"
-                                class="selected-products-table">
+                        <table id="tabelaProdutos"
+                               class="selected-products-table">
 
                             <thead>
+
                             <tr>
                                 <th>Produto</th>
-                                <th class="quantity-column">Quantidade</th>
+                                <th class="quantity-column">Quantidade utilizada</th>
                                 <th class="remove-column">Ação</th>
                             </tr>
+
                             </thead>
 
                             <tbody id="produtosSelecionados">
@@ -347,34 +583,45 @@
                                 th:attr="data-produto-codigo=${produto.produtoCodigo}">
 
                                 <td>
-                                    <span th:text="${produto.produtoNome}"></span>
 
-                                    <input
-                                            type="hidden"
-                                            th:name="${'produtos[' + stat.index + '].produtoCodigo'}"
-                                            th:value="${produto.produtoCodigo}">
+                                    <div class="selected-product-name">
 
-                                    <input
-                                            type="hidden"
-                                            th:name="${'produtos[' + stat.index + '].produtoNome'}"
-                                            th:value="${produto.produtoNome}">
+                                        <span class="product-icon">
+                                            •
+                                        </span>
+
+                                        <strong th:text="${produto.produtoNome}">
+                                        </strong>
+
+                                    </div>
+
+                                    <input type="hidden"
+                                           th:name="${'produtos[' + stat.index + '].produtoCodigo'}"
+                                           th:value="${produto.produtoCodigo}">
+
+                                    <input type="hidden"
+                                           th:name="${'produtos[' + stat.index + '].produtoNome'}"
+                                           th:value="${produto.produtoNome}">
+
                                 </td>
 
                                 <td>
-                                    <input
-                                            type="number"
-                                            min="1"
-                                            class="table-quantity"
-                                            th:name="${'produtos[' + stat.index + '].quantidade'}"
-                                            th:value="${produto.quantidade}">
+
+                                    <input type="number"
+                                           min="1"
+                                           class="table-quantity"
+                                           th:name="${'produtos[' + stat.index + '].quantidade'}"
+                                           th:value="${produto.quantidade}">
+
                                 </td>
 
                                 <td>
-                                    <button
-                                            type="button"
+
+                                    <button type="button"
                                             class="btn-remove-product">
                                         Remover
                                     </button>
+
                                 </td>
 
                             </tr>
@@ -387,7 +634,27 @@
 
                 </section>
 
-                <div class="form-action-bar">
+                <section class="procedure-preview">
+
+                    <div class="preview-icon">
+                        +
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Resumo do procedimento
+                        </span>
+
+                        <strong id="procedure-preview-text">
+                            Informe o nome e o valor do procedimento.
+                        </strong>
+
+                    </div>
+
+                </section>
+
+                <footer class="form-action-bar">
 
                     <span class="required-info">
                         <span class="required">*</span>
@@ -401,8 +668,7 @@
                             Cancelar
                         </a>
 
-                        <button
-                                type="submit"
+                        <button type="submit"
                                 class="btn-primary"
                                 th:text="${procedimentoForm.codigo == null
                                     ? 'Cadastrar procedimento'
@@ -412,7 +678,7 @@
 
                     </div>
 
-                </div>
+                </footer>
 
             </form>
 
@@ -421,8 +687,6 @@
     </main>
 
 </div>
-
-<script th:src="@{/js/procedimento.js}"></script>
 
 </body>
 </html>
