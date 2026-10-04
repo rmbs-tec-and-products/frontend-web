@@ -8,6 +8,7 @@ import br.com.migracao.frontend.dto.odontograma.OdontogramaProcedimentoRequest;
 import br.com.migracao.frontend.dto.odontograma.OdontogramaProcedimentoResponse;
 import br.com.migracao.frontend.dto.odontograma.OdontogramaRequest;
 import br.com.migracao.frontend.dto.odontograma.OdontogramaResponse;
+import br.com.migracao.frontend.dto.odontograma.OdontogramaResumoResponse;
 import br.com.migracao.frontend.dto.odontograma.OdontogramaStatusRequest;
 import br.com.migracao.frontend.form.OdontogramaProcedimentoForm;
 import lombok.RequiredArgsConstructor;
@@ -37,13 +38,18 @@ public class OdontogramaController {
             @RequestParam(required = false) String pesquisa,
             Model model
     ) {
+
         try {
+
             model.addAttribute(
                     "pacientes",
-                    pacienteClient.pesquisar(pesquisa)
+                    pacienteClient.pesquisar(
+                            pesquisa
+                    )
             );
 
         } catch (RestClientResponseException exception) {
+
             model.addAttribute(
                     "pacientes",
                     List.of()
@@ -51,7 +57,9 @@ public class OdontogramaController {
 
             model.addAttribute(
                     "mensagemErro",
-                    extrairMensagemErro(exception)
+                    extrairMensagemErro(
+                            exception
+                    )
             );
         }
 
@@ -69,7 +77,32 @@ public class OdontogramaController {
             Model model,
             RedirectAttributes redirectAttributes
     ) {
+
         try {
+
+            List<OdontogramaResumoResponse> odontogramas =
+                    odontogramaClient.listarPorPaciente(
+                            pacienteCodigo
+                    );
+
+            List<OdontogramaResumoResponse> adultos =
+                    odontogramas.stream()
+                            .filter(item ->
+                                    !Boolean.TRUE.equals(
+                                            item.odontopediatria()
+                                    )
+                            )
+                            .toList();
+
+            List<OdontogramaResumoResponse> pediatricos =
+                    odontogramas.stream()
+                            .filter(item ->
+                                    Boolean.TRUE.equals(
+                                            item.odontopediatria()
+                                    )
+                            )
+                            .toList();
+
             model.addAttribute(
                     "paciente",
                     pacienteClient.buscarPorCodigo(
@@ -78,18 +111,24 @@ public class OdontogramaController {
             );
 
             model.addAttribute(
-                    "odontogramas",
-                    odontogramaClient.listarPorPaciente(
-                            pacienteCodigo
-                    )
+                    "odontogramasAdultos",
+                    adultos
+            );
+
+            model.addAttribute(
+                    "odontogramasPediatricos",
+                    pediatricos
             );
 
             return "odontograma/paciente";
 
         } catch (RestClientResponseException exception) {
+
             redirectAttributes.addFlashAttribute(
                     "mensagemErro",
-                    extrairMensagemErro(exception)
+                    extrairMensagemErro(
+                            exception
+                    )
             );
 
             return "redirect:/odontogramas";
@@ -101,26 +140,60 @@ public class OdontogramaController {
             @PathVariable Integer pacienteCodigo,
             RedirectAttributes redirectAttributes
     ) {
+
+        return criarOdontograma(
+                pacienteCodigo,
+                false,
+                redirectAttributes
+        );
+    }
+
+    @PostMapping("/paciente/{pacienteCodigo}/novo-pediatrico")
+    public String novoOdontogramaPediatrico(
+            @PathVariable Integer pacienteCodigo,
+            RedirectAttributes redirectAttributes
+    ) {
+
+        return criarOdontograma(
+                pacienteCodigo,
+                true,
+                redirectAttributes
+        );
+    }
+
+    private String criarOdontograma(
+            Integer pacienteCodigo,
+            boolean odontopediatria,
+            RedirectAttributes redirectAttributes
+    ) {
+
         try {
+
             OdontogramaResponse odontograma =
                     odontogramaClient.cadastrar(
                             new OdontogramaRequest(
-                                    pacienteCodigo
+                                    pacienteCodigo,
+                                    odontopediatria
                             )
                     );
 
             redirectAttributes.addFlashAttribute(
                     "mensagemSucesso",
-                    "Odontograma criado com sucesso."
+                    odontopediatria
+                            ? "Odontograma pediátrico criado com sucesso."
+                            : "Odontograma adulto criado com sucesso."
             );
 
             return "redirect:/odontogramas/"
                     + odontograma.codigo();
 
         } catch (RestClientResponseException exception) {
+
             redirectAttributes.addFlashAttribute(
                     "mensagemErro",
-                    extrairMensagemErro(exception)
+                    extrairMensagemErro(
+                            exception
+                    )
             );
 
             return "redirect:/odontogramas/paciente/"
@@ -135,7 +208,9 @@ public class OdontogramaController {
             Model model,
             RedirectAttributes redirectAttributes
     ) {
+
         try {
+
             OdontogramaResponse odontograma =
                     odontogramaClient.buscarPorCodigo(
                             codigo
@@ -145,6 +220,7 @@ public class OdontogramaController {
                     new OdontogramaProcedimentoForm();
 
             if (editar != null) {
+
                 odontograma.procedimentos()
                         .stream()
                         .filter(item ->
@@ -168,7 +244,9 @@ public class OdontogramaController {
 
             model.addAttribute(
                     "procedimentosCadastro",
-                    procedimentoClient.listar(null)
+                    procedimentoClient.listar(
+                            null
+                    )
             );
 
             model.addAttribute(
@@ -176,48 +254,97 @@ public class OdontogramaController {
                     form
             );
 
-            model.addAttribute(
-                    "dentesSuperioresDireita",
-                    List.of(
-                            18, 17, 16, 15,
-                            14, 13, 12, 11
-                    )
-            );
-
-            model.addAttribute(
-                    "dentesSuperioresEsquerda",
-                    List.of(
-                            21, 22, 23, 24,
-                            25, 26, 27, 28
-                    )
-            );
-
-            model.addAttribute(
-                    "dentesInferioresDireita",
-                    List.of(
-                            48, 47, 46, 45,
-                            44, 43, 42, 41
-                    )
-            );
-
-            model.addAttribute(
-                    "dentesInferioresEsquerda",
-                    List.of(
-                            31, 32, 33, 34,
-                            35, 36, 37, 38
+            configurarDentes(
+                    model,
+                    Boolean.TRUE.equals(
+                            odontograma.odontopediatria()
                     )
             );
 
             return "odontograma/detalhe";
 
         } catch (RestClientResponseException exception) {
+
             redirectAttributes.addFlashAttribute(
                     "mensagemErro",
-                    extrairMensagemErro(exception)
+                    extrairMensagemErro(
+                            exception
+                    )
             );
 
             return "redirect:/odontogramas";
         }
+    }
+
+    private void configurarDentes(
+            Model model,
+            boolean odontopediatria
+    ) {
+
+        if (odontopediatria) {
+
+            model.addAttribute(
+                    "dentesSuperioresDireita",
+                    List.of(
+                            55, 54, 53, 52, 51
+                    )
+            );
+
+            model.addAttribute(
+                    "dentesSuperioresEsquerda",
+                    List.of(
+                            61, 62, 63, 64, 65
+                    )
+            );
+
+            model.addAttribute(
+                    "dentesInferioresDireita",
+                    List.of(
+                            85, 84, 83, 82, 81
+                    )
+            );
+
+            model.addAttribute(
+                    "dentesInferioresEsquerda",
+                    List.of(
+                            71, 72, 73, 74, 75
+                    )
+            );
+
+            return;
+        }
+
+        model.addAttribute(
+                "dentesSuperioresDireita",
+                List.of(
+                        18, 17, 16, 15,
+                        14, 13, 12, 11
+                )
+        );
+
+        model.addAttribute(
+                "dentesSuperioresEsquerda",
+                List.of(
+                        21, 22, 23, 24,
+                        25, 26, 27, 28
+                )
+        );
+
+        model.addAttribute(
+                "dentesInferioresDireita",
+                List.of(
+                        48, 47, 46, 45,
+                        44, 43, 42, 41
+                )
+        );
+
+        model.addAttribute(
+                "dentesInferioresEsquerda",
+                List.of(
+                        31, 32, 33, 34,
+                        35, 36, 37, 38
+                )
+        );
     }
 
     @PostMapping("/{codigo}/status")
@@ -226,7 +353,9 @@ public class OdontogramaController {
             @RequestParam String status,
             RedirectAttributes redirectAttributes
     ) {
+
         try {
+
             odontogramaClient.alterarStatus(
                     codigo,
                     new OdontogramaStatusRequest(
@@ -240,9 +369,12 @@ public class OdontogramaController {
             );
 
         } catch (RestClientResponseException exception) {
+
             redirectAttributes.addFlashAttribute(
                     "mensagemErro",
-                    extrairMensagemErro(exception)
+                    extrairMensagemErro(
+                            exception
+                    )
             );
         }
 
@@ -256,7 +388,9 @@ public class OdontogramaController {
             @RequestParam Integer dente,
             RedirectAttributes redirectAttributes
     ) {
+
         try {
+
             odontogramaClient.excluirDente(
                     codigo,
                     dente
@@ -270,9 +404,12 @@ public class OdontogramaController {
             );
 
         } catch (RestClientResponseException exception) {
+
             redirectAttributes.addFlashAttribute(
                     "mensagemErro",
-                    extrairMensagemErro(exception)
+                    extrairMensagemErro(
+                            exception
+                    )
             );
         }
 
@@ -286,7 +423,9 @@ public class OdontogramaController {
             @RequestParam Integer dente,
             RedirectAttributes redirectAttributes
     ) {
+
         try {
+
             odontogramaClient.restaurarDente(
                     codigo,
                     dente
@@ -300,9 +439,12 @@ public class OdontogramaController {
             );
 
         } catch (RestClientResponseException exception) {
+
             redirectAttributes.addFlashAttribute(
                     "mensagemErro",
-                    extrairMensagemErro(exception)
+                    extrairMensagemErro(
+                            exception
+                    )
             );
         }
 
@@ -316,7 +458,9 @@ public class OdontogramaController {
             @ModelAttribute OdontogramaProcedimentoForm procedimentoForm,
             RedirectAttributes redirectAttributes
     ) {
+
         try {
+
             OdontogramaProcedimentoRequest request =
                     new OdontogramaProcedimentoRequest(
                             procedimentoForm.getProcedimentoCodigo(),
@@ -328,6 +472,7 @@ public class OdontogramaController {
                     );
 
             if (procedimentoForm.getCodigo() == null) {
+
                 odontogramaClient.adicionarProcedimento(
                         codigo,
                         request
@@ -339,6 +484,7 @@ public class OdontogramaController {
                 );
 
             } else {
+
                 odontogramaClient.atualizarProcedimento(
                         codigo,
                         procedimentoForm.getCodigo(),
@@ -352,9 +498,12 @@ public class OdontogramaController {
             }
 
         } catch (RestClientResponseException exception) {
+
             redirectAttributes.addFlashAttribute(
                     "mensagemErro",
-                    extrairMensagemErro(exception)
+                    extrairMensagemErro(
+                            exception
+                    )
             );
         }
 
@@ -368,7 +517,9 @@ public class OdontogramaController {
             @PathVariable Integer itemCodigo,
             RedirectAttributes redirectAttributes
     ) {
+
         try {
+
             odontogramaClient.excluirProcedimento(
                     codigo,
                     itemCodigo
@@ -380,9 +531,12 @@ public class OdontogramaController {
             );
 
         } catch (RestClientResponseException exception) {
+
             redirectAttributes.addFlashAttribute(
                     "mensagemErro",
-                    extrairMensagemErro(exception)
+                    extrairMensagemErro(
+                            exception
+                    )
             );
         }
 
@@ -396,7 +550,9 @@ public class OdontogramaController {
             @PathVariable Integer itemCodigo,
             RedirectAttributes redirectAttributes
     ) {
+
         try {
+
             caixaClient.buscarAberto();
 
             odontogramaClient.concluirProcedimento(
@@ -410,10 +566,13 @@ public class OdontogramaController {
             );
 
         } catch (RestClientResponseException exception) {
+
             String mensagem =
                     exception.getStatusCode().value() == 404
                             ? "Não existe caixa aberto. Abra o caixa antes de concluir o procedimento."
-                            : extrairMensagemErro(exception);
+                            : extrairMensagemErro(
+                            exception
+                    );
 
             redirectAttributes.addFlashAttribute(
                     "mensagemErro",
@@ -429,6 +588,7 @@ public class OdontogramaController {
             OdontogramaProcedimentoForm form,
             OdontogramaProcedimentoResponse item
     ) {
+
         form.setCodigo(
                 item.codigo()
         );
@@ -463,14 +623,18 @@ public class OdontogramaController {
     private String extrairMensagemErro(
             RestClientResponseException exception
     ) {
+
         try {
+
             JsonNode json =
                     objectMapper.readTree(
                             exception.getResponseBodyAsString()
                     );
 
             JsonNode mensagem =
-                    json.get("message");
+                    json.get(
+                            "message"
+                    );
 
             if (mensagem != null
                     && !mensagem.asText().isBlank()) {
@@ -479,7 +643,9 @@ public class OdontogramaController {
             }
 
             JsonNode detalhe =
-                    json.get("detail");
+                    json.get(
+                            "detail"
+                    );
 
             if (detalhe != null
                     && !detalhe.asText().isBlank()) {
@@ -491,14 +657,17 @@ public class OdontogramaController {
         }
 
         if (exception.getStatusCode().value() == 400) {
+
             return "Verifique os dados informados.";
         }
 
         if (exception.getStatusCode().value() == 404) {
+
             return "Registro não encontrado.";
         }
 
         if (exception.getStatusCode().value() == 409) {
+
             return "A operação não pôde ser realizada.";
         }
 

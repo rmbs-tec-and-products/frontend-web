@@ -4,12 +4,15 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record OdontogramaResumoResponse(
+
         Integer codigo,
         String tipo,
         String tipoDescricao,
         BigDecimal valor,
         LocalDateTime data,
         String status,
-        String statusDescricao
+        String statusDescricao,
+        Boolean odontopediatria
+
 ) {
 }

@@ -1,6 +1,9 @@
 package br.com.migracao.frontend.dto.odontograma;
 
 public record OdontogramaRequest(
-        Integer pacienteCodigo
+
+        Integer pacienteCodigo,
+        Boolean odontopediatria
+
 ) {
 }
