@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <title>Usuários - SysOdonto</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/app.css}">
+
+    <link rel="stylesheet"
+          th:href="@{/css/admin.css}">
+
+    <script th:src="@{/js/admin.js}"
+            defer></script>
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="app-container">
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <main class="content admin-page">
+
+        <div th:if="${mensagemSucesso}"
+             class="admin-toast admin-toast-success">
+
+            <span>✓</span>
+
+            <strong th:text="${mensagemSucesso}">
+            </strong>
+
+            <button type="button"
+                    class="admin-toast-close">
+                ×
+            </button>
+
+        </div>
+
+        <div th:if="${mensagemErro}"
+             class="admin-toast admin-toast-error">
+
+            <span>!</span>
+
+            <strong th:text="${mensagemErro}">
+            </strong>
+
+            <button type="button"
+                    class="admin-toast-close">
+                ×
+            </button>
+
+        </div>
+
+        <header class="admin-header">
+
+            <div>
+
+                <span class="page-eyebrow">
+                    Administração
+                </span>
+
+                <h1>
+                    Usuários
+                </h1>
+
+                <p>
+                    Gerencie quem pode acessar o SysOdonto e o nível de acesso de cada usuário.
+                </p>
+
+            </div>
+
+            <a th:if="${modo == 'consultar'}"
+               th:href="@{/admin/usuarios/novo}"
+               class="btn-primary">
+
+                + Novo usuário
+
+            </a>
+
+        </header>
+
+        <nav class="admin-tabs">
+
+            <a th:href="@{/admin/usuarios}"
+               th:classappend="${modo == 'consultar'} ? ' active' : ''">
+
+                Usuários
+
+            </a>
+
+            <a th:href="@{/admin/usuarios/novo}"
+               th:classappend="${modo == 'novo'} ? ' active' : ''">
+
+                Novo usuário
+
+            </a>
+
+        </nav>
+
+        <!-- CONSULTA -->
+
+        <section th:if="${modo == 'consultar'}"
+                 class="admin-consult">
+
+            <section class="search-card">
+
+                <div>
+
+                    <span class="section-eyebrow">
+                        Controle de acesso
+                    </span>
+
+                    <h2>
+                        Localizar usuário
+                    </h2>
+
+                    <p>
+                        Pesquise pelo nome, login ou e-mail.
+                    </p>
+
+                </div>
+
+                <form method="get"
+                      th:action="@{/admin/usuarios}"
+                      class="search-form">
+
+                    <div class="search-wrapper">
+
+                        <span>
+                            ⌕
+                        </span>
+
+                        <input type="text"
+                               name="pesquisa"
+                               th:value="${pesquisa}"
+                               placeholder="Nome, login ou e-mail">
+
+                    </div>
+
+                    <button type="submit"
+                            class="btn-primary">
+
+                        Pesquisar
+
+                    </button>
+
+                    <a th:if="${pesquisa != null and !pesquisa.isBlank()}"
+                       th:href="@{/admin/usuarios}"
+                       class="btn-secondary">
+
+                        Limpar
+
+                    </a>
+
+                </form>
+
+            </section>
+
+            <section class="users-card">
+
+                <header class="users-card-header">
+
+                    <div>
+
+                        <span class="section-eyebrow">
+                            Segurança
+                        </span>
+
+                        <h2>
+                            Usuários cadastrados
+                        </h2>
+
+                        <p th:text="${#lists.size(usuarios) + ' usuário(s) encontrado(s)'}">
+                        </p>
+
+                    </div>
+
+                </header>
+
+                <div class="table-responsive">
+
+                    <table class="users-table">
+
+                        <thead>
+
+                        <tr>
+                            <th>Usuário</th>
+                            <th>Login</th>
+                            <th>Perfil</th>
+                            <th>Status</th>
+                            <th class="column-actions">Ações</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                        <tr th:each="usuario : ${usuarios}">
+
+                            <td>
+
+                                <div class="user-identity">
+
+                                    <span class="user-avatar"
+                                          th:text="${usuario.nome != null && !usuario.nome.isBlank()
+                                            ? #strings.substring(usuario.nome, 0, 1)
+                                            : 'U'}">
+
+                                        U
+
+                                    </span>
+
+                                    <div>
+
+                                        <strong th:text="${usuario.nome}">
+                                        </strong>
+
+                                        <small th:text="${usuario.email}">
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+
+                                <span class="login-badge"
+                                      th:text="${usuario.login}">
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span th:class="${usuario.perfil == 'ADMIN'
+                                    ? 'profile-badge profile-admin'
+                                    : 'profile-badge profile-user'}"
+                                      th:text="${usuario.perfil == 'ADMIN'
+                                    ? 'Administrador'
+                                    : 'Usuário'}">
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span th:class="${usuario.ativo
+                                    ? 'status-badge status-active'
+                                    : 'status-badge status-inactive'}">
+
+                                    <i></i>
+
+                                    <span th:text="${usuario.ativo
+                                        ? 'Ativo'
+                                        : 'Inativo'}">
+                                    </span>
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <div class="table-actions">
+
+                                    <a th:href="@{/admin/usuarios/{codigo}/editar(codigo=${usuario.codigo})}"
+                                       class="action-link action-edit">
+
+                                        Editar
+
+                                    </a>
+
+                                    <form th:if="${usuario.login != username}"
+                                          th:action="@{/admin/usuarios/{codigo}/status(codigo=${usuario.codigo})}"
+                                          method="post">
+
+                                        <input type="hidden"
+                                               name="ativo"
+                                               th:value="${!usuario.ativo}">
+
+                                        <button type="submit"
+                                                th:class="${usuario.ativo
+                                                    ? 'action-link action-disable'
+                                                    : 'action-link action-enable'}"
+                                                th:text="${usuario.ativo
+                                                    ? 'Desativar'
+                                                    : 'Ativar'}">
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(usuarios)}">
+
+                            <td colspan="5">
+
+                                <div class="empty-state">
+
+                                    <span class="empty-icon">
+                                        U
+                                    </span>
+
+                                    <strong>
+                                        Nenhum usuário encontrado
+                                    </strong>
+
+                                    <span>
+                                        Cadastre um usuário para permitir acesso ao sistema.
+                                    </span>
+
+                                    <a th:href="@{/admin/usuarios/novo}"
+                                       class="btn-primary">
+
+                                        + Novo usuário
+
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </section>
+
+        <!-- NOVO / EDITAR -->
+
+        <section th:if="${modo == 'novo'}"
+                 class="user-editor">
+
+            <header class="editor-header">
+
+                <div>
+
+                    <a th:href="@{/admin/usuarios}"
+                       class="back-link">
+
+                        ← Voltar para usuários
+
+                    </a>
+
+                    <span class="page-eyebrow"
+                          th:text="${usuarioForm.codigo == null
+                            ? 'Novo acesso'
+                            : 'Editando usuário'}">
+                    </span>
+
+                    <h2 th:text="${usuarioForm.codigo == null
+                        ? 'Novo usuário'
+                        : usuarioForm.nome}">
+                    </h2>
+
+                    <p>
+                        Configure os dados de acesso e o perfil do usuário.
+                    </p>
+
+                </div>
+
+                <div th:if="${usuarioForm.codigo != null}"
+                     class="editor-code">
+
+                    <span>
+                        Código
+                    </span>
+
+                    <strong th:text="${usuarioForm.codigo}">
+                    </strong>
+
+                </div>
+
+            </header>
+
+            <form th:action="@{/admin/usuarios/salvar}"
+                  th:object="${usuarioForm}"
+                  method="post"
+                  class="user-form">
+
+                <input type="hidden"
+                       th:field="*{codigo}">
+
+                <input th:if="${usuarioForm.codigo != null}"
+                       type="hidden"
+                       name="ativo"
+                       th:value="${!usuarioForm.ativo}">
+
+                <!-- IDENTIFICAÇÃO -->
+
+                <section class="form-card">
+
+                    <header class="form-card-header">
+
+                        <span class="section-number">
+                            1
+                        </span>
+
+                        <div>
+
+                            <span class="section-eyebrow">
+                                Identificação
+                            </span>
+
+                            <h3>
+                                Dados do usuário
+                            </h3>
+
+                            <p>
+                                Informações usadas para identificar e recuperar o acesso do usuário.
+                            </p>
+
+                        </div>
+
+                    </header>
+
+                    <div class="form-grid">
+
+                        <div class="field">
+
+                            <label for="nome">
+
+                                Nome
+
+                                <span class="required">
+                                    *
+                                </span>
+
+                            </label>
+
+                            <input id="nome"
+                                   type="text"
+                                   th:field="*{nome}"
+                                   maxlength="100"
+                                   required
+                                   placeholder="Ex.: Maria da Silva">
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="login">
+
+                                Login
+
+                                <span class="required">
+                                    *
+                                </span>
+
+                            </label>
+
+                            <input id="login"
+                                   type="text"
+                                   th:field="*{login}"
+                                   minlength="3"
+                                   maxlength="80"
+                                   required
+                                   autocomplete="off"
+                                   placeholder="Ex.: maria">
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="email">
+
+                                E-mail
+
+                                <span class="required">
+                                    *
+                                </span>
+
+                            </label>
+
+                            <input id="email"
+                                   type="email"
+                                   th:field="*{email}"
+                                   maxlength="150"
+                                   required
+                                   autocomplete="email"
+                                   placeholder="Ex.: maria@clinica.com.br">
+
+                            <small class="field-help">
+                                Este e-mail será utilizado futuramente para recuperação de senha.
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- SEGURANÇA -->
+
+                <section class="form-card">
+
+                    <header class="form-card-header">
+
+                        <span class="section-number">
+                            2
+                        </span>
+
+                        <div>
+
+                            <span class="section-eyebrow">
+                                Segurança
+                            </span>
+
+                            <h3>
+                                Perfil e senha
+                            </h3>
+
+                            <p>
+                                Defina o nível de acesso do usuário.
+                            </p>
+
+                        </div>
+
+                    </header>
+
+                    <div class="form-grid">
+
+                        <div class="field">
+
+                            <label for="perfil">
+
+                                Perfil
+
+                                <span class="required">
+                                    *
+                                </span>
+
+                            </label>
+
+                            <select id="perfil"
+                                    th:field="*{perfil}"
+                                    required>
+
+                                <option value="USER">
+                                    Usuário
+                                </option>
+
+                                <option value="ADMIN">
+                                    Administrador
+                                </option>
+
+                            </select>
+
+                            <small class="field-help">
+                                Administradores podem acessar a área de Administração.
+                            </small>
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="senha"
+                                   th:text="${usuarioForm.codigo == null
+                                    ? 'Senha *'
+                                    : 'Nova senha'}">
+                            </label>
+
+                            <div class="password-wrapper">
+
+                                <input id="senha"
+                                       type="password"
+                                       th:field="*{senha}"
+                                       minlength="8"
+                                       maxlength="100"
+                                       th:required="${usuarioForm.codigo == null}"
+                                       autocomplete="new-password"
+                                       th:placeholder="${usuarioForm.codigo == null
+                                            ? 'Mínimo de 8 caracteres'
+                                            : 'Deixe em branco para manter'}">
+
+                                <button type="button"
+                                        class="password-toggle"
+                                        data-password-toggle>
+
+                                    Mostrar
+
+                                </button>
+
+                            </div>
+
+                            <small class="field-help"
+                                   th:text="${usuarioForm.codigo == null
+                                    ? 'A senha deve possuir pelo menos 8 caracteres.'
+                                    : 'Preencha somente se desejar redefinir a senha.'}">
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- RESUMO -->
+
+                <section class="user-preview">
+
+                    <div class="preview-avatar"
+                         id="user-preview-avatar">
+
+                        U
+
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Resumo do acesso
+                        </span>
+
+                        <strong id="user-preview-name">
+                            Novo usuário
+                        </strong>
+
+                        <small id="user-preview-access">
+                            Perfil Usuário
+                        </small>
+
+                    </div>
+
+                </section>
+
+                <!-- AÇÕES -->
+
+                <footer class="form-actions">
+
+                    <div>
+
+                        <span class="required-info">
+
+                            <span class="required">
+                                *
+                            </span>
+
+                            Campos obrigatórios
+
+                        </span>
+
+                    </div>
+
+                    <div>
+
+                        <button th:if="${usuarioForm.codigo != null && usuarioForm.login != username}"
+                                type="submit"
+                                th:formaction="@{/admin/usuarios/{codigo}/status(codigo=${usuarioForm.codigo})}"
+                                formmethod="post"
+                                th:class="${usuarioForm.ativo
+                                    ? 'action-link action-disable'
+                                    : 'action-link action-enable'}"
+                                th:text="${usuarioForm.ativo
+                                    ? 'Desativar usuário'
+                                    : 'Ativar usuário'}">
+
+                            Desativar usuário
+
+                        </button>
+
+                        <a th:href="@{/admin/usuarios}"
+                           class="btn-secondary">
+
+                            Cancelar
+
+                        </a>
+
+                        <button type="submit"
+                                class="btn-primary"
+                                th:text="${usuarioForm.codigo == null
+                                    ? 'Cadastrar usuário'
+                                    : 'Salvar alterações'}">
+
+                            Salvar alterações
+
+                        </button>
+
+                    </div>
+
+                </footer>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

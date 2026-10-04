@@ -1,34 +1,146 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login</title>
-    <link rel="stylesheet" th:href="@{/css/app.css}">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <title>Entrar - SysOdonto</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/app.css}">
+
+    <link rel="stylesheet"
+          th:href="@{/css/login.css}">
 </head>
-<body>
-<main class="container narrow">
-    <h1>Login</h1>
-    <p>Frontend Web - Spring Security</p>
 
-    <div class="alert error" th:if="${param.error}">Usuário ou senha inválidos.</div>
-    <div class="alert success" th:if="${param.logout}">Logout realizado.</div>
+<body class="login-body">
 
-    <form th:action="@{/login}" method="post">
-        <label for="username">Usuário</label>
-        <input id="username" name="username" autocomplete="username" required>
+<main class="login-wrapper">
 
-        <label for="password">Senha</label>
-        <input id="password" name="password" type="password" autocomplete="current-password" required>
+    <section class="login-brand">
 
-        <button type="submit">Entrar</button>
-    </form>
+        <div class="brand-mark">
+            S
+        </div>
 
-    <div class="dev-box">
-        <strong>Usuários locais iniciais</strong>
-        <p>USER: user / user123</p>
-        <p>ADMIN: admin / admin123</p>
-    </div>
+        <div>
+
+            <span>
+                Gestão odontológica
+            </span>
+
+            <h1>
+                SysOdonto
+            </h1>
+
+            <p>
+                Gestão clínica, agenda, prontuário,
+                estoque e financeiro em um só lugar.
+            </p>
+
+        </div>
+
+    </section>
+
+    <section class="login-card">
+
+        <header>
+
+            <span class="login-eyebrow">
+                Acesso seguro
+            </span>
+
+            <h2>
+                Entrar no sistema
+            </h2>
+
+            <p>
+                Informe seu usuário e senha para continuar.
+            </p>
+
+        </header>
+
+        <div class="login-alert login-alert-error"
+             th:if="${param.error}">
+
+            <strong>
+                Não foi possível entrar
+            </strong>
+
+            <span>
+                Verifique o usuário e a senha informados.
+            </span>
+
+        </div>
+
+        <div class="login-alert login-alert-success"
+             th:if="${param.logout}">
+
+            <strong>
+                Sessão encerrada
+            </strong>
+
+            <span>
+                Você saiu do sistema com segurança.
+            </span>
+
+        </div>
+
+        <form th:action="@{/login}"
+              method="post"
+              class="login-form">
+
+            <div class="login-field">
+
+                <label for="username">
+                    Usuário
+                </label>
+
+                <input id="username"
+                       name="username"
+                       type="text"
+                       autocomplete="username"
+                       autofocus
+                       required
+                       placeholder="Digite seu usuário">
+
+            </div>
+
+            <div class="login-field">
+
+                <label for="password">
+                    Senha
+                </label>
+
+                <input id="password"
+                       name="password"
+                       type="password"
+                       autocomplete="current-password"
+                       required
+                       placeholder="Digite sua senha">
+
+            </div>
+
+            <button type="submit"
+                    class="login-button">
+
+                Entrar
+
+            </button>
+
+        </form>
+
+        <footer>
+            SysOdonto
+        </footer>
+
+    </section>
+
 </main>
+
 </body>
 </html>
