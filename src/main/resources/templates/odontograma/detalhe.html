@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <title>Odontograma - SysOdonto</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/app.css}">
+
+    <link rel="stylesheet"
+          th:href="@{/css/odontograma.css}">
+
+    <script th:src="@{/js/odontograma.js}"
+            defer></script>
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="app-container">
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <main class="content odontograma-page">
+
+        <a th:href="@{/odontogramas/paciente/{codigo}(codigo=${odontograma.pacienteCodigo})}"
+           class="back-link">
+            ← Voltar
+        </a>
+
+        <div class="odontogram-header">
+
+            <div>
+                <h1 th:text="${odontograma.pacienteNome}"></h1>
+
+                <p class="page-subtitle">
+                    Odontograma adulto
+                </p>
+            </div>
+
+            <div class="odontogram-header-info">
+
+                <div>
+                    <span>Data</span>
+
+                    <strong th:text="${#temporals.format(odontograma.data, 'dd/MM/yyyy HH:mm')}">
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Valor pendente</span>
+
+                    <strong class="pending-value"
+                            th:text="${'R$ ' + #numbers.formatDecimal(odontograma.valor, 1, 'POINT', 2, 'COMMA')}">
+                    </strong>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div th:if="${mensagemSucesso}"
+             class="feedback feedback-success">
+            <span class="feedback-icon">✓</span>
+            <span th:text="${mensagemSucesso}"></span>
+        </div>
+
+        <div th:if="${mensagemErro}"
+             class="feedback feedback-error">
+            <span class="feedback-icon">!</span>
+            <span th:text="${mensagemErro}"></span>
+        </div>
+
+        <section class="odonto-card status-general-card">
+
+            <div>
+                <strong>Status geral</strong>
+
+                <span class="general-status"
+                      th:text="${odontograma.statusDescricao}">
+                </span>
+            </div>
+
+            <form th:action="@{/odontogramas/{codigo}/status(codigo=${odontograma.codigo})}"
+                  method="post"
+                  class="status-form">
+
+                <select name="status">
+                    <option value="EM_ANDAMENTO"
+                            th:selected="${odontograma.status == 'EM_ANDAMENTO'}">
+                        Em andamento
+                    </option>
+
+                    <option value="CONCLUIDO"
+                            th:selected="${odontograma.status == 'CONCLUIDO'}">
+                        Concluído
+                    </option>
+
+                    <option value="CANCELADO"
+                            th:selected="${odontograma.status == 'CANCELADO'}">
+                        Cancelado
+                    </option>
+                </select>
+
+                <button type="submit"
+                        class="btn-secondary">
+                    Alterar status
+                </button>
+
+            </form>
+
+        </section>
+
+        <section class="odonto-card">
+
+            <div class="section-title">
+                <h2>Odontograma</h2>
+
+                <p>
+                    Clique em um dente para selecioná-lo no formulário.
+                </p>
+            </div>
+
+            <div class="odontogram-legend">
+
+                <span>
+                    <i class="legend-color legend-observation"></i>
+                    Observação
+                </span>
+
+                <span>
+                    <i class="legend-color legend-todo"></i>
+                    À realizar
+                </span>
+
+                <span>
+                    <i class="legend-color legend-started"></i>
+                    Iniciado
+                </span>
+
+                <span>
+                    <i class="legend-color legend-completed"></i>
+                    Concluído
+                </span>
+
+                <span>
+                    <i class="legend-color legend-excluded"></i>
+                    Excluído
+                </span>
+
+            </div>
+
+            <div class="mouth">
+
+                <div class="arch">
+
+                    <div class="quadrant">
+
+                        <button type="button"
+                                class="tooth"
+                                th:each="dente : ${dentesSuperioresDireita}"
+                                th:data-tooth="${dente}"
+                                th:classappend="${#lists.contains(odontograma.dentesExcluidos, dente)} ? ' tooth-excluded' : ''">
+
+                            <span class="tooth-shape">🦷</span>
+
+                            <strong th:text="${dente}"></strong>
+
+                        </button>
+
+                    </div>
+
+                    <div class="quadrant">
+
+                        <button type="button"
+                                class="tooth"
+                                th:each="dente : ${dentesSuperioresEsquerda}"
+                                th:data-tooth="${dente}"
+                                th:classappend="${#lists.contains(odontograma.dentesExcluidos, dente)} ? ' tooth-excluded' : ''">
+
+                            <span class="tooth-shape">🦷</span>
+
+                            <strong th:text="${dente}"></strong>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="mouth-divider"></div>
+
+                <div class="arch">
+
+                    <div class="quadrant">
+
+                        <button type="button"
+                                class="tooth"
+                                th:each="dente : ${dentesInferioresDireita}"
+                                th:data-tooth="${dente}"
+                                th:classappend="${#lists.contains(odontograma.dentesExcluidos, dente)} ? ' tooth-excluded' : ''">
+
+                            <span class="tooth-shape">🦷</span>
+
+                            <strong th:text="${dente}"></strong>
+
+                        </button>
+
+                    </div>
+
+                    <div class="quadrant">
+
+                        <button type="button"
+                                class="tooth"
+                                th:each="dente : ${dentesInferioresEsquerda}"
+                                th:data-tooth="${dente}"
+                                th:classappend="${#lists.contains(odontograma.dentesExcluidos, dente)} ? ' tooth-excluded' : ''">
+
+                            <span class="tooth-shape">🦷</span>
+
+                            <strong th:text="${dente}"></strong>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <div class="odontogram-workspace">
+
+            <section class="odonto-card procedure-form-card">
+
+                <div class="section-title">
+
+                    <h2 th:text="${procedimentoForm.codigo == null
+                        ? 'Novo procedimento'
+                        : 'Alterar procedimento'}">
+                    </h2>
+
+                    <p id="selected-tooth-label">
+                        Selecione um dente.
+                    </p>
+
+                </div>
+
+                <form th:action="@{/odontogramas/{codigo}/procedimentos/salvar(codigo=${odontograma.codigo})}"
+                      th:object="${procedimentoForm}"
+                      method="post">
+
+                    <input type="hidden"
+                           th:field="*{codigo}">
+
+                    <div class="field">
+
+                        <label for="procedimentoCodigo">
+                            Procedimento *
+                        </label>
+
+                        <select id="procedimentoCodigo"
+                                th:field="*{procedimentoCodigo}"
+                                required>
+
+                            <option value="">
+                                Selecione
+                            </option>
+
+                            <option th:each="procedimento : ${procedimentosCadastro}"
+                                    th:value="${procedimento.codigo}"
+                                    th:text="${procedimento.nome}"
+                                    th:data-value="${procedimento.valor}">
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="field">
+
+                        <label for="dente">
+                            Dente *
+                        </label>
+
+                        <input id="dente"
+                               type="number"
+                               th:field="*{dente}"
+                               readonly
+                               required>
+
+                    </div>
+
+                    <div class="field">
+
+                        <label for="status">
+                            Status *
+                        </label>
+
+                        <select id="status"
+                                th:field="*{status}"
+                                required>
+
+                            <option value="OBSERVACAO">
+                                Observação
+                            </option>
+
+                            <option value="A_REALIZAR">
+                                À realizar
+                            </option>
+
+                            <option value="INICIADO">
+                                Iniciado
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="field">
+
+                        <label for="valor">
+                            Valor
+                        </label>
+
+                        <input id="valor"
+                               type="number"
+                               th:field="*{valor}"
+                               min="0"
+                               step="0.01"
+                               placeholder="0,00">
+
+                    </div>
+
+                    <div class="field">
+
+                        <label>
+                            Faces
+                        </label>
+
+                        <div class="faces-grid">
+
+                            <label>
+                                <input type="checkbox"
+                                       th:field="*{faces}"
+                                       value="DISTAL">
+                                Distal
+                            </label>
+
+                            <label>
+                                <input type="checkbox"
+                                       th:field="*{faces}"
+                                       value="LINGUAL_PALATAL">
+                                Lingual / palatal
+                            </label>
+
+                            <label>
+                                <input type="checkbox"
+                                       th:field="*{faces}"
+                                       value="MESIAL">
+                                Mesial
+                            </label>
+
+                            <label>
+                                <input type="checkbox"
+                                       th:field="*{faces}"
+                                       value="VESTIBULAR">
+                                Vestibular
+                            </label>
+
+                            <label>
+                                <input type="checkbox"
+                                       th:field="*{faces}"
+                                       value="OCLUSAL">
+                                Oclusal
+                            </label>
+
+                            <label>
+                                <input type="checkbox"
+                                       th:field="*{faces}"
+                                       value="RAIZ_MESIO_VESTIBULAR">
+                                Raiz mésio-vestibular
+                            </label>
+
+                            <label>
+                                <input type="checkbox"
+                                       th:field="*{faces}"
+                                       value="RAIZ_DISTO_VESTIBULAR">
+                                Raiz disto-vestibular
+                            </label>
+
+                            <label>
+                                <input type="checkbox"
+                                       th:field="*{faces}"
+                                       value="RAIZ_PALATINA">
+                                Raiz palatina
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                    <div class="field">
+
+                        <label for="observacao">
+                            Observação
+                        </label>
+
+                        <textarea id="observacao"
+                                  th:field="*{observacao}"
+                                  rows="5"></textarea>
+
+                    </div>
+
+                    <div class="form-actions">
+
+                        <a th:if="${procedimentoForm.codigo != null}"
+                           th:href="@{/odontogramas/{codigo}(codigo=${odontograma.codigo})}"
+                           class="btn-secondary">
+                            Cancelar
+                        </a>
+
+                        <button type="submit"
+                                class="btn-primary">
+                            Salvar
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </section>
+
+            <section class="odonto-card">
+
+                <div class="section-title">
+                    <h2>Dente selecionado</h2>
+                    <p>
+                        Excluir ou restaurar um dente inteiro.
+                    </p>
+                </div>
+
+                <div class="tooth-actions">
+
+                    <span>
+                        Dente:
+                        <strong id="action-tooth">
+                            -
+                        </strong>
+                    </span>
+
+                    <form id="exclude-tooth-form"
+                          method="post"
+                          data-base-action="/odontogramas/"
+                          th:data-odontograma="${odontograma.codigo}">
+
+                        <button type="submit"
+                                class="btn-danger"
+                                onclick="return confirm('Deseja excluir este dente?')">
+                            Excluir dente
+                        </button>
+
+                    </form>
+
+                    <form id="restore-tooth-form"
+                          method="post"
+                          data-base-action="/odontogramas/"
+                          th:data-odontograma="${odontograma.codigo}">
+
+                        <button type="submit"
+                                class="btn-secondary">
+                            Restaurar dente
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+        </div>
+
+        <section class="odonto-card">
+
+            <div class="section-title">
+                <h2>Procedimentos</h2>
+
+                <p th:text="${#lists.size(odontograma.procedimentos) + ' procedimento(s)'}">
+                </p>
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="odonto-table">
+
+                    <thead>
+
+                    <tr>
+                        <th>Procedimento</th>
+                        <th>Status</th>
+                        <th>Dente</th>
+                        <th>Face</th>
+                        <th>Valor</th>
+                        <th>Observação</th>
+                        <th>Data</th>
+                        <th>Ações</th>
+                    </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    <tr th:each="item : ${odontograma.procedimentos}">
+
+                        <td>
+                            <strong th:text="${item.procedimentoNome}">
+                            </strong>
+                        </td>
+
+                        <td>
+                            <span class="procedure-status"
+                                  th:classappend="${' status-' + #strings.toLowerCase(item.status)}"
+                                  th:text="${item.statusDescricao}">
+                            </span>
+                        </td>
+
+                        <td th:text="${item.dente}">
+                        </td>
+
+                        <td th:text="${item.face != null && !item.face.isBlank() ? item.face : '-'}">
+                        </td>
+
+                        <td th:text="${'R$ ' + #numbers.formatDecimal(item.valor, 1, 'POINT', 2, 'COMMA')}">
+                        </td>
+
+                        <td th:text="${item.observacao != null && !item.observacao.isBlank() ? item.observacao : '-'}">
+                        </td>
+
+                        <td th:text="${#temporals.format(item.data, 'dd/MM/yyyy HH:mm')}">
+                        </td>
+
+                        <td>
+
+                            <div class="table-actions"
+                                 th:if="${item.status != 'CONCLUIDO'}">
+
+                                <a th:href="@{/odontogramas/{codigo}(codigo=${odontograma.codigo},editar=${item.codigo})}"
+                                   class="btn-table-edit">
+                                    Alterar
+                                </a>
+
+                                <form th:action="@{/odontogramas/{codigo}/procedimentos/{itemCodigo}/concluir(
+                                    codigo=${odontograma.codigo},
+                                    itemCodigo=${item.codigo})}"
+                                      method="post">
+
+                                    <button type="submit"
+                                            class="btn-table-success"
+                                            onclick="return confirm('Concluir este procedimento? Isso irá movimentar estoque e caixa.')">
+                                        Concluir
+                                    </button>
+
+                                </form>
+
+                                <form th:action="@{/odontogramas/{codigo}/procedimentos/{itemCodigo}/excluir(
+                                    codigo=${odontograma.codigo},
+                                    itemCodigo=${item.codigo})}"
+                                      method="post">
+
+                                    <button type="submit"
+                                            class="btn-table-delete"
+                                            onclick="return confirm('Deseja excluir este procedimento?')">
+                                        Excluir
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                            <span th:if="${item.status == 'CONCLUIDO'}"
+                                  class="completed-label">
+                                Concluído
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(odontograma.procedimentos)}">
+
+                        <td colspan="8">
+
+                            <div class="empty-state">
+                                <strong>
+                                    Nenhum procedimento registrado.
+                                </strong>
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

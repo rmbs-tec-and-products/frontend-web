@@ -621,7 +621,8 @@
 
                                     <td>
 
-                                        <div class="table-actions">
+                                        <div class="table-actions"
+                                             th:if="${movimentacao.descricao != 'FINALIZAÇÃO DE PROCEDIMENTO'}">
 
                                             <a th:href="@{/financeiro/caixa-aberto(editar=${movimentacao.codigo})}"
                                                class="btn-table-edit">
@@ -646,6 +647,11 @@
                                             </form>
 
                                         </div>
+
+                                        <span th:if="${movimentacao.descricao == 'FINALIZAÇÃO DE PROCEDIMENTO'}"
+                                              class="result-count">
+                                            Automática
+                                        </span>
 
                                     </td>
 

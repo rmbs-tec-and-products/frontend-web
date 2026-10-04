@@ -1,0 +1,402 @@
+.odontograma-page {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.page-subtitle {
+    margin: 6px 0 0;
+    color: var(--text-secondary);
+}
+
+.odonto-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.section-title {
+    margin-bottom: 18px;
+}
+
+.section-title h2 {
+    margin: 0 0 5px;
+    font-size: 18px;
+    color: var(--text-primary);
+}
+
+.section-title p {
+    margin: 0;
+    color: var(--text-secondary);
+}
+
+.odonto-search {
+    display: grid;
+    grid-template-columns: minmax(200px, 1fr) auto;
+    gap: 12px;
+}
+
+.odonto-search input,
+.odonto-card input,
+.odonto-card select,
+.odonto-card textarea {
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--bg-page);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+}
+
+.patient-odontogram-header,
+.odontogram-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.patient-odontogram-header h1,
+.odontogram-header h1 {
+    margin: 0;
+}
+
+.odontogram-header-info {
+    display: flex;
+    gap: 30px;
+}
+
+.odontogram-header-info div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.odontogram-header-info span {
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.pending-value {
+    font-size: 18px;
+}
+
+.status-general-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.status-general-card > div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.general-status {
+    color: var(--text-secondary);
+}
+
+.status-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.status-form select {
+    min-width: 180px;
+}
+
+.odontogram-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-bottom: 24px;
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.odontogram-legend span {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.legend-color {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.legend-observation {
+    background: #3b82f6;
+}
+
+.legend-todo {
+    background: #eab308;
+}
+
+.legend-started {
+    background: #22c55e;
+}
+
+.legend-completed {
+    background: #ef4444;
+}
+
+.legend-excluded {
+    background: #020617;
+    border: 1px solid #64748b;
+}
+
+.mouth {
+    max-width: 1150px;
+    margin: 0 auto;
+    overflow-x: auto;
+}
+
+.arch {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+}
+
+.quadrant {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(54px, 1fr));
+    gap: 7px;
+}
+
+.mouth-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 18px 0;
+}
+
+.tooth {
+    appearance: none;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-page);
+    color: var(--text-primary);
+    cursor: pointer;
+    min-height: 86px;
+    padding: 7px 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    transition: 0.15s ease;
+}
+
+.tooth:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.tooth-selected {
+    border: 2px solid var(--primary);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+.tooth-excluded {
+    background: #020617;
+    opacity: 0.65;
+}
+
+.tooth-shape {
+    font-size: 25px;
+}
+
+.odontogram-workspace {
+    display: grid;
+    grid-template-columns: minmax(380px, 1.3fr) minmax(260px, 0.7fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.procedure-form-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.field label {
+    font-weight: 600;
+}
+
+.faces-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+}
+
+.faces-grid label {
+    background: var(--bg-page);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 400;
+}
+
+.faces-grid input {
+    width: auto;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.tooth-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.odonto-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.odonto-table th,
+.odonto-table td {
+    padding: 13px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+}
+
+.odonto-table th {
+    color: var(--text-secondary);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.table-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.table-actions form {
+    margin: 0;
+}
+
+.procedure-status,
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.status-observacao {
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+}
+
+.status-a_realizar {
+    background: rgba(234, 179, 8, 0.15);
+    color: #facc15;
+}
+
+.status-iniciado {
+    background: rgba(34, 197, 94, 0.15);
+    color: #4ade80;
+}
+
+.status-concluido {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+}
+
+.completed-label {
+    color: #f87171;
+    font-weight: 700;
+}
+
+.btn-table-success {
+    border: 0;
+    border-radius: 7px;
+    padding: 7px 10px;
+    cursor: pointer;
+    background: rgba(34, 197, 94, 0.14);
+    color: #4ade80;
+    font-weight: 600;
+}
+
+.btn-table-success:hover {
+    background: rgba(34, 197, 94, 0.22);
+}
+
+.back-link {
+    color: var(--primary);
+    text-decoration: none;
+    width: fit-content;
+}
+
+.empty-state {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 30px;
+}
+
+@media (max-width: 1000px) {
+
+    .odontogram-workspace {
+        grid-template-columns: 1fr;
+    }
+
+    .patient-odontogram-header,
+    .odontogram-header,
+    .status-general-card {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .odontogram-header-info {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .quadrant {
+        min-width: 520px;
+    }
+}
+
+@media (max-width: 700px) {
+
+    .odonto-search {
+        grid-template-columns: 1fr;
+    }
+
+    .faces-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .status-form {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <title>Odontogramas do paciente - SysOdonto</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/app.css}">
+
+    <link rel="stylesheet"
+          th:href="@{/css/odontograma.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="app-container">
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <main class="content odontograma-page">
+
+        <a th:href="@{/odontogramas}"
+           class="back-link">
+            ← Voltar
+        </a>
+
+        <div class="patient-odontogram-header">
+
+            <div>
+                <h1 th:text="${paciente.nome}"></h1>
+
+                <p class="page-subtitle">
+                    Odontogramas do paciente
+                </p>
+            </div>
+
+            <form th:action="@{/odontogramas/paciente/{codigo}/novo(codigo=${paciente.codigo})}"
+                  method="post">
+
+                <button type="submit"
+                        class="btn-primary">
+                    Novo odontograma
+                </button>
+
+            </form>
+
+        </div>
+
+        <div th:if="${mensagemSucesso}"
+             class="feedback feedback-success">
+            <span class="feedback-icon">✓</span>
+            <span th:text="${mensagemSucesso}"></span>
+        </div>
+
+        <div th:if="${mensagemErro}"
+             class="feedback feedback-error">
+            <span class="feedback-icon">!</span>
+            <span th:text="${mensagemErro}"></span>
+        </div>
+
+        <section class="odonto-card">
+
+            <div class="table-responsive">
+
+                <table class="odonto-table">
+
+                    <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Tipo</th>
+                        <th>Status</th>
+                        <th>Valor pendente</th>
+                        <th class="column-actions">Ação</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr th:each="odontograma : ${odontogramas}">
+
+                        <td th:text="${#temporals.format(odontograma.data, 'dd/MM/yyyy HH:mm')}">
+                        </td>
+
+                        <td th:text="${odontograma.tipoDescricao}">
+                        </td>
+
+                        <td>
+                            <span class="status-badge"
+                                  th:text="${odontograma.statusDescricao}">
+                            </span>
+                        </td>
+
+                        <td>
+                            <strong th:text="${'R$ ' + #numbers.formatDecimal(odontograma.valor, 1, 'POINT', 2, 'COMMA')}">
+                            </strong>
+                        </td>
+
+                        <td>
+                            <a class="btn-table-view"
+                               th:href="@{/odontogramas/{codigo}(codigo=${odontograma.codigo})}">
+                                Abrir
+                            </a>
+                        </td>
+
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(odontogramas)}">
+                        <td colspan="5">
+                            <div class="empty-state">
+                                <strong>
+                                    Este paciente ainda não possui odontograma.
+                                </strong>
+                            </div>
+                        </td>
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>
