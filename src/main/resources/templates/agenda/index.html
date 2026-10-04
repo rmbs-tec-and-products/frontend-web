@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <title>Agenda - SysOdonto</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/app.css}">
+
+    <link rel="stylesheet"
+          th:href="@{/css/agenda.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="app-container">
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <main class="content agenda-page">
+
+        <div class="page-header">
+
+            <div>
+
+                <h1>Agenda</h1>
+
+                <p class="page-subtitle">
+                    Gerencie os atendimentos dos pacientes e dentistas.
+                </p>
+
+            </div>
+
+            <a th:if="${modo == 'consultar'}"
+               th:href="@{/agenda/novo(data=${dataSelecionada},dentistaCodigo=${dentistaCodigo})}"
+               class="btn-primary">
+
+                + Novo agendamento
+
+            </a>
+
+        </div>
+
+        <div th:if="${mensagemSucesso}"
+             class="feedback feedback-success">
+
+            <span class="feedback-icon">
+                ✓
+            </span>
+
+            <span th:text="${mensagemSucesso}">
+            </span>
+
+        </div>
+
+        <div th:if="${mensagemErro}"
+             class="feedback feedback-error">
+
+            <span class="feedback-icon">
+                !
+            </span>
+
+            <span th:text="${mensagemErro}">
+            </span>
+
+        </div>
+
+        <!-- ==================================================
+             CONSULTA
+        ================================================== -->
+
+        <section th:if="${modo == 'consultar'}">
+
+            <div class="filter-card">
+
+                <div class="filter-header">
+
+                    <div>
+
+                        <h2>
+                            Agenda do dia
+                        </h2>
+
+                        <p>
+                            Escolha a data e, se desejar, filtre por dentista.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <form
+                        method="get"
+                        th:action="@{/agenda}"
+                        class="agenda-filter">
+
+                    <div class="field date-filter">
+
+                        <label for="data">
+                            Data
+                        </label>
+
+                        <input
+                                id="data"
+                                name="data"
+                                type="date"
+                                th:value="${dataSelecionada}">
+
+                    </div>
+
+                    <div class="field dentist-filter">
+
+                        <label for="dentistaCodigo">
+                            Dentista
+                        </label>
+
+                        <select
+                                id="dentistaCodigo"
+                                name="dentistaCodigo">
+
+                            <option value="">
+                                Todos os dentistas
+                            </option>
+
+                            <option
+                                    th:each="dentista : ${dentistas}"
+                                    th:value="${dentista.codigo}"
+                                    th:text="${dentista.nome}"
+                                    th:selected="${dentistaCodigo != null && dentista.codigo == dentistaCodigo}">
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <button
+                            type="submit"
+                            class="btn-primary filter-button">
+
+                        Filtrar
+
+                    </button>
+
+                    <a th:href="@{/agenda}"
+                       class="btn-secondary filter-button">
+
+                        Hoje
+
+                    </a>
+
+                </form>
+
+            </div>
+
+            <div class="agenda-summary">
+
+                <div class="summary-date">
+
+                    <span class="summary-label">
+                        Data selecionada
+                    </span>
+
+                    <strong th:text="${#temporals.format(dataSelecionada, 'dd/MM/yyyy')}">
+                    </strong>
+
+                </div>
+
+                <div class="summary-count">
+
+                    <span class="summary-label">
+                        Agendamentos
+                    </span>
+
+                    <strong th:text="${#lists.size(agendamentos)}">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+            <div class="table-card">
+
+                <div class="table-header">
+
+                    <div>
+
+                        <h2>
+                            Agendamentos
+                        </h2>
+
+                        <span
+                                class="result-count"
+                                th:text="${#lists.size(agendamentos) + ' atendimento(s) agendado(s)'}">
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="table-responsive">
+
+                    <table class="agenda-table">
+
+                        <thead>
+
+                        <tr>
+
+                            <th class="column-time">
+                                Hora
+                            </th>
+
+                            <th>
+                                Paciente
+                            </th>
+
+                            <th>
+                                Celular
+                            </th>
+
+                            <th>
+                                Dentista
+                            </th>
+
+                            <th class="column-actions">
+                                Ações
+                            </th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                        <tr th:each="agendamento : ${agendamentos}">
+
+                            <td>
+
+                                <span
+                                        class="agenda-time"
+                                        th:text="${#temporals.format(agendamento.data, 'HH:mm')}">
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <strong
+                                        class="patient-name"
+                                        th:text="${agendamento.pacienteNome}">
+                                </strong>
+
+                            </td>
+
+                            <td>
+
+                                <span
+                                        th:text="${agendamento.pacienteCelular != null && !agendamento.pacienteCelular.isBlank()
+                                            ? agendamento.pacienteCelular
+                                            : '-'}">
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span
+                                        class="dentist-name"
+                                        th:text="${agendamento.dentistaNome}">
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <div class="table-actions">
+
+                                    <a
+                                            th:href="@{/agenda/{codigo}/editar(codigo=${agendamento.codigo})}"
+                                            class="btn-table-edit">
+
+                                        Alterar
+
+                                    </a>
+
+                                    <form
+                                            th:action="@{/agenda/{codigo}/excluir(codigo=${agendamento.codigo})}"
+                                            method="post">
+
+                                        <input
+                                                type="hidden"
+                                                name="data"
+                                                th:value="${dataSelecionada}">
+
+                                        <input
+                                                type="hidden"
+                                                name="dentistaCodigo"
+                                                th:value="${dentistaCodigo}">
+
+                                        <button
+                                                type="submit"
+                                                class="btn-table-delete"
+                                                onclick="return confirm('Deseja realmente excluir este agendamento?')">
+
+                                            Excluir
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(agendamentos)}">
+
+                            <td colspan="5">
+
+                                <div class="empty-state">
+
+                                    <div class="empty-icon">
+                                        ◷
+                                    </div>
+
+                                    <strong>
+                                        Nenhum agendamento neste dia
+                                    </strong>
+
+                                    <span>
+                                        Utilize o botão Novo agendamento para adicionar um atendimento.
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ==================================================
+             NOVO / EDITAR
+        ================================================== -->
+
+        <section th:if="${modo == 'novo'}">
+
+            <div
+                    class="edit-status"
+                    th:if="${agendaForm.codigo != null}">
+
+                <span>
+                    Editando agendamento
+                </span>
+
+                <strong th:text="${'#' + agendaForm.codigo}">
+                </strong>
+
+            </div>
+
+            <form
+                    th:action="@{/agenda/salvar}"
+                    th:object="${agendaForm}"
+                    method="post">
+
+                <input
+                        type="hidden"
+                        th:field="*{codigo}">
+
+                <section class="form-card">
+
+                    <div class="section-header">
+
+                        <div class="section-number">
+                            1
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Data e horário
+                            </h2>
+
+                            <p>
+                                Defina quando o atendimento será realizado.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="date-time-grid">
+
+                        <div class="field">
+
+                            <label for="agendaData">
+
+                                Data
+                                <span class="required">*</span>
+
+                            </label>
+
+                            <input
+                                    id="agendaData"
+                                    type="date"
+                                    th:field="*{data}"
+                                    required>
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="agendaHora">
+
+                                Horário
+                                <span class="required">*</span>
+
+                            </label>
+
+                            <input
+                                    id="agendaHora"
+                                    type="time"
+                                    step="60"
+                                    th:field="*{hora}"
+                                    required>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <section class="form-card">
+
+                    <div class="section-header">
+
+                        <div class="section-number">
+                            2
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Atendimento
+                            </h2>
+
+                            <p>
+                                Selecione o paciente e o dentista responsável.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="attendance-grid">
+
+                        <div class="field">
+
+                            <label for="pacienteCodigo">
+
+                                Paciente
+                                <span class="required">*</span>
+
+                            </label>
+
+                            <select
+                                    id="pacienteCodigo"
+                                    th:field="*{pacienteCodigo}"
+                                    required>
+
+                                <option value="">
+                                    Selecione um paciente
+                                </option>
+
+                                <option
+                                        th:each="paciente : ${pacientes}"
+                                        th:value="${paciente.codigo}"
+                                        th:text="${paciente.nome}">
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="dentistaFormCodigo">
+
+                                Dentista
+                                <span class="required">*</span>
+
+                            </label>
+
+                            <select
+                                    id="dentistaFormCodigo"
+                                    th:field="*{dentistaCodigo}"
+                                    required>
+
+                                <option value="">
+                                    Selecione um dentista
+                                </option>
+
+                                <option
+                                        th:each="dentista : ${dentistas}"
+                                        th:value="${dentista.codigo}"
+                                        th:text="${dentista.nome}">
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <div class="form-action-bar">
+
+                    <span class="required-info">
+
+                        <span class="required">
+                            *
+                        </span>
+
+                        Campos obrigatórios
+
+                    </span>
+
+                    <div class="form-action-buttons">
+
+                        <a
+                                th:href="@{/agenda(data=${agendaForm.data},dentistaCodigo=${agendaForm.dentistaCodigo})}"
+                                class="btn-secondary">
+
+                            Cancelar
+
+                        </a>
+
+                        <button
+                                type="submit"
+                                class="btn-primary"
+                                th:text="${agendaForm.codigo == null
+                                    ? 'Cadastrar agendamento'
+                                    : 'Salvar alterações'}">
+
+                            Salvar
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>
